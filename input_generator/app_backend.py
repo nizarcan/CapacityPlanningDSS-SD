@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from openpyxl import *
 
 
 def level_lookup(df_name, level_col, lookup_col, level_diff):
@@ -13,10 +14,25 @@ def level_lookup(df_name, level_col, lookup_col, level_diff):
     return pd.DataFrame({lookup_col[i]: df_name.reindex(idx)[lookup_col[i]].values for i in range(len(lookup_col))}, index = df_name.index)
 
 
+def get_excel_sheet_names(directory):
+    wb = load_workbook(directory, read_only = True)
+    return wb.sheetnames
+
+
 def read_excel_sheet(directory, name_of_sheet="no_name"):
     if name_of_sheet == "no_name":
-        return pd.read_excel(directory)
-    return pd.read_excel(directory, sheet_name = name_of_sheet)
+        wb = load_workbook(directory, read_only = True)
+        sheet = wb[wb.sheetnames[0]]
+        df = pd.DataFrame(sheet.values)
+        df.columns = df.iloc[0, :]
+        df = df.drop(0)
+        return df
+    wb = load_workbook(directory, read_only = True)
+    sheet = wb[name_of_sheet]
+    df = pd.DataFrame(sheet.values)
+    df.columns = df.iloc[0, :]
+    df = df.drop(0)
+    return df
 
 
 def arrange_df(df, relevant_col_idx, df_type, items_to_delete_dir="no_dir"):
