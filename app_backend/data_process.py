@@ -16,6 +16,41 @@ def level_lookup(df, level_col, lookup_col):
     return pd.DataFrame({lookup_col: df.reindex(idx)[lookup_col].values}, index = df.index)
 
 
+def gross_seq_matrix(df, lookup_col, matrix_type):
+    df_copy = df.copy().reset_index()
+    dummies = pd.get_dummies(df_copy["level"])
+
+    lookup_series = df_copy[lookup_col]
+    gross_matrix = dummies.apply(lambda col: lookup_series.where(col != 0, np.nan).fillna(method = "ffill"))
+    gross_matrix.index = df.index
+
+    gross_matrix = gross_seq_matrix_trimmer(gsm = gross_matrix, df = df, matrix_type = matrix_type)
+    return gross_matrix
+
+
+def gross_seq_matrix_trimmer(gsm, df, matrix_type):
+    max_level = df.level.max()
+    input_idx = finder.input_indices(df)
+    temp_df = df.loc[input_idx]
+    if matrix_type == "station":
+        trimmed_df = pd.DataFrame(index=input_idx, columns=list(range(1, gsm.columns.max() + 2)))
+        for curr_level in range(max_level, 1, -1):
+            temp_idx = temp_df.loc[temp_df.level == curr_level].index
+            temp_seq = gsm.loc[temp_idx][list(range(curr_level, 0, -1))]
+            temp_seq[curr_level + 1] = "ENDING_STATION"
+            temp_seq.columns = list(range(1, curr_level+2))
+            trimmed_df.loc[temp_idx, list(range(1, curr_level+2))] = temp_seq
+    elif matrix_type == "time":
+        trimmed_df = pd.DataFrame(index=input_idx, columns=list(range(1, gsm.columns.max() + 1)))
+        for curr_level in range(max_level, 1, -1):
+            temp_idx = temp_df.loc[temp_df.level == curr_level].index
+            temp_seq = gsm.loc[temp_idx][list(range(curr_level, 0, -1))]
+            temp_seq.columns = list(range(1, curr_level+1))
+            trimmed_df.loc[temp_idx, list(range(1, curr_level+1))] = temp_seq
+    trimmed_df.reset_index(drop = "index", inplace = True)
+    return trimmed_df
+
+
 def level_lookup_bak(df_name, level_col, lookup_col, level_diff):
     # Creating a dummy matrix with the levels of the bill of materials.
     dummies = pd.get_dummies(df_name[level_col])
@@ -100,7 +135,7 @@ def determine_amounts(df):
     df["new_amount"] = 1
     bom_row = 0
     while bom_row < len(df):
-        if (df.loc[bom_row, "amount"]%1 == 0) and (df.loc[bom_row, "amount"] != 1):
+        if (df.loc[bom_row, "amount"] % 1 == 0) and (df.loc[bom_row, "amount"] != 1):
             starting_amount = df.loc[bom_row, "amount"]
             df.loc[bom_row, "new_amount"] = starting_amount
             starting_level = df.loc[bom_row, "level"]
@@ -149,13 +184,13 @@ def reformat_columns(df, relevant_col_idx, df_type):
     return df
 
 
-def arrange_df(df, relevant_col_idx, df_type, items_to_delete_dir="no_dir", assembly_df=None, cmy_df=None):
+def arrange_df(df, df_type, relevant_col_idx=None, tbd_path="no_dir", assembly_df=None, cmy_df=None):
     if df_type.lower() == "bom":
         # Reformatting the columns
         df = reformat_columns(df, relevant_col_idx, "bom")
 
         # This to be deleted parts can be redundant, so it will be decided that if these codes are going to stay or not
-        items_to_delete = read_excel_sheet(items_to_delete_dir)
+        items_to_delete = read_excel_sheet(tbd_path)
         s = [str(x).split(".")[0] not in list(items_to_delete["Kalacaklar"]) for x in df["part_no"]]
         df = df.drop(np.where(np.asarray(s))[0])
 
@@ -209,11 +244,35 @@ def arrange_df(df, relevant_col_idx, df_type, items_to_delete_dir="no_dir", asse
         df["prep_times"] = level_lookup(df, "level", "prep_times")
 
         df.loc[df.level == 1, ["station", "cycle_times", "prep_times"]] = \
-            pd.merge(df["product_no"], assembly_df[["part_no", "station", "cycle_times", "prep_times"]], "left", left_on = "product_no",
+            pd.merge(df["product_no"], assembly_df[["part_no", "station", "cycle_times", "prep_times"]], "left",
+                     left_on = "product_no",
                      right_on = "part_no")[["station", "cycle_times", "prep_times"]]
 
         missing_dict = missing_values_df(df)
-        # Continue from here.
+        missing_df = pd.DataFrame(missing_dict).transpose().reset_index()
+        missing_df.columns = ["code", "station", "cycle_times", "prep_times"]
+        # Ask for what are the values for the NAs in the missing dictionary
+        """
+        THIS WILL CHANGE
+        """
+        missing_df.station.fillna("CAM_YAPISTIRMA", inplace = True)
+        missing_df.cycle_times.fillna(45, inplace = True)
+        missing_df.prep_times.fillna(0, inplace = True)
+        """
+        END OF THIS WILL CHANGE
+        """
+        # Rounding all the numerical values to integers.
+        missing_df.loc[~missing_df.station.isna(), ["cycle_times", "prep_times"]] = \
+            missing_df.loc[~missing_df.station.isna()][["cycle_times", "prep_times"]].apply(np.ceil)
+
+        # Creating the missing slice to fill it to the merged bom dataframe later
+        missing_slice = pd.merge(left = df.part_no.apply(lambda x: x.split(".")[0]).loc[df.station.isna()],
+                                 right = missing_df, left_on = "part_no", right_on = "code", how = "left")
+        missing_slice.index = df.loc[df.station.isna()].index
+
+        # Equating the filled missing data slice into the bom
+        df.loc[df.station.isna(), ["station", "cycle_times", "prep_times"]] = \
+            missing_slice[["station", "cycle_times", "prep_times"]]
 
         return df
 
