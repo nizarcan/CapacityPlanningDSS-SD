@@ -1,8 +1,9 @@
 import pandas as pd
-# import numpy as np
+import numpy as np
 from openpyxl import *
-from app_backend.finder import np as np
+# from app_backend.finder import np as np
 import app_backend.finder as finder
+from random import randint
 
 
 def level_lookup(df, level_col, lookup_col):
@@ -32,6 +33,7 @@ def gross_seq_matrix_trimmer(gsm, df, matrix_type):
     max_level = df.level.max()
     input_idx = finder.input_indices(df)
     temp_df = df.loc[input_idx]
+    trimmed_df = None
     if matrix_type == "station":
         trimmed_df = pd.DataFrame(index=input_idx, columns=list(range(1, gsm.columns.max() + 2)))
         for curr_level in range(max_level, 1, -1):
@@ -49,19 +51,6 @@ def gross_seq_matrix_trimmer(gsm, df, matrix_type):
             trimmed_df.loc[temp_idx, list(range(1, curr_level+1))] = temp_seq
     trimmed_df.reset_index(drop = "index", inplace = True)
     return trimmed_df
-
-
-def level_lookup_bak(df_name, level_col, lookup_col, level_diff):
-    # Creating a dummy matrix with the levels of the bill of materials.
-    dummies = pd.get_dummies(df_name[level_col])
-
-    idx = dummies.index.to_series()
-    last_index = dummies.apply(lambda col: idx.where(col != 0, np.nan).fillna(method = "ffill"))
-    last_index[0] = np.nan
-
-    idx = last_index.lookup(last_index.index, df_name[level_col] - level_diff)
-    return pd.DataFrame({lookup_col: df_name.reindex(idx)[lookup_col].values for i in range(len(lookup_col))},
-                        index = df_name.index)
 
 
 def create_legend_table(df):
@@ -97,15 +86,6 @@ def create_duplication_table(df):
          dup_count], axis = 1)
     duplication_table.columns = ["product", "start", "number to duplicate"]
     return duplication_table
-
-
-def find_product_codes(df):
-    return df["product_no"].ne(df["product_no"].shift(1, fill_value = df.iloc[0]["product_no"])).cumsum() + 1
-
-
-def find_process_input_indices(df):
-    s = df["level"].ge(df["level"].shift(-1, fill_value = df.iloc[-1]["level"]))
-    return np.where(s)
 
 
 def get_excel_sheet_names(directory):
@@ -184,10 +164,14 @@ def reformat_columns(df, relevant_col_idx, df_type):
     return df
 
 
-def arrange_df(df, df_type, relevant_col_idx=None, tbd_path="no_dir", assembly_df=None, cmy_df=None):
+def arrange_df(df, df_type, relevant_col_idx=None, tbd_path="no_dir", assembly_df=None):  # , cmy_df=None
     if df_type.lower() == "bom":
         # Reformatting the columns
         df = reformat_columns(df, relevant_col_idx, "bom")
+
+        # Deleting the trial products
+        df.drop(df[df.product_no.apply(lambda x: int(x.split(".")[2]) >= 900)].index, inplace = True)
+        df.reset_index(drop="index", inplace=True)
 
         # This to be deleted parts can be redundant, so it will be decided that if these codes are going to stay or not
         items_to_delete = read_excel_sheet(tbd_path)
@@ -205,6 +189,13 @@ def arrange_df(df, df_type, relevant_col_idx=None, tbd_path="no_dir", assembly_d
         # Making sure that the dataframe returns in order
         df.reset_index(drop = "index", inplace = True)
 
+        # This part is not certain
+        df["product_family"] = [x.split(".")[0] for x in df.product_no]
+        first_products = df[df.product_family.ne(df.product_family.shift(1, fill_value = 0))]["product_no"].to_list()
+        a = pd.Series([x in first_products for x in df.product_no])
+        df.drop(df[~a].index, inplace = True)
+        df.reset_index(drop = "index", inplace = True)
+
         return df
 
     if df_type.lower() == "times":
@@ -213,6 +204,7 @@ def arrange_df(df, df_type, relevant_col_idx=None, tbd_path="no_dir", assembly_d
 
         # Transforming the machine names to ASCII characters.
         df["station"] = format_machine_names(df, "station")
+        set_list_df = pd.DataFrame({"stations_list": list(set(df.station.to_list()))})
 
         # Creating a dataframe with the assembly times
         montaj_df = df[(df["station"] == "BANT") | (df["station"] == "LOOP")]
@@ -236,7 +228,7 @@ def arrange_df(df, df_type, relevant_col_idx=None, tbd_path="no_dir", assembly_d
         # Resetting the index
         df.reset_index(drop = "index", inplace = True)
 
-        return df, montaj_df, cmy_df
+        return df, montaj_df, cmy_df, set_list_df
 
     if df_type.lower() == "merged":
         df["station"] = level_lookup(df, "level", "station")
@@ -275,6 +267,74 @@ def arrange_df(df, df_type, relevant_col_idx=None, tbd_path="no_dir", assembly_d
             missing_slice[["station", "cycle_times", "prep_times"]]
 
         return df
+
+
+def create_join_matrix(df):
+    # Tutorial df for joining matrix
+    df = df[["product_no", "level"]].copy()
+    df["product_no"] = finder.product_numerator(df)
+    # df = df[df["product_no"].le(100)].copy()
+    input_idx = finder.input_indices(df)
+    join_df = df.loc[finder.joining_indices(df)].copy()
+    join_matrix = pd.DataFrame(index = input_idx, columns = list(range(1, df.level.max() + 1)))
+    join_idx = 2
+    product_assembly_amount = df.loc[finder.input_indices(df)].copy().reset_index().groupby(by = "product_no").agg(
+        {"index": list, "level": list})
+    product_assembly_amount["count"] = [len(x) for x in product_assembly_amount["level"]]
+    join_amount_count = [1]
+    # start loop here
+    while len(join_df) > 0:
+        curr_row = int(join_df.tail(1).index[0])
+        curr_level = df.loc[curr_row, "level"]
+        start_row = curr_row
+        end_row = int(df[df["level"].eq(df.loc[curr_row, "level"] - 1) & (df.index < curr_row)].tail(1).index[0])
+        middle_parts = df[df["level"].eq(df.loc[curr_row, "level"]) & (df.index <= start_row) & (df.index >= end_row)]
+        inputs_n_levels = [[input_idx[input_idx >= x][0], df.loc[input_idx[input_idx >= x][0], "level"]] for x in
+                           middle_parts.index]
+        if pd.isna(join_matrix.loc[inputs_n_levels[0][0], inputs_n_levels[0][1] - curr_level + 1]):
+            product_assembly_amount.loc[df.loc[inputs_n_levels[0][0], "product_no"], "count"] -= (
+                        len(inputs_n_levels) - 1)
+            for inputs in inputs_n_levels:
+                join_matrix.loc[inputs[0], inputs[1] - curr_level + 1] = join_idx
+            join_df.drop(join_df.tail(1).index[0], inplace = True)
+            join_amount_count.append(len(inputs_n_levels))
+            join_idx += 1
+        else:
+            join_df.drop(join_df.tail(1).index[0], inplace = True)
+
+    for product_idx in product_assembly_amount.index:
+        temp_idx = product_assembly_amount.loc[product_idx, "index"]
+        for idx in temp_idx:
+            join_matrix.loc[idx, df.loc[idx, "level"]] = join_idx
+            join_matrix.loc[idx, list(range(1, df.loc[idx, "level"]))] = \
+                join_matrix.loc[idx, list(range(1, df.loc[idx, "level"]))].fillna(1)
+        join_amount_count.append(product_assembly_amount.loc[product_idx, "count"])
+        join_idx += 1
+
+    join_amount_df = pd.DataFrame(
+        {"join_code": list(range(1, len(join_amount_count) + 1)), "amount": join_amount_count},
+        index = list(range(1, len(join_amount_count) + 1)))
+    join_matrix.reset_index(drop = True, inplace = True)
+    join_matrix.index = list(range(1, join_matrix.shape[0] + 1))
+
+    return join_matrix, join_amount_df
+
+
+def set_list_table(df):
+    df["queues_list"] = [str(x) + "_Q" for x in df.stations_list]
+    df["resources_list"] = [str(x) + "_RES" for x in df.stations_list]
+    df["x_coordinates"] = [randint(-50, 150) for _ in df.stations_list]
+    df["y_coordinates"] = [randint(-50, 150) for _ in df.stations_list]
+    return df
+
+
+def order_table(input_df, amount=10):
+    max_product_idx = input_df["product"].max()
+    order_df = pd.DataFrame({"product": [randint(1, max_product_idx) for _ in range(amount)],
+                             "order_time": np.linspace(100, 8000, amount),
+                             "order_size": [randint(1, 50) for _ in range(amount)]
+                             }, index=range(1, amount+1))
+    return order_df
 
 
 def missing_values_df(df):
@@ -316,46 +376,3 @@ def merge_bom_and_times(df_bom, df_times):
     merged_df = merged_df.reindex(
         columns = list(merged_df.columns[0:4]) + list(merged_df.columns[5:]) + list(merged_df.columns[4:5]))
     return merged_df
-
-
-"""
-Eski hali ile yapılmış şeyler, denemek için yapıldı bu kısım
-Çalıştığından emin olunduktan sonra eski haliyle değiştirilecek
-"""
-
-
-def create_route_matrix(merged_df, bom_df, times_df, montaj_df, inputs_df):
-    for i_row in reversed(range(len(inputs_df))):
-        w_col = 1
-        bom_row = get_level_cross_reference(bom_df, inputs_df.at[i_row, "Ürün Kodu"],
-                                            inputs_df.at[i_row, "Bileşen Kodu"])
-        bom_next_input = next_input(bom_df, bom_row)
-        while (bom_row > bom_next_input) | (bom_row == 0):
-            if (not is_input_end(bom_df, bom_row)) | \
-                    (find_predecessor_level(bom_df, bom_row) == 1):
-                if isinstance(inputs_df.at[i_row, w_col], float):
-                    inputs_df.at[i_row, w_col] = get_is_merkezi(times_df, bom_df.at[bom_row - 1, "Bileşen Kodu"])
-                    w_col += 1
-                    bom_row -= 1
-                else:
-                    w_col += 1
-                    bom_row -= 1
-            elif (is_input_end(bom_df, bom_row)) & (get_level(bom_df, bom_row) == 1):
-                try:
-                    mntj_brm = montaj_df.at[int(bom_df.at[bom_row, "Ürün Kodu"][:4]), "MONTAJ BİRİMİ"]
-                except KeyError:
-                    mntj_brm = "NI_MNTJ"
-                inputs_df.at[i_row, w_col] = mntj_brm
-                if bom_row == 0:
-                    break
-                else:
-                    bom_row -= 1
-            else:
-                inputs_df.at[i_row, w_col] = "BIR_" + get_is_merkezi(times_df, bom_df.at[
-                    find_one_upper_level(bom_df, bom_row), "Bileşen Kodu"])
-                inputs_df.at[i_row - how_many_inputs_above(bom_df, bom_row),
-                             find_last_level(bom_df, find_one_upper_level(bom_df, bom_row)) -
-                             get_level(bom_df, bom_row) + 1] = \
-                    "BIR_" + get_is_merkezi(times_df, bom_df.at[find_one_upper_level(bom_df, bom_row), "Bileşen Kodu"])
-                bom_row -= 1
-    return inputs_df
