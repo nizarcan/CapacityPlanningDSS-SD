@@ -2,20 +2,57 @@ import pandas as pd
 import win32com.client
 from string import ascii_uppercase as auc
 import app_backend.constants as constants
+from openpyxl import load_workbook
+
+
+def get_excel_sheet_names(directory):
+    try:
+        wb = load_workbook(directory, read_only = True)
+        return wb.sheetnames
+    except Exception as e:
+        print(e)
+
+
+def read_excel_sheet(directory, name_of_sheet="no_name"):
+    if name_of_sheet == "no_name":
+        try:
+            wb = load_workbook(directory, read_only = True)
+            sheet = wb[wb.sheetnames[0]]
+            df = pd.DataFrame(sheet.values)
+            df.columns = df.iloc[0, :]
+            df = df.drop(0)
+            df.reset_index(drop = "index", inplace = True)
+            return df
+        except Exception as e:
+            print(e)
+    try:
+        wb = load_workbook(directory, read_only = True)
+        sheet = wb[name_of_sheet]
+        df = pd.DataFrame(sheet.values)
+        df.columns = df.iloc[0, :]
+        df = df.drop(0)
+        df.reset_index(drop = "index", inplace = True)
+        return df
+    except Exception as e:
+        print(e)
 
 
 def create_excel_file(legend_df, input_df, sequence_df, time_df, join_df,
                       join_info_df, duplication_df, set_list_df, order_matrix_df):
     with pd.ExcelWriter(constants.output_path) as writer:
-        legend_df.to_excel(writer, sheet_name = "LEGEND")
-        input_df.to_excel(writer, sheet_name = "input_table")
-        sequence_df.to_excel(writer, sheet_name = "sequence_matrix")
-        time_df.to_excel(writer, sheet_name = "time_matrix")
-        join_df.to_excel(writer, sheet_name = "join_matrix")
-        join_info_df.to_excel(writer, sheet_name = "join_info")
-        duplication_df.to_excel(writer, sheet_name = "product_duplication")
-        set_list_df.to_excel(writer, sheet_name = "set_lists")
-        order_matrix_df.to_excel(writer, sheet_name = "orders")
+        try:
+            legend_df.to_excel(writer, sheet_name = "LEGEND")
+            input_df.to_excel(writer, sheet_name = "input_table")
+            sequence_df.to_excel(writer, sheet_name = "sequence_matrix")
+            time_df.to_excel(writer, sheet_name = "time_matrix")
+            join_df.to_excel(writer, sheet_name = "join_matrix")
+            join_info_df.to_excel(writer, sheet_name = "join_info")
+            duplication_df.to_excel(writer, sheet_name = "product_duplication")
+            set_list_df.to_excel(writer, sheet_name = "set_lists")
+            order_matrix_df.to_excel(writer, sheet_name = "orders")
+        except ValueError as e:
+            print("One of the tables type is not dataframe within the create_excel_file function.")
+            print(e)
     excel_named_ranges(input_df, sequence_df, time_df, join_df, join_info_df, duplication_df, set_list_df,
                        order_matrix_df, constants.output_path)
 

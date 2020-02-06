@@ -1,170 +1,30 @@
 import pandas as pd
 import numpy as np
-from openpyxl import *
-# from app_backend.finder import np as np
 import app_backend.finder as finder
+from app_backend.excel_operations import read_excel_sheet
 from random import randint
 
 
-def level_lookup(df, level_col, lookup_col):
-    dummies = pd.get_dummies(df[level_col])
-
-    idx = dummies.index.to_series()
-    last_index = dummies.apply(lambda col: idx.where(col != 0, np.nan).fillna(method = "ffill"))
-    last_index[0] = 1
-
-    idx = last_index.lookup(last_index.index, df[level_col] - 1)
-    return pd.DataFrame({lookup_col: df.reindex(idx)[lookup_col].values}, index = df.index)
-
-
-def gross_seq_matrix(df, lookup_col, matrix_type):
-    df_copy = df.copy().reset_index()
-    dummies = pd.get_dummies(df_copy["level"])
-
-    lookup_series = df_copy[lookup_col]
-    gross_matrix = dummies.apply(lambda col: lookup_series.where(col != 0, np.nan).fillna(method = "ffill"))
-    gross_matrix.index = df.index
-
-    gross_matrix = gross_seq_matrix_trimmer(gsm = gross_matrix, df = df, matrix_type = matrix_type)
-    return gross_matrix
-
-
-def gross_seq_matrix_trimmer(gsm, df, matrix_type):
-    max_level = df.level.max()
-    input_idx = finder.input_indices(df)
-    temp_df = df.loc[input_idx]
-    trimmed_df = None
-    if matrix_type == "station":
-        trimmed_df = pd.DataFrame(index=input_idx, columns=list(range(1, gsm.columns.max() + 2)))
-        for curr_level in range(max_level, 1, -1):
-            temp_idx = temp_df.loc[temp_df.level == curr_level].index
-            temp_seq = gsm.loc[temp_idx][list(range(curr_level, 0, -1))]
-            temp_seq[curr_level + 1] = "ENDING_STATION"
-            temp_seq.columns = list(range(1, curr_level+2))
-            trimmed_df.loc[temp_idx, list(range(1, curr_level+2))] = temp_seq
-    elif matrix_type == "time":
-        trimmed_df = pd.DataFrame(index=input_idx, columns=list(range(1, gsm.columns.max() + 1)))
-        for curr_level in range(max_level, 1, -1):
-            temp_idx = temp_df.loc[temp_df.level == curr_level].index
-            temp_seq = gsm.loc[temp_idx][list(range(curr_level, 0, -1))]
-            temp_seq.columns = list(range(1, curr_level+1))
-            trimmed_df.loc[temp_idx, list(range(1, curr_level+1))] = temp_seq
-    trimmed_df.reset_index(drop = "index", inplace = True)
-    return trimmed_df
-
-
-def create_legend_table(df):
-    df = df.iloc[finder.input_indices(df)][["product_no", "part_no"]]
-    df.index = list(range(1, len(df) + 1))
-    return df
-
-
-def create_input_table(df):
-    df = df.iloc[finder.input_indices(df)][["product_no", "amount"]]
-    df["product_no"] = finder.product_numerator(df)
-    df.index = list(range(1, len(df) + 1))
-    df.columns = ["product", "amount"]
-    return df
-
-
-def create_duplication_table(df):
-    # This function gets the input table as a base dataframe to work on and make calculations with.
-    df = create_input_table(df)
-
-    # The following three lines creates the products' index in the process input list, i.e. from the input table
-    s = df["product"].ne(df["product"].shift(fill_value = df.iloc[0]["product"]))
-    product_idx = pd.Series([1] + list(np.where(s)[0] + 1))
-    product_idx.index += 1
-
-    # Following line calculates the entity amounts to be duplicated in the simulation software
-    dup_count = product_idx.shift(-1, fill_value = len(df) + 1) - product_idx
-
-    # The next two lines concatanates, basically zipps the created product index and the duplication amounts and
-    # converts them to a pandas dataframe with the product # with them.
-    duplication_table = pd.concat(
-        [pd.Series(list(range(1, len(product_idx) + 1)), index = list(range(1, len(product_idx) + 1))), product_idx,
-         dup_count], axis = 1)
-    duplication_table.columns = ["product", "start", "number to duplicate"]
-    return duplication_table
-
-
-def get_excel_sheet_names(directory):
-    wb = load_workbook(directory, read_only = True)
-    return wb.sheetnames
-
-
-def read_excel_sheet(directory, name_of_sheet="no_name"):
-    if name_of_sheet == "no_name":
-        wb = load_workbook(directory, read_only = True)
-        sheet = wb[wb.sheetnames[0]]
-        df = pd.DataFrame(sheet.values)
-        df.columns = df.iloc[0, :]
-        df = df.drop(0)
-        df.reset_index(drop = "index", inplace = True)
-        return df
-    wb = load_workbook(directory, read_only = True)
-    sheet = wb[name_of_sheet]
-    df = pd.DataFrame(sheet.values)
-    df.columns = df.iloc[0, :]
-    df = df.drop(0)
-    df.reset_index(drop = "index", inplace = True)
-    return df
-
-
-def determine_amounts(df):
-    df["new_amount"] = 1
-    bom_row = 0
-    while bom_row < len(df):
-        if (df.loc[bom_row, "amount"] % 1 == 0) and (df.loc[bom_row, "amount"] != 1):
-            starting_amount = df.loc[bom_row, "amount"]
-            df.loc[bom_row, "new_amount"] = starting_amount
-            starting_level = df.loc[bom_row, "level"]
-            while bom_row < len(df):
-                bom_row += 1
-                if df.at[bom_row, "level"] > starting_level:
-                    df.at[bom_row, "new_amount"] = starting_amount
-                else:
-                    break
-        bom_row += 1
-    df['amount'] = df['new_amount']
-    df.drop('new_amount', axis = 1, inplace = True)
-    df.reset_index(drop = "index", inplace = True)
-    return df
-
-
-def reformat_columns(df, relevant_col_idx, df_type):
-    if df_type == "bom":
-        # Rearranging the level amount
-        df["Seviye"] = [int(x[-1]) for x in df[df.columns[relevant_col_idx][2]]]
-        relevant_col_idx[2] = len(df.columns) - 1
-
-        # Determining the columns names to use for reindex later
-        relevant_col_names = df.columns[relevant_col_idx]
-
-        # Columns to be dropped from the dataframe
-        cols_to_drop = list(set(df.columns) - set(df.columns[relevant_col_idx]))
-
-        # Dropping, sorting and indexing the corresponding columns
-        df.drop(cols_to_drop, axis = 1, inplace = True)
-        df = df.reindex(columns = relevant_col_names)
-        df.columns = ["product_no", "part_no", "level", "amount", "explanation"]
-
-    if df_type == "times":
-        # Determining the columns names to use for reindex later
-        relevant_col_names = df.columns[relevant_col_idx]
-
-        # Columns to be dropped from the dataframe
-        cols_to_drop = list(set(df.columns) - set(df.columns[relevant_col_idx]))
-
-        # Dropping, sorting and indexing the corresponding columns
-        df.drop(cols_to_drop, axis = 1, inplace = True)
-        df = df.reindex(columns = relevant_col_names)
-        df.columns = ["part_no", "station", "cycle_times", "prep_times"]
-
-    return df
+"""
+######################
+#       Initial      #         
+#      edits of      #
+#     dataframes     #
+######################
+"""
 
 
 def arrange_df(df, df_type, relevant_col_idx=None, tbd_path="no_dir", assembly_df=None):  # , cmy_df=None
+    """
+    :param df:
+    pandas.DataFrame object that contains the raw format that is read from the file.
+    :param df_type:
+    File type of
+    :param relevant_col_idx:
+    :param tbd_path:
+    :param assembly_df:
+    :return:
+    """
     if df_type.lower() == "bom":
         # Reformatting the columns
         df = reformat_columns(df, relevant_col_idx, "bom")
@@ -269,6 +129,179 @@ def arrange_df(df, df_type, relevant_col_idx=None, tbd_path="no_dir", assembly_d
         return df
 
 
+def reformat_columns(df, relevant_col_idx, df_type):
+    if df_type == "bom":
+        # Rearranging the level amount
+        df["Seviye"] = [int(x[-1]) for x in df[df.columns[relevant_col_idx][2]]]
+        relevant_col_idx[2] = len(df.columns) - 1
+
+        # Determining the columns names to use for reindex later
+        relevant_col_names = df.columns[relevant_col_idx]
+
+        # Columns to be dropped from the dataframe
+        cols_to_drop = list(set(df.columns) - set(df.columns[relevant_col_idx]))
+
+        # Dropping, sorting and indexing the corresponding columns
+        df.drop(cols_to_drop, axis = 1, inplace = True)
+        df = df.reindex(columns = relevant_col_names)
+        df.columns = ["product_no", "part_no", "level", "amount", "explanation"]
+
+    if df_type == "times":
+        # Determining the columns names to use for reindex later
+        relevant_col_names = df.columns[relevant_col_idx]
+
+        # Columns to be dropped from the dataframe
+        cols_to_drop = list(set(df.columns) - set(df.columns[relevant_col_idx]))
+
+        # Dropping, sorting and indexing the corresponding columns
+        df.drop(cols_to_drop, axis = 1, inplace = True)
+        df = df.reindex(columns = relevant_col_names)
+        df.columns = ["part_no", "station", "cycle_times", "prep_times"]
+
+    return df
+
+
+"""
+######################
+#       Tools        #         
+#         of         #
+#    manipulation    #
+######################
+"""
+
+
+def level_lookup(df, level_col, lookup_col):
+    dummies = pd.get_dummies(df[level_col])
+
+    idx = dummies.index.to_series()
+    last_index = dummies.apply(lambda col: idx.where(col != 0, np.nan).fillna(method = "ffill"))
+    last_index[0] = 1
+
+    idx = last_index.lookup(last_index.index, df[level_col] - 1)
+    return pd.DataFrame({lookup_col: df.reindex(idx)[lookup_col].values}, index = df.index)
+
+
+def gross_seq_matrix_trimmer(gsm, df, matrix_type):
+    max_level = df.level.max()
+    input_idx = finder.input_indices(df)
+    temp_df = df.loc[input_idx]
+    trimmed_df = None
+    if matrix_type == "station":
+        trimmed_df = pd.DataFrame(index=input_idx, columns=list(range(1, gsm.columns.max() + 2)))
+        for curr_level in range(max_level, 1, -1):
+            temp_idx = temp_df.loc[temp_df.level == curr_level].index
+            temp_seq = gsm.loc[temp_idx][list(range(curr_level, 0, -1))]
+            temp_seq[curr_level + 1] = "ENDING_STATION"
+            temp_seq.columns = list(range(1, curr_level+2))
+            trimmed_df.loc[temp_idx, list(range(1, curr_level+2))] = temp_seq
+    elif matrix_type == "time":
+        trimmed_df = pd.DataFrame(index=input_idx, columns=list(range(1, gsm.columns.max() + 1)))
+        for curr_level in range(max_level, 1, -1):
+            temp_idx = temp_df.loc[temp_df.level == curr_level].index
+            temp_seq = gsm.loc[temp_idx][list(range(curr_level, 0, -1))]
+            temp_seq.columns = list(range(1, curr_level+1))
+            trimmed_df.loc[temp_idx, list(range(1, curr_level+1))] = temp_seq
+    trimmed_df.reset_index(drop = "index", inplace = True)
+    return trimmed_df
+
+
+def missing_values_df(df):
+    missing_parts = df[df.station.isna()].part_no.apply(lambda x: x.split(".")[0]).unique()
+    missing_dict = {}
+    for items in missing_parts:
+        temp_station = df[df.part_no.apply(lambda x: x.split(".")[0]) == items].station.mode()
+        if temp_station.shape == (0,):
+            temp_station = np.nan
+        else:
+            temp_station = temp_station[0]
+        temp_cycle = df[df.part_no.apply(lambda x: x.split(".")[0]) == items].cycle_times.mean()
+        temp_prep = df[df.part_no.apply(lambda x: x.split(".")[0]) == items].prep_times.mean()
+        missing_dict[items] = [temp_station, temp_cycle, temp_prep]
+    return missing_dict
+
+
+def format_word(word, letter_dict):
+    new_word = ""
+    for i in range(len(word)):
+        if word[i] in letter_dict.keys():
+            new_word += letter_dict[word[i]].upper()
+            continue
+        new_word += word[i].upper()
+    return new_word
+
+
+def format_machine_names(df, column):
+    turkish_char_dict = {"ı": "i", "ğ": "g", "Ğ": "G", "ü": "u", "Ü": "U", "Ş": "s", "-": "_",
+                         "ş": "s", "İ": "I", "Ö": "O", "ö": "o", "Ç": "C", "ç": "c", " ": "_", "/": "_"}
+    machine_dict = {}
+    for item in list(set(df[column])):
+        machine_dict[item] = (format_word(item, turkish_char_dict))
+    return [machine_dict[x] for x in df[column]]
+
+
+def merge_bom_and_times(df_bom, df_times):
+    merged_df = pd.merge(left = df_bom, right = df_times, how = "left", on = "part_no")
+    merged_df = merged_df.reindex(
+        columns = list(merged_df.columns[0:4]) + list(merged_df.columns[5:]) + list(merged_df.columns[4:5]))
+    return merged_df
+
+
+def determine_amounts(df):
+    df["new_amount"] = 1
+    bom_row = 0
+    while bom_row < len(df):
+        if (df.loc[bom_row, "amount"] % 1 == 0) and (df.loc[bom_row, "amount"] != 1):
+            starting_amount = df.loc[bom_row, "amount"]
+            df.loc[bom_row, "new_amount"] = starting_amount
+            starting_level = df.loc[bom_row, "level"]
+            while bom_row < len(df):
+                bom_row += 1
+                if df.at[bom_row, "level"] > starting_level:
+                    df.at[bom_row, "new_amount"] = starting_amount
+                else:
+                    break
+        bom_row += 1
+    df['amount'] = df['new_amount']
+    df.drop('new_amount', axis = 1, inplace = True)
+    df.reset_index(drop = "index", inplace = True)
+    return df
+
+
+"""
+######################
+#       Output       #         
+#      dataframe     #
+#      creators      #
+######################
+"""
+
+
+def create_legend_table(df):
+    df = df.iloc[finder.input_indices(df)][["product_no", "part_no"]]
+    df.index = list(range(1, len(df) + 1))
+    return df
+
+
+def create_input_table(df):
+    df = df.iloc[finder.input_indices(df)][["product_no", "amount"]]
+    df["product_no"] = finder.product_numerator(df)
+    df.index = list(range(1, len(df) + 1))
+    df.columns = ["product", "amount"]
+    return df
+
+
+def sequence_type_matrix(df, lookup_col, matrix_type):
+    df_copy = df.copy().reset_index()
+    dummies = pd.get_dummies(df_copy["level"])
+
+    lookup_series = df_copy[lookup_col]
+    gross_matrix = dummies.apply(lambda col: lookup_series.where(col != 0, np.nan).fillna(method = "ffill"))
+    gross_matrix.index = df.index
+
+    gross_matrix = gross_seq_matrix_trimmer(gsm = gross_matrix, df = df, matrix_type = matrix_type)
+    return gross_matrix
+
+
 def create_join_matrix(df):
     # Tutorial df for joining matrix
     df = df[["product_no", "level"]].copy()
@@ -320,6 +353,27 @@ def create_join_matrix(df):
     return join_matrix, join_amount_df
 
 
+def create_duplication_table(df):
+    # This function gets the input table as a base dataframe to work on and make calculations with.
+    df = create_input_table(df)
+
+    # The following three lines creates the products' index in the process input list, i.e. from the input table
+    s = df["product"].ne(df["product"].shift(fill_value = df.iloc[0]["product"]))
+    product_idx = pd.Series([1] + list(np.where(s)[0] + 1))
+    product_idx.index += 1
+
+    # Following line calculates the entity amounts to be duplicated in the simulation software
+    dup_count = product_idx.shift(-1, fill_value = len(df) + 1) - product_idx
+
+    # The next two lines concatanates, basically zipps the created product index and the duplication amounts and
+    # converts them to a pandas dataframe with the product # with them.
+    duplication_table = pd.concat(
+        [pd.Series(list(range(1, len(product_idx) + 1)), index = list(range(1, len(product_idx) + 1))), product_idx,
+         dup_count], axis = 1)
+    duplication_table.columns = ["product", "start", "number to duplicate"]
+    return duplication_table
+
+
 def set_list_table(df):
     df["queues_list"] = [str(x) + "_Q" for x in df.stations_list]
     df["resources_list"] = [str(x) + "_RES" for x in df.stations_list]
@@ -335,44 +389,3 @@ def order_table(input_df, amount=10):
                              "order_size": [randint(1, 50) for _ in range(amount)]
                              }, index=range(1, amount+1))
     return order_df
-
-
-def missing_values_df(df):
-    missing_parts = df[df.station.isna()].part_no.apply(lambda x: x.split(".")[0]).unique()
-    missing_dict = {}
-    for items in missing_parts:
-        temp_station = df[df.part_no.apply(lambda x: x.split(".")[0]) == items].station.mode()
-        if temp_station.shape == (0,):
-            temp_station = np.nan
-        else:
-            temp_station = temp_station[0]
-        temp_cycle = df[df.part_no.apply(lambda x: x.split(".")[0]) == items].cycle_times.mean()
-        temp_prep = df[df.part_no.apply(lambda x: x.split(".")[0]) == items].prep_times.mean()
-        missing_dict[items] = [temp_station, temp_cycle, temp_prep]
-    return missing_dict
-
-
-def format_word(word, letter_dict):
-    new_word = ""
-    for i in range(len(word)):
-        if word[i] in letter_dict.keys():
-            new_word += letter_dict[word[i]].upper()
-            continue
-        new_word += word[i].upper()
-    return new_word
-
-
-def format_machine_names(df, column):
-    turkish_char_dict = {"ı": "i", "ğ": "g", "Ğ": "G", "ü": "u", "Ü": "U", "Ş": "s", "-": "_",
-                         "ş": "s", "İ": "I", "Ö": "O", "ö": "o", "Ç": "C", "ç": "c", " ": "_", "/": "_"}
-    machine_dict = {}
-    for item in list(set(df[column])):
-        machine_dict[item] = (format_word(item, turkish_char_dict))
-    return [machine_dict[x] for x in df[column]]
-
-
-def merge_bom_and_times(df_bom, df_times):
-    merged_df = pd.merge(left = df_bom, right = df_times, how = "left", on = "part_no")
-    merged_df = merged_df.reindex(
-        columns = list(merged_df.columns[0:4]) + list(merged_df.columns[5:]) + list(merged_df.columns[4:5]))
-    return merged_df

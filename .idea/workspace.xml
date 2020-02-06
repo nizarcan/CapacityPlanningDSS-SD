@@ -3,11 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="5f7fefbb-65dd-4bdc-8ae1-8b15cdff0e94" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app_backend/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_backend/constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app_backend/data_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_backend/data_process.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app_backend/excel_operations.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_backend/excel_operations.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app_backend/finder.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_backend/finder.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/temp.xlsx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -1,5 +1,5 @@
 from app_backend.data_process import *
-from app_backend.excel_operations import create_excel_file
+from app_backend.excel_operations import *
 import app_backend.constants as constants
 
 # BOM dosyasını okuma aşaması
@@ -20,8 +20,8 @@ merged_df = arrange_df(df = merged_df, df_type = "merged", assembly_df = montaj_
 legend_table = create_legend_table(bom_df)
 input_table = create_input_table(bom_df)
 duplication_table = create_duplication_table(bom_df)
-sequence_table = gross_seq_matrix(df = merged_df, lookup_col = "station", matrix_type = "station")
-time_table = gross_seq_matrix(df = merged_df, lookup_col = "cycle_times", matrix_type = "time")
+sequence_table = sequence_type_matrix(df = merged_df, lookup_col = "station", matrix_type = "station")
+time_table = sequence_type_matrix(df = merged_df, lookup_col = "cycle_times", matrix_type = "time")
 join_matrix, join_amount_table = create_join_matrix(merged_df)
 set_table = set_list_table(set_list_df)
 order_table_df = order_table(input_table, 20)
