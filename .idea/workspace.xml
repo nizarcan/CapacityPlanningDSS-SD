@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="5f7fefbb-65dd-4bdc-8ae1-8b15cdff0e94" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app_backend/data_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_backend/data_process.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app_backend/excel_operations.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_backend/excel_operations.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app_backend/finder.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_backend/finder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app_backend/data_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_backend/data_manipulation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -52,7 +50,28 @@
       <recent name="D:\Nizar\Documents\Nizar\20191\systems_design\sd_python\test_app" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.file_window">
+    <configuration name="file_window" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="sd_python" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app_frontend" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app_frontend/file_window.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="sd_python" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -76,6 +95,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.file_window" />
         <item itemvalue="Python.main" />
       </list>
     </recent_temporary>
@@ -135,22 +155,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1579246719318" />
-    <state width="1117" height="279" key="GridCell.Tab.0.bottom" timestamp="1580925132843">
+    <state width="1899" height="281" key="GridCell.Tab.0.bottom" timestamp="1581341940582">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1117" height="279" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1580925132843" />
-    <state width="1117" height="279" key="GridCell.Tab.0.center" timestamp="1580925132843">
+    <state width="1899" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1581341940582" />
+    <state width="1899" height="281" key="GridCell.Tab.0.center" timestamp="1581341940582">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1117" height="279" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1580925132843" />
-    <state width="1117" height="279" key="GridCell.Tab.0.left" timestamp="1580925132843">
+    <state width="1899" height="281" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1581341940582" />
+    <state width="1899" height="281" key="GridCell.Tab.0.left" timestamp="1581341940582">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1117" height="279" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1580925132843" />
-    <state width="1117" height="279" key="GridCell.Tab.0.right" timestamp="1580925132843">
+    <state width="1899" height="281" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1581341940582" />
+    <state width="1899" height="281" key="GridCell.Tab.0.right" timestamp="1581341940582">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1117" height="279" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1580925132843" />
+    <state width="1899" height="281" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1581341940582" />
     <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1579815387673">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
