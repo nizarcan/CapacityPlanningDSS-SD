@@ -1,31 +1,13 @@
-from app_backend.data_manipulation import *
-from app_backend.excel_operations import *
+from app_backend.backend_parser import InputFileSkeleton, OperationalInput, TacticalInput, revert_checkpoint
 import app_backend.constants as constants
 
 if __name__ == "__main__":
-    # BOM dosyasını okuma aşaması
-    bom_sheet_name = get_excel_sheet_names(constants.bom_path)
-    bom_sheet_name = bom_sheet_name[0]
-    bom_df = read_excel_sheet(constants.bom_path, name_of_sheet = bom_sheet_name)
-    bom_df = arrange_df(df = bom_df, relevant_col_idx = [0, 3, 2, 5, 4], df_type = "bom", tbd_path = constants.tbd_path)
-    bom_df = determine_amounts(bom_df)
-
-    times_sheet_name = get_excel_sheet_names(constants.times_path)
-    times_sheet_name = times_sheet_name[2]
-    times_df = read_excel_sheet(constants.times_path, constants.times_sheet_name)
-    times_df, montaj_df, cmy_df, set_list_df = arrange_df(df = times_df, relevant_col_idx = [3, 25, 29, 30],
-                                                          df_type = "times")
-    merged_df = merge_bom_and_times(bom_df, times_df)
-    merged_df = arrange_df(df = merged_df, df_type = "merged", assembly_df = montaj_df)
-
-    legend_table = create_legend_table(bom_df)
-    input_table = create_input_table(bom_df)
-    duplication_table = create_duplication_table(bom_df)
-    sequence_table = sequence_type_matrix(df = merged_df, lookup_col = "station", matrix_type = "station")
-    time_table = sequence_type_matrix(df = merged_df, lookup_col = "cycle_times", matrix_type = "time")
-    join_matrix, join_amount_table = create_join_matrix(merged_df)
-    set_table = set_list_table(set_list_df)
-    order_table_df = order_table(input_table, 20)
-
-    create_excel_file(legend_table, input_table, sequence_table, time_table, join_matrix, join_amount_table,
-                      duplication_table, set_table, order_table_df)
+    model = revert_checkpoint("10_mart.mng")
+    op_input_file = OperationalInput(model)
+    op_input_file.load_plan(constants.aralik_order_path)
+    op_input_file.load_plan(constants.ocak_order_path)
+    op_input_file.create_tables()
+    # op_input_file.create_file("C:\\sl_data\\mango_operational.xlsx")
+    tac_input_file = TacticalInput(model)
+    tac_input_file.create_tables()
+    # tac_input_file.create_file("C:\\sl_data\\mango_tactical.xlsx")
