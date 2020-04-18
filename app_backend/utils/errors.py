@@ -25,3 +25,16 @@ class WrongFileExtensionError(Exception):
         else:
             return "An error happened because the filetype is not appropriate ."
 
+
+class WrongKeywordError(Exception):
+    def __init__(self, *args):
+        if args:
+            self.message = f"The keyword {args[0]} is not appropriate for the operation."
+        else:
+            self.message = None
+
+    def __str__(self):
+        if self.message:
+            return self.message
+        else:
+            return "An error happened because the keyword is not appropriate ."

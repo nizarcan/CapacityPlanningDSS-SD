@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from statistics import mode
 from random import randint
+from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 
@@ -29,8 +30,9 @@ def arrange_df(df, df_type, relevant_col_idx=None, items_to_delete=None, assembl
         if bom_trim:
             df = trim_bom(df)
 
+        # This part will be discarded for the time being, 15.04.2020
         # Deleting the trial products
-        df.drop(df[df.product_no.str.split(".", 0).apply(lambda x: int(x[2]) > 900)].index, inplace = True)
+        # df.drop(df[df.product_no.str.split(".", 0).apply(lambda x: int(x[2]) > 900)].index, inplace = True)
 
         # Deleting the entries where two successive entries are level 1s.
         df.drop(df[df.level.eq(df.level.shift(-1, fill_value = 1)) & df.level.eq(1)].index, inplace = True)
@@ -586,7 +588,7 @@ def create_sim_timestamps(group):
     else:
         length_multiplier = int(np.select(
             [group.value <= 10, group.value <= 50, group.value <= 250, group.value <= 500, group.value > 500], [1, 2, 4, 6, 8]))
-        rel = relativedelta(days = 30/length_multiplier)
+        rel = relativedelta(days = int(30/length_multiplier))
         start_dates = group.date.apply(lambda x: [x + y*rel for y in range(length_multiplier)])[0]
         end_dates = group.date.apply(lambda x: [x + y*rel - relativedelta(days = 1) for y in range(1, length_multiplier + 1)])[0]
         return pd.DataFrame({"product_family": [group.product_family.values[0]] * length_multiplier, "amount": [int(group.value/length_multiplier)]*length_multiplier, "start_date": start_dates, "due_date": end_dates})

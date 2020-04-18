@@ -14,13 +14,13 @@ class OperationalMathModel:
 
 
 def create_table(df):
-    df = df.copy()
-    df.amount = df.amount.astype(int)
-    df.cycle_times = df.cycle_times.astype(float)
-    df.cycle_times = df.amount*df.cycle_times.astype(float)
-    df.drop(joining_indices(df), inplace = True)
-    df.drop(df[df.product_no.eq(df.product_no.shift(1, fill_value = 0)) & df.level.eq(1)].index, inplace = True)
-    production_path = df.groupby("station", as_index = False).agg({"level": np.mean})
+    df1 = df.copy()
+    df1.amount = df1.amount.astype(int)
+    df1.cycle_times = df1.cycle_times.astype(float)
+    df1.cycle_times = df1.amount*df1.cycle_times.astype(float)
+    df1.drop(joining_indices(df1), inplace = True)
+    df1.drop(df1[df1.product_no.eq(df1.product_no.shift(1, fill_value = 0)) & df1.level.eq(1)].index, inplace = True)
+    production_path = df1.groupby("station", as_index = False).agg({"level": np.mean})
     production_path.sort_values("level", ascending = False, inplace = True)
     machine_legend_table = production_path["station"].copy()
     machine_legend_table.index = list(range(1, machine_legend_table.shape[0] + 1))
@@ -29,11 +29,11 @@ def create_table(df):
     production_path.columns = [1]
     production_path = production_path.transpose()
     production_path.columns = list(range(1, production_path.shape[1] + 1))
-    df = df.groupby(["product_no", "station"], as_index = False).agg({"cycle_times": sum})
-    product_family_legend_table = pd.DataFrame(df.product_no.unique().tolist(), columns = ["product_no"],
-                                               index = list(range(1, len(df.product_no.unique().tolist()) + 1)))
-    prod_count = df.product_no.nunique()
-    grouped_df = df.groupby("station", as_index=False).agg({"product_no": "count", "cycle_times": ["min", "mean", "max"]})
+    df1 = df1.groupby(["product_no", "station"], as_index = False).agg({"cycle_times": sum})
+    product_family_legend_table = pd.DataFrame(df1.product_no.unique().tolist(), columns = ["product_no"],
+                                               index = list(range(1, len(df1.product_no.unique().tolist()) + 1)))
+    prod_count = df1.product_no.nunique()
+    grouped_df = df1.groupby("station", as_index=False).agg({"product_no": "count", "cycle_times": ["min", "mean", "max"]})
     grouped_df.columns = ["station", "product_no", "min", "mean", "max"]
     temp_df = pd.merge(left = production_path.transpose(), right = grouped_df, how = "left", left_on = 1, right_on = "station")
     # station_path = temp_df.station.transpose()
@@ -46,4 +46,4 @@ if __name__ == "__main__":
     model = revert_checkpoint("../10_mart.mng")
     new = OperationalMathModel(model)
     # stat, prob, time = create_table(new.merged_file)
-    df = create_table(new.merged_file)
+    out_df = create_table(new.merged_file)
