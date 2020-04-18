@@ -19,3 +19,4 @@ if __name__ == "__main__":
     # tac_input_file.create_file("C:\\sl_data\\mango_tactical.xlsx")
     op_mm = OperationalMathModel(model, constants.aralik_order_path)
     op_mm.create_file("C://sl_data//xlsx//op_mm_aralik.xlsx")
+    # PyCharm commit trial
