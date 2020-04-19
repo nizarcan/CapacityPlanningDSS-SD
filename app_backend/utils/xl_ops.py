@@ -100,7 +100,7 @@ def create_xl_file(input_obj, output_dir, file_type):
                 input_obj.plan.to_excel(writer, sheet_name = "d")
                 input_obj.times.to_excel(writer, sheet_name = "h")
                 input_obj.route_prob.to_excel(writer, sheet_name = "k")
-                input_obj.amount.to_excel(writer, sheet_name = "f", index=False)
+                input_obj.machine_cnt.to_excel(writer, sheet_name = "f", index=False)
                 input_obj.shift.to_excel(writer, sheet_name = "s", index=False)
                 input_obj.cost.to_excel(writer, sheet_name = "c", index=False)
             except ValueError as e:

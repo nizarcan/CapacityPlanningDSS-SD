@@ -1,4 +1,4 @@
-from app_backend.backend_parser import revert_checkpoint, InputFileSkeleton
+from app_backend.backend_composer import revert_checkpoint, FileSkeleton
 from app_backend.utils.finder import product_numerator, joining_indices
 import numpy as np
 import pandas as pd

@@ -1,9 +1,13 @@
 from app_backend.utils.df_ops import arrange_df, merge_bom_and_times, trim_df, create_operational_table, create_tactical_table, trim_order, format_machine_names
-from app_backend.utils.xl_ops import load_file, load_plan, add_plan, create_op_input_file, create_tac_input_file, create_xl_file
+from app_backend.utils.xl_ops import load_file, load_plan, add_plan, create_xl_file
 from pandas import DataFrame, concat, merge, to_timedelta
 from app_backend.utils.demand_util import demand_parser
 from app_backend.utils.finder import joining_indices
 import pickle
+
+
+def extract_forecast(obj):
+    return 0
 
 
 def revert_checkpoint(file_dir):
@@ -12,17 +16,17 @@ def revert_checkpoint(file_dir):
         return mdl
 
 
-class InputFileSkeleton:
+class FileSkeleton:
     def __init__(self):
-        self.bom_file = []
-        self.times_file = []
-        self.files_to_be_deleted = []
-        self.order_history = []
-        self.merged_file = []
-        self.assembly_df = []
-        self.cmy_df = []
-        self.temp = []
-        self.machine_info = []
+        self.bom_file = None
+        self.times_file = None
+        self.files_to_be_deleted = None
+        self.order_history = None
+        self.merged_file = None
+        self.assembly_df = None
+        self.cmy_df = None
+        self.temp = None
+        self.machine_info = None
         self.last_callback_date = None
 
     def __repr__(self):
@@ -48,7 +52,7 @@ class InputFileSkeleton:
             arrange_df(self.times_file, "times", relevant_col_idx = [3, 25, 29, 28])
 
     def load_order_history(self):
-        self.order_history = demand_parser(agg=True)
+        self.order_history = demand_parser(agg=False, pivot = True)
 
     def load_machine_info(self, file_dir):
         self.machine_info = load_file(file_dir)
@@ -58,7 +62,7 @@ class InputFileSkeleton:
         self.merged_file = arrange_df(self.merged_file, "merged", assembly_df = self.assembly_df)
 
 
-class OperationalInput:
+class OperationalSMInput:
     def __init__(self, parent_obj):
         # Parent attributes
         self.bom_file = parent_obj.bom_file
@@ -77,7 +81,7 @@ class OperationalInput:
         self.order_table = None
         self.plan_count = 0
         # Plan init
-        self.plan = []
+        self.plan = None
 
     def load_plan(self, file_dir):
         if not bool(self.plan_count):
@@ -102,11 +106,11 @@ class OperationalInput:
         self.order_table = create_operational_table(self.plan, "order", self.merged_file, self.plan_count)
 
     def create_file(self, file_dir):
-        create_op_input_file(self, file_dir)
+        create_xl_file(self, file_dir, "operational_simulation_model")
 
 
 # Discontinued
-class TacticalInput:
+class TacticalSMInput:
     def __init__(self, parent_obj):
         # Input files attributes
         self.merged_file = parent_obj.merged_file
@@ -128,22 +132,22 @@ class TacticalInput:
         self.order_table = create_tactical_table(self.order_history, "order")
 
     def create_file(self, file_dir):
-        create_tac_input_file(self, file_dir)
+        create_xl_file(self, file_dir, "tactical_simulation_model")
 
 
-class OperationalMathModel:
+class OperationalMMInput:
     def __init__(self, parent, file_dir):
         self.merged_file = parent.merged_file
         self.plan = load_plan(file_dir)
         self.machine_info = parent.machine_info
         self.cross_trim()
-        self.product_no_legend = []
-        self.machine_legend = []
-        self.times = []
-        self.route_prob = []
-        self.amount = []
-        self.shift = []
-        self.cost = []
+        self.product_no_legend = None
+        self.machine_legend = None
+        self.times = None
+        self.route_prob = None
+        self.machine_cnt = None
+        self.shift = None
+        self.cost = None
 
     def cross_trim(self):
         self.plan = self.plan[self.plan.product_no.isin(self.merged_file.product_no)].copy()
@@ -212,22 +216,33 @@ class OperationalMathModel:
         return product_no_legend, machine_legend, d, h, k, f, s, c
 
     def get_attrs(self):
-        return self.product_no_legend, self.machine_legend, self.plan, self.times, self.route_prob, self.amount, self.shift, self.cost
+        return self.product_no_legend, self.machine_legend, self.plan, self.times, self.route_prob, self.machine_cnt, self.shift, self.cost
 
     def create_file(self, file_dir):
-        self.product_no_legend, self.machine_legend, self.plan, self.times, self.route_prob, self.amount, self.shift, self.cost = self.create_tables()
+        self.product_no_legend, self.machine_legend, self.plan, self.times, self.route_prob, self.machine_cnt, self.shift, self.cost = self.create_tables()
         create_xl_file(self, file_dir, "operational_math_model")
 
 
-class TacticalMathModel:
-    def __init__(self, parent, file_dir):
+class TacticalMMInput:
+    def __init__(self, parent, forecast):
         self.merged_file = parent.merged_file
-        self.forecast = []
+        self.machine_info = parent.machine_info
+        self.product_no_legend = None
+        self.machine_legend = None
+        self.forecast = forecast
+        self.times = None
+        self.route_prob = None
+        self.machine_cnt = None
+        self.workdays = None
+        self.budget = None
+        self.cost = None
+        self.machine_price = None
+        self.shift = None
 
 
 if __name__ == "__main__":
     # If a callback is not being made;
-    # model = InputFileSkeleton()
+    # model = FileSkeleton()
     # model.load_files_to_be_deleted(constants.tbd_path)
     # model.load_bom(constants.bom_path)
     # model.load_times(constants.times_path)
@@ -235,10 +250,10 @@ if __name__ == "__main__":
     # model.merge_files()
     # If a callback is made;
     model = revert_checkpoint("../10_mart.mng")
-    op_input_file = OperationalInput(model)
+    op_input_file = OperationalSMInput(model)
     op_input_file.load_plan("C://sl_data//xlsx//aralik_plan.xlsx")
     op_input_file.create_tables()
     # op_input_file.create_file("C:\\sl_data\\mango.xlsx")
-    # tac_input_file = TacticalInput(model)
+    # tac_input_file = TacticalSMInput(model)
     # tac_input_file.create_tables()
     # tac_input_file.create_file("C:\\sl_data\\mango_tactical.xlsx")
