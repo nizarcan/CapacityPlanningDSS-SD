@@ -1,6 +1,12 @@
 import pandas as pd
 
 
+def extract_forecast(orders: pd.DataFrame):
+    df = orders.iloc[:, -12:].copy()
+    df.drop(df[df.sum(axis=1) == 0].index, inplace=True)
+    return df
+
+
 class OrderHistory:
     def __init__(self):
         self.orders = None

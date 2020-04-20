@@ -123,7 +123,21 @@ def create_xl_file(input_obj, output_dir, file_type):
                 print(e)
         namerange_xl_files(input_obj, output_dir, file_type)
     elif file_type == "tactical_math_model":
-        pass
+        with pd.ExcelWriter(output_dir) as writer:
+            try:
+                input_obj.product_family_legend.to_excel(writer, sheet_name = "product_no_legend")
+                input_obj.machine_legend.to_excel(writer, sheet_name = "machine_legend")
+                input_obj.forecast.to_excel(writer, sheet_name = "d")
+                input_obj.times.to_excel(writer, sheet_name = "h")
+                input_obj.route_prob.to_excel(writer, sheet_name = "k")
+                input_obj.machine_cnt.to_excel(writer, sheet_name = "f", index = False)
+                input_obj.workdays.to_excel(writer, sheet_name = "w", index = False)
+                input_obj.budget.to_excel(writer, sheet_name = "b", index = False)
+                input_obj.cost.to_excel(writer, sheet_name = "c", index = False)
+                input_obj.machine_price.to_excel(writer, sheet_name = "cr", index = False)
+            except ValueError as e:
+                print("One of the tables type is not dataframe within the create_excel_file function.")
+                print(e)
     else:
         raise WrongKeywordError(file_type)
 
