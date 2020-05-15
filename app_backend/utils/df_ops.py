@@ -1,12 +1,10 @@
-import pandas as pd
 import numpy as np
-from statistics import mode
+import pandas as pd
 from random import randint
-from datetime import timedelta
-
-from dateutil.relativedelta import relativedelta
-
+from statistics import mode
+from datetime import datetime
 import app_backend.utils.finder as finder
+from dateutil.relativedelta import relativedelta
 
 
 def arrange_df(df, df_type, relevant_col_idx=None, items_to_delete=None, assembly_df=None, bom_trim=False):
@@ -38,8 +36,8 @@ def arrange_df(df, df_type, relevant_col_idx=None, items_to_delete=None, assembl
         df.drop(df[df.level.eq(df.level.shift(-1, fill_value = 1)) & df.level.eq(1)].index, inplace = True)
 
         # This to be deleted parts can be redundant, so it will be decided that if these codes are going to stay or not
-        tbd_list = items_to_delete["Kalacaklar"].unique().tolist()
-        df.drop(df[df["part_no"].str.split(".").apply(lambda x: x[0] not in tbd_list)].index, inplace = True)
+        tbd_list = items_to_delete["Silinecekler"].unique().tolist()
+        df.drop(df[df["part_no"].str.split(".").apply(lambda x: x[0] in tbd_list)].index, inplace = True)
 
         # Deleting the entries where two successive entries are level 1s.
         df.drop(df[df.level.eq(df.level.shift(-1, fill_value = 1)) & df.level.eq(1)].index, inplace = True)
@@ -204,6 +202,7 @@ def trim_bom(df):
 
 
 def trim_order(order_df, bom_df):
+    order_df = order_df.pivot()
     return order_df[order_df.index.to_series().str.split(".").apply(lambda x: x[0]).isin(bom_df.product_no.str.split(".").apply(lambda x: x[0]))]
 
 
@@ -216,6 +215,30 @@ def trim_df(df, plan_df):
     temp_df = temp_df[temp_df.product_no.isin(products_to_be_taken.product_no.to_list()).eq(1)]
     temp_df.reset_index(drop = True, inplace = True)
     return temp_df, missing_dict
+
+
+def schedule_changer_dict(df, days):
+    current_month = datetime(df.start_date.dt.year.mode(), df.start_date.dt.month.mode(), 1).date()
+    availability = [1 if (list(days.values)[0][x] == 1) & ((current_month + pd.to_timedelta(x, unit = "d")).weekday() < 5) else 0 for x in range(0, days.columns.max())]
+
+    replace_dict = {}
+    if current_month.weekday() >= 5:
+        replace_dict[current_month] = pd.to_datetime(
+            (current_month + pd.to_timedelta(7 - current_month.weekday(), unit = "d")))
+    else:
+        replace_dict[current_month] = pd.to_datetime(current_month)
+    for x in range(1, days.columns.max()):
+        if availability[x] == 1:
+            replace_dict[(current_month + pd.to_timedelta(x, unit = "d"))] = \
+                pd.to_datetime(current_month + pd.to_timedelta(x, unit = "d"))
+        else:
+            replace_dict[(current_month + pd.to_timedelta(x, unit = "d"))] = \
+                pd.to_datetime(max(replace_dict.values()))
+
+    renewed_dict = {x: replace_dict[x].date() for x in list(replace_dict.keys())}
+    # days["day"] = days["date"].dt.day
+    # days.day.replace(renewed_dict, inplace = True)
+    return renewed_dict
 
 
 def level_lookup(df, level_col, lookup_col):
@@ -403,10 +426,10 @@ def create_operational_table(df, table_type, aux=None, *args):
 
         return join_matrix, join_amount_df
     elif table_type == "set_list":
+        x_y_coord = pd.merge(left=df, right=aux, left_on="stations_list", right_on="machine", how="left").loc[:, ["x_coordinate", "y_coordinate"]]
         df["queues_list"] = [str(x) + "_Q" for x in df.stations_list]
         df["resources_list"] = [str(x) + "_RES" for x in df.stations_list]
-        df["x_coordinates"] = [randint(-50, 150) for _ in df.stations_list]
-        df["y_coordinates"] = [randint(-50, 150) for _ in df.stations_list]
+        df[["x_coordinates", "y_coordinates"]] = x_y_coord
         df = df[[df.columns[0]] + list(df.columns[3:]) + list(df.columns[1:3])]
         df.index = list(range(1, df.shape[0] + 1))
         return df
@@ -421,13 +444,40 @@ def create_operational_table(df, table_type, aux=None, *args):
                 "prod_code"]
         whole_dataframe = df.copy()
         whole_dataframe.product_no.replace(idx_dict, inplace = True)
-        whole_dataframe["day_of_month"] = whole_dataframe.start_date - whole_dataframe.start_date.min()
-        whole_dataframe["day_of_month"] = [int(x.days) for x in whole_dataframe["day_of_month"]]
-        whole_dataframe.drop(whole_dataframe[whole_dataframe["day_of_month"] > 30*args[0]].index, inplace = True)
+        whole_dataframe["day_of_month"] = whole_dataframe.start_date.dt.day
+        # whole_dataframe["day_of_month"] = [int(x.days) for x in whole_dataframe["day_of_month"]]
+        # if sum(whole_dataframe.iloc[:int(whole_dataframe.shape[0]/2), :].reset_index(drop=True).start_date == whole_dataframe.iloc[int(whole_dataframe.shape[0]/2):, :].reset_index(drop=True).start_date)==int(whole_dataframe.shape[0]/2):
+        if args[0] > 1:
+            if args[1]:
+                whole_dataframe.drop(whole_dataframe[~whole_dataframe["start_date"].dt.month == whole_dataframe["start_date"].dt.month.mode().values[0]].index, inplace=True)
+
+                if whole_dataframe.start_date.dt.month.mode().values[0] != 12:
+                    curr_month_day = (datetime(year=whole_dataframe.start_date.dt.year.mode().values[0], month = whole_dataframe.start_date.dt.month.mode().values[0]+1, day=1)-pd.to_timedelta(1, unit="d")).day
+                else:
+                    curr_month_day = (datetime(year=whole_dataframe.start_date.dt.year.mode().values[0]+1, month = 1, day=1)-pd.to_timedelta(1, unit="d")).day
+
+                whole_dataframe.loc[int(whole_dataframe.shape[0]/2):, "day_of_month"] = [x + curr_month_day for x in whole_dataframe.iloc[int(whole_dataframe.shape[0]/2):, :].day_of_month]
+                # This is VERY, VERY dumb
+                whole_dataframe["due_date"] = pd.concat([whole_dataframe.loc[:int(whole_dataframe.shape[0]/2)-1, "due_date"], whole_dataframe.loc[int(whole_dataframe.shape[0]/2):, "due_date"] + pd.to_timedelta(curr_month_day, unit="d")])
+                whole_dataframe["start_date"] = pd.concat([whole_dataframe.loc[:int(whole_dataframe.shape[0]/2)-1, "start_date"], whole_dataframe.loc[int(whole_dataframe.shape[0]/2):, "start_date"] + pd.to_timedelta(curr_month_day, unit="d")])
+                # THIS LINE CAUSED REDUNDANCY AFTER MULTIPLE PLAN SPLIT, IS COMMENTED OUT FOR NOW
+                # whole_dataframe.drop(whole_dataframe[whole_dataframe["day_of_month"] > curr_month_day*args[0]].index, inplace = True)
+            else:
+                months_count = whole_dataframe["start_date"].dt.month.value_counts().to_dict()
+                plan_months = []
+                for _ in range(len(months_count.keys())):
+                    plan_months.append(max(months_count, key = lambda x: months_count[x]))
+                    months_count.pop(max(months_count, key = lambda x: months_count[x]))
+                whole_dataframe.drop(whole_dataframe[~whole_dataframe["start_date"].dt.month.isin(plan_months)].index, inplace=True)
+                first_month_day = (datetime(whole_dataframe["start_date"].dt.year.max(), whole_dataframe["start_date"].dt.month.max(), 1)-pd.to_timedelta(1, unit="d")).day
+                whole_dataframe.loc[whole_dataframe["start_date"].dt.month == max(plan_months), "day_of_month"] = whole_dataframe.loc[whole_dataframe["start_date"].dt.month == max(plan_months), "day_of_month"] + first_month_day
+        else:
+            whole_dataframe.drop(whole_dataframe[~whole_dataframe["start_date"].dt.month == whole_dataframe["start_date"].dt.month.mode().values[0]].index, inplace = True)
+
         whole_dataframe.reset_index(drop = True, inplace = True)
         whole_dataframe["sim_release_time"] = whole_dataframe.groupby("day_of_month").apply(create_sim_time_release_month)
         whole_dataframe["due_date_attribute"] = [x.strftime("%y%m%d") for x in whole_dataframe.due_date]
-        whole_dataframe["days_until_due"] = 4
+        whole_dataframe["days_until_due"] = [x.days for x in whole_dataframe.due_date - whole_dataframe.start_date]
         whole_dataframe = whole_dataframe[
             ["product_no", "sim_release_time", "amount", "due_date_attribute", "days_until_due"]].copy()
         whole_dataframe.sort_values("sim_release_time", inplace=True)
@@ -592,3 +642,11 @@ def create_sim_timestamps(group):
         start_dates = group.date.apply(lambda x: [x + y*rel for y in range(length_multiplier)])[0]
         end_dates = group.date.apply(lambda x: [x + y*rel - relativedelta(days = 1) for y in range(1, length_multiplier + 1)])[0]
         return pd.DataFrame({"product_family": [group.product_family.values[0]] * length_multiplier, "amount": [int(group.value/length_multiplier)]*length_multiplier, "start_date": start_dates, "due_date": end_dates})
+
+
+def ctesi_creator(hour):
+    if hour < 24:
+        out = pd.DataFrame(data = [[1, hour], [0, 24 - hour]])
+    else:
+        out = pd.DataFrame(data = [[1, 24], [0, 0]])
+    return out

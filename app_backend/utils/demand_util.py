@@ -32,7 +32,7 @@ class OrderHistory:
         df1.drop(df1[(df1year == "2019") & (df1month == "09")].index, inplace = True)
         total_data = pd.concat([df1, df2, df3], ignore_index = True)
         total_data.date = pd.to_datetime(total_data.date, format = "%d/%m/%Y")
-        total_data.date = total_data.date.dt.strftime("%Y-%m")
+        total_data.date = total_data["date"].dt.strftime("%Y-%m")
         total_data.amount = total_data.amount.astype(int)
         total_data.product_no = total_data.product_no.astype(str)
         total_data = total_data.groupby(by = ["product_no", "date"], as_index = False).agg({"amount": sum})
@@ -55,7 +55,7 @@ class OrderHistory:
         return data
 
     def add_orders(self, file_dir):
-        new_data = None
+        new_data = pd.DataFrame()
         if (file_dir.split(".")[-1] == "xlsx") | (file_dir.split(".")[-1] == "xls"):
             new_data = pd.read_excel(file_dir)
         elif file_dir.split(".")[-1] == "csv":
@@ -67,7 +67,7 @@ class OrderHistory:
         new_data.drop(new_data[pd.to_numeric(new_data.amount, errors = "coerce").isna()].index, inplace = True)
         new_data.drop(new_data[new_data.product_no.map(len) != 13].index, inplace = True)
         new_data.date = pd.to_datetime(new_data.date, format = "%d/%m/%Y")
-        new_data.date = new_data.date.dt.strftime("%Y-%m")
+        new_data.date = new_data["date"].dt.strftime("%Y-%m")
         new_data.amount = new_data.amount.astype(int)
         new_data.product_no = new_data.product_no.astype(str)
         concat_data = pd.concat([self.orders, new_data], ignore_index = True)

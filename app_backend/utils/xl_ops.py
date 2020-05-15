@@ -1,11 +1,12 @@
 import pandas as pd
+from datetime import datetime
+import random
 from openpyxl import load_workbook
 from win32com.client import Dispatch
 from string import ascii_uppercase as auc
 from app_backend.utils.errors import WrongFileExtensionError, WrongKeywordError
 
-
-auc = list(auc) + [auc[0] + str(x) for x in auc] + [auc[1] + str(x) for x in auc] + [auc[2] + str(x) for x in auc]
+auc = list(auc) + [x + y for x in auc for y in auc]
 
 
 def get_excel_sheet_names(directory) -> list:
@@ -50,29 +51,54 @@ def load_file(file_dir, sheet_name=None) -> pd.DataFrame:
 
 
 def load_plan(file_dir):
-    plan_sheets = get_excel_sheet_names(file_dir)
-    wb = load_workbook(file_dir, read_only = True)
-    bant_list = [str(x) + ". Bant" for x in range(1, 5)] + ["LOOP"]
-    assembly_unit_dict = {"1. Bant": "BANT", "2. Bant": "BANT", "3. Bant": "BANT", "4. Bant": "BANT", "LOOP": "LOOP"}
-    whole_dataframe = pd.DataFrame()
-    for sheet in plan_sheets:
-        plan = pd.DataFrame(wb[sheet].values)
-        plan.columns = plan.iloc[2]
-        plan.drop(plan[~pd.Series([x in bant_list for x in plan[plan.columns[0]]])].index, inplace = True)
-        plan = plan[["BANT NO", "ÜRÜNKODU", "Tarih", "PLAN ADET", "TERMİN"]]
-        plan.columns = ["assembly_unit", "product_no", "start_date", "amount", "due_date"]
-        plan.assembly_unit.replace(assembly_unit_dict, inplace = True)
-        whole_dataframe = whole_dataframe.append(plan)
-    whole_dataframe.sort_values(by = "start_date", inplace = True)
-    whole_dataframe.dropna(inplace = True)
-    whole_dataframe.drop(whole_dataframe[pd.to_numeric(whole_dataframe.amount, errors = 'coerce').isnull()].index, inplace = True)
-    whole_dataframe.drop(whole_dataframe[whole_dataframe.due_date.apply(lambda x: type(x)) == str].index, inplace = True)
-    whole_dataframe.reset_index(drop=True, inplace=True)
-    return whole_dataframe
+    # plan_sheets = get_excel_sheet_names(file_dir)
+    # wb = load_workbook(file_dir, read_only = True)
+    # bant_list = [str(x) + ". Bant" for x in range(1, 5)] + ["LOOP"]
+    # assembly_unit_dict = {"1. Bant": "BANT", "2. Bant": "BANT", "3. Bant": "BANT", "4. Bant": "BANT", "LOOP": "LOOP"}
+    # whole_dataframe = pd.DataFrame()
+    # for sheet in plan_sheets:
+    #     plan = pd.DataFrame(wb[sheet].values)
+    #     plan.columns = plan.iloc[2]
+    #     plan.drop(plan[~pd.Series([x in bant_list for x in plan[plan.columns[0]]])].index, inplace = True)
+    #     plan = plan[["BANT NO", "ÜRÜNKODU", "Tarih", "PLAN ADET", "TERMİN"]]
+    #     plan.columns = ["assembly_unit", "product_no", "start_date", "amount", "due_date"]
+    #     plan.assembly_unit.replace(assembly_unit_dict, inplace = True)
+    #     whole_dataframe = whole_dataframe.append(plan)
+    # whole_dataframe.sort_values(by = "start_date", inplace = True)
+    # whole_dataframe.dropna(inplace = True)
+    # whole_dataframe.drop(whole_dataframe[pd.to_numeric(whole_dataframe.amount, errors = 'coerce').isnull()].index, inplace = True)
+    # whole_dataframe.drop(whole_dataframe[whole_dataframe.due_date.apply(lambda x: type(x)) == str].index, inplace = True)
+    # whole_dataframe.reset_index(drop=True, inplace=True)
+    plan_df = pd.read_excel(file_dir)[["BANT NO", "ÜRÜNKODU", "Tarih", "PLAN ADET"]]  # , sheet_name="MartPlan"
+    plan_df.columns = ["assembly_unit", "product_no", "start_date", "amount"]
+    plan_df.drop(plan_df[
+                     plan_df.assembly_unit.isnull() | plan_df.product_no.isnull() | plan_df.start_date.isnull() | plan_df.amount.isnull()].index,
+                 inplace = True)
+    plan_df.sort_values(by = "start_date", inplace = True)
+    plan_df["due_date"] = plan_df.start_date + pd.to_timedelta([random.randint(4, 8) for _ in range(plan_df.shape[0])],
+                                                               unit = "d")
+    plan_df.dropna(inplace = True)
+    plan_df.drop(plan_df[pd.to_numeric(plan_df.amount, errors = 'coerce').isnull()].index, inplace = True)
+    plan_df.drop(plan_df[plan_df.due_date.apply(lambda x: type(x)) == str].index, inplace = True)
+    plan_df.reset_index(drop = True, inplace = True)
+    ourtime = [datetime(pd.to_datetime(plan_df.start_date).dt.year.mode()[0],
+                        pd.to_datetime(plan_df.start_date).dt.month.mode()[0] + 1, 1) -
+               pd.to_timedelta(1, unit = "d") if (pd.to_datetime(plan_df.start_date).dt.month.mode()[0] != 12)
+               else datetime(pd.to_datetime(plan_df.start_date).dt.year.mode()[0] + 1, 1, 1) - pd.to_timedelta(1,
+                                                                                                               unit = "d")
+               for _ in range(1)][0]
+    # ourtime = datetime(plan_df.start_date.dt.year.mode(), plan_df.start_date.dt.month.mode() + 1, 1) - pd.to_timedelta(1,
+    #                                                                                                        unit = "d")
+    plan_df.loc[plan_df["due_date"] > ourtime, "due_date"] = ourtime
+    return plan_df
 
 
 def add_plan(base_plan, file_dir):
-    return pd.concat([base_plan, load_plan(file_dir)], ignore_index=True, copy=True)
+    new_plan = load_plan(file_dir)
+    if base_plan.equals(load_plan):
+        return pd.concat([base_plan, new_plan], ignore_index = True, copy = True), True
+    else:
+        return pd.concat([base_plan, new_plan], ignore_index = True, copy = True), False
 
 
 def create_xl_file(input_obj, output_dir, file_type):
@@ -88,6 +114,7 @@ def create_xl_file(input_obj, output_dir, file_type):
                 input_obj.duplication_matrix.to_excel(writer, sheet_name = "product_duplication")
                 input_obj.set_list_table.to_excel(writer, sheet_name = "set_lists")
                 input_obj.order_table.to_excel(writer, sheet_name = "orders")
+                pd.concat([input_obj.schedules[x] for x in input_obj.schedules.keys()], axis=1).to_excel(writer, sheet_name = "schedules", index = False, header = False)
             except ValueError as e:
                 print("One of the tables type is not dataframe within the create_excel_file function.")
                 print(e)
@@ -100,9 +127,12 @@ def create_xl_file(input_obj, output_dir, file_type):
                 input_obj.plan.to_excel(writer, sheet_name = "d")
                 input_obj.times.to_excel(writer, sheet_name = "h")
                 input_obj.route_prob.to_excel(writer, sheet_name = "k")
-                input_obj.machine_cnt.to_excel(writer, sheet_name = "f", index=False)
-                input_obj.shift.to_excel(writer, sheet_name = "s", index=False)
-                input_obj.cost.to_excel(writer, sheet_name = "c", index=False)
+                input_obj.machine_cnt.to_excel(writer, sheet_name = "f", index = False)
+                input_obj.order_averages.to_excel(writer, sheet_name = "o", header = False)
+                input_obj.shift.to_excel(writer, sheet_name = "s", index = False)
+                input_obj.cost.to_excel(writer, sheet_name = "c", index = False)
+                input_obj.setup_time.to_excel(writer, sheet_name = "st", index = False)
+                input_obj.outsource_perm.to_excel(writer, sheet_name = "osp", index = False)
             except ValueError as e:
                 print("One of the tables type is not dataframe within the create_excel_file function.")
                 print(e)
@@ -125,14 +155,19 @@ def create_xl_file(input_obj, output_dir, file_type):
     elif file_type == "tactical_math_model":
         with pd.ExcelWriter(output_dir) as writer:
             try:
-                input_obj.product_family_legend.to_excel(writer, sheet_name = "product_no_legend")
-                input_obj.machine_legend.to_excel(writer, sheet_name = "machine_legend")
-                input_obj.forecast.to_excel(writer, sheet_name = "d")
+                input_obj.product_family_legend.to_excel(writer, sheet_name = "product_no_legend", header = False)
+                input_obj.machine_legend.to_excel(writer, sheet_name = "machine_legend", header = False)
+                input_obj.forecast.to_excel(writer, sheet_name = "d", merge_cells = False, index_label = False)
                 input_obj.times.to_excel(writer, sheet_name = "h")
                 input_obj.route_prob.to_excel(writer, sheet_name = "k")
                 input_obj.machine_cnt.to_excel(writer, sheet_name = "f", index = False)
                 input_obj.workdays.to_excel(writer, sheet_name = "w", index = False)
-                input_obj.budget.to_excel(writer, sheet_name = "b", index = False)
+                # O EKLENECEK
+                # O EKLENECEK
+                # input_obj.order_averages.to_excel(writer, sheet_name = "o", index = False)
+                # O EKLENECEK
+                # O EKLENECEK
+                # input_obj.budget.to_excel(writer, sheet_name = "b", index = False)
                 input_obj.cost.to_excel(writer, sheet_name = "c", index = False)
                 input_obj.machine_price.to_excel(writer, sheet_name = "cr", index = False)
             except ValueError as e:
@@ -182,6 +217,17 @@ def namerange_xl_files(input_obj, output_dir, file_type):
                 auc[info_dict[namerange_keys]["col_start"] + info_dict[namerange_keys]["num_of_cols"] - 2],
                 # letter of end
                 info_dict[namerange_keys]["num_of_rows"] + 1))  # number of the ending column
+        # Schedules
+        schedule_namerange = "={}!${}$1:${}${}"
+        schedule_idx = 0
+        schedule_rows = input_obj.schedules[list(input_obj.schedules.keys())[0]].shape[0]
+        for schedule_machine in input_obj.schedules.keys():
+            xl.ActiveWorkbook.Names.Add(Name = ("schedule_" + schedule_machine).lower(), RefersTo = schedule_namerange.format(
+                "schedules",                                        # name of the named range
+                auc[2*schedule_idx],                                # the letter that is going to be used for the start
+                auc[2*schedule_idx + 1],                            # letter of end
+                schedule_rows))      # number of the ending column
+            schedule_idx += 1
     elif file_type == "tactical_simulation_model":
         info_dict = {
             "coordinate_matrix": {"sheet": "set_lists", "col_start": 5, "num_of_cols": 2,
@@ -330,3 +376,7 @@ def namerange_xl_files(input_obj, output_dir, file_type):
 #             info_dict[namerange_keys]["num_of_rows"] + 1))  # number of the ending column
 #     xl.Workbooks(1).Close(SaveChanges = 1)
 #     xl.Application.Quit()
+
+
+if __name__ == "__main__":
+    a = load_plan("C://sl_data//xlsx//planlar.xlsx")
