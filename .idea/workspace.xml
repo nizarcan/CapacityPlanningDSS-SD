@@ -21,7 +21,8 @@
   <component name="ChangeListManager">
     <list default="true" id="18a06a02-a94f-41d1-ae3c-cd33898e8efd" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app_backend/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_backend/constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -381,7 +382,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589577969790</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="readme update">
+      <created>1589579507392</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1589579507392</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -403,7 +411,8 @@
     <MESSAGE value="order archival feature" />
     <MESSAGE value="tactical math model implementation" />
     <MESSAGE value="schedule implementation for operational simulation input and average order size and overtime implementation for operational mathematical program" />
-    <option name="LAST_COMMIT_MESSAGE" value="schedule implementation for operational simulation input and average order size and overtime implementation for operational mathematical program" />
+    <MESSAGE value="readme update" />
+    <option name="LAST_COMMIT_MESSAGE" value="readme update" />
   </component>
   <component name="WindowStateProjectService">
     <state x="669" y="120" key="#average_order_size" timestamp="1588710784437">
@@ -475,10 +484,10 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="707" y="380" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1050@0.0.1920.1050" timestamp="1588691904619" />
-    <state x="587" y="93" key="CommitChangelistDialog2" timestamp="1589577965001">
+    <state x="449" y="93" key="CommitChangelistDialog2" timestamp="1589579506387">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="587" y="93" key="CommitChangelistDialog2/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589577965001" />
+    <state x="449" y="93" key="CommitChangelistDialog2/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589579506387" />
     <state x="587" y="93" key="CommitChangelistDialog2/1920.185.1440.870/0.0.1920.1050@0.0.1920.1050" timestamp="1587221307342" />
     <state x="739" y="267" key="FileChooserDialogImpl" timestamp="1589015443151">
       <screen x="0" y="0" width="1920" height="1050" />
@@ -527,10 +536,10 @@
     <state x="461" y="167" key="SettingsEditor/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1586850770945" />
     <state x="461" y="167" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1588692198646" />
     <state x="461" y="167" key="SettingsEditor/1920.185.1440.870/0.0.1920.1050@0.0.1920.1050" timestamp="1587221183963" />
-    <state x="552" y="258" key="Vcs.Push.Dialog.v2" timestamp="1589577973070">
+    <state x="552" y="258" key="Vcs.Push.Dialog.v2" timestamp="1589579509170">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="552" y="258" key="Vcs.Push.Dialog.v2/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589577973070" />
+    <state x="552" y="258" key="Vcs.Push.Dialog.v2/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589579509170" />
     <state x="552" y="258" key="Vcs.Push.Dialog.v2/1920.185.1440.870/0.0.1920.1050@0.0.1920.1050" timestamp="1587221256475" />
     <state width="936" height="546" key="XDebugger.FullValuePopup" timestamp="1589553510179">
       <screen x="0" y="0" width="1920" height="1050" />

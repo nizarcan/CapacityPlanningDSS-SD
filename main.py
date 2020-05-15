@@ -19,21 +19,21 @@ def load_archive():
     return revert_checkpoint(constants.archive_file_path)
 
 
-def create_operational_simulation(model, output_dir):
+def create_operational_simulation(model):
     op_input_file = OperationalSMInput(model)
-    op_input_file.load_plan("C://sl_data//xlsx//aralik_new_plan.xlsx")
-    op_input_file.load_plan("C://sl_data//xlsx//aralik_new_plan.xlsx")
-    op_input_file.load_days("C://sl_data//xlsx//aralik_gunler.xlsx")
-    op_input_file.load_math_model_output("C://sl_data//xlsx//okpm_results.xlsx")
+    op_input_file.load_plan(constants.plans["aralik"])
+    op_input_file.load_plan(constants.plans["aralik"])
+    op_input_file.load_days(constants.days["aralik"])
+    op_input_file.load_math_model_output(constants.results["OperationalMMInput"])
     op_input_file.create_tables()
-    op_input_file.create_file(output_dir)
+    op_input_file.create_file(constants.outputs["OperationalSMInput"])
     return op_input_file
 
 
 def create_operational_math_model(model):
-    out_struct = OperationalMMInput(model, "C://sl_data//xlsx//eylul_plan.xlsx")
-    out_struct.load_days("C://sl_data//xlsx//eylul_gunler.xlsx")
-    out_struct.create_file(constants.okpm_parameters)
+    out_struct = OperationalMMInput(model, constants.plans["eylul"])
+    out_struct.load_days(constants.days["eylul"])
+    out_struct.create_file(constants.results["OperationalMMInput"])
     return out_struct
 
 
@@ -45,14 +45,14 @@ def create_tactical_simulation(model):
 
 def create_tactical_math_model(model):
     tacmm = TacticalMMInput(model, "forecast")
-    tacmm.create_file("tactical_math_model.xlsx")
+    tacmm.create_file(constants.outputs["TacticalMMInput"])
     return tacmm
 
 
 if __name__ == "__main__":
     # archive = create_archive()
     archive = load_archive()
-    op_sm = create_operational_simulation(archive, "D:\\Nizar\\Desktop\\Aralik_Aralik_OKPB_Input.xlsx")
+    op_sm = create_operational_simulation(archive)
     # create_tactical_simulation(archive)
     # op_mm = create_operational_math_model(archive)
     # tmm = create_tactical_math_model(archive)
