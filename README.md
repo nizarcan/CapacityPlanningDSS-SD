@@ -1,4 +1,4 @@
-# Capacity_Planning_DSS_SD
+# CapacityPlanningDSS-SD
 <p>This repository is the codebase of the 2019-2020 METU IE System Design project of team TC MANGO.
 <br /><br />What this tool basically does is to fetch various data to process those data so that they can be 
 used for the project's two-levelled capacity evaluation.<br /><br />The softwares used for mathematical 
