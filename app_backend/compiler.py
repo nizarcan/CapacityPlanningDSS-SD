@@ -26,13 +26,16 @@ class ArchiveDatabase:
         self.cmy_df = None
         self.temp = None
         self.machine_info = None
-        self.last_callback_date = None
+        self.last_adition_date = datetime.now().date()
 
     def __repr__(self):
-        if self.last_callback_date is None:
+        if self.last_adition_date is None:
             return "An input file struct that holds the data but hasn't yet compiled and created a backup."
         else:
-            return f"An input file struct that holds the data that is compiled at {self.last_callback_date}."
+            return f"An input file struct that holds the data that is compiled at {self.last_adition_date}."
+
+    def reassign_time(self):
+        self.last_adition_date = datetime.now().date()
 
     def save_checkpoint(self, file_dir):
         with open(file_dir, "wb") as f:
@@ -91,7 +94,7 @@ class OperationalSMInput:
     def load_math_model_output(self, file_dir):
         self.math_model_output["machine_legend"] = pd.read_excel(file_dir, sheet_name="machine_legend", index_col=0)
         self.math_model_output["overtime"] = pd.read_excel(file_dir, sheet_name="A")
-        self.math_model_output["overtime"] = self.math_model_output["overtime"][self.math_model_output["overtime"][self.math_model_output["overtime"].columns[0]]==2].iloc[:, 1:]
+        self.math_model_output["overtime"] = self.math_model_output["overtime"][self.math_model_output["overtime"][self.math_model_output["overtime"].columns[0]] == 2].iloc[:, 1:]
         self.math_model_output["overtime"].set_index(keys=self.math_model_output["overtime"].columns[0], inplace=True)
         self.math_model_output["overtime"] = self.math_model_output["overtime"].sum(axis = 1)
         self.math_model_output["combo"] = pd.concat([self.math_model_output["machine_legend"], self.math_model_output["overtime"]], axis=1).fillna(0)
@@ -130,8 +133,8 @@ class OperationalSMInput:
         for month in list(self.days.keys()):
             month_and_day = month.split(".")
             current_month = datetime(int(month_and_day[0]), int(month_and_day[1]), 1)
-            end_day = [datetime(int(month_and_day[0]), int(month_and_day[1])+1, 1) - pd.to_timedelta(1, unit="d") if int(month_and_day[1])<12 else 31 for _ in range(1)][0]
-            availability[month] = [1 if (((current_month+pd.to_timedelta(x, unit="d")).weekday()<5) and (self.days[month].values[0][x]==1)) else 2 if (((current_month+pd.to_timedelta(x, unit="d")).weekday()==5) and (self.days[month].values[0][x]==1)) else 3 for x in range(end_day)]
+            end_day = [datetime(int(month_and_day[0]), int(month_and_day[1])+1, 1) - pd.to_timedelta(1, unit="d") if int(month_and_day[1]) < 12 else 31 for _ in range(1)][0].day
+            availability[month] = [1 if (((current_month+pd.to_timedelta(x, unit="d")).weekday() < 5) and (self.days[month].values[0][x] == 1)) else 2 if (((current_month+pd.to_timedelta(x, unit="d")).weekday()==5) and (self.days[month].values[0][x]==1)) else 3 for x in range(end_day)]
 
         if self.plan_count==2:
             if self.is_duplicate:
@@ -367,6 +370,8 @@ class TacticalMMInput:
     def __init__(self, parent, forecast):
         self.merged_file = parent.merged_file.copy()
         self.machine_info = parent.machine_info.copy()
+        self.order_history = parent.order_history
+        self.setup = parent.temp.copy()
         self.product_family_legend = None
         self.machine_legend = None
         self.forecast = forecast
@@ -377,6 +382,11 @@ class TacticalMMInput:
         self.budget = None
         self.cost = None
         self.machine_price = None
+        self.average_order = None
+        self.setup_times = None
+        self.outsource_availability = None
+        self.order_time_parameters = None
+        self.probabilities = None
         # Placeholder
         self.forecast = parent.order_history.agg(pivot = True).iloc[:, -12:]
 
@@ -417,6 +427,12 @@ class TacticalMMInput:
             list(self.merged_file.product_no.str.split(".").apply(lambda x: x[0]).unique()))].index, inplace = True)
         self.merged_file.reset_index(inplace = True, drop = True)
 
+    def set_order_times(self, l: list):
+        self.order_time_parameters = pd.DataFrame(data=l, index=[1, 2]).transpose()
+
+    def set_probabilities(self, l: list):
+        self.probabilities = pd.DataFrame(data=l, index=[1, 2, 3, 4, 5]).transpose()
+
     def create_tables(self):
         self.cross_trim()
         product_family_legend = DataFrame(
@@ -446,6 +462,33 @@ class TacticalMMInput:
         machine_info_df = merge(left = machine_legend, right = self.machine_info, how = "left", left_on = "station",
                                 right_on = "machine").fillna(1).iloc[:, [0, 2, 3, 4, 5]]
 
+        # AVERAGE ORDER SIZE
+        avg_df = self.order_history.orders.copy()
+        avg_df["product_family"] = avg_df.product_no.str.split(".").apply(lambda x: x[0])
+        avg_df = avg_df.groupby("product_family", as_index = False).agg({"date": "count", "amount": "sum"})
+        avg_df["order_amount"] = avg_df.amount/avg_df.date
+        avg_df.order_amount = avg_df.order_amount.floordiv(1) + 1
+        avg_df.drop(["date", "amount"], axis = 1, inplace = True)
+        o = pd.merge(left=pd.DataFrame(product_family_legend.product_family.unique(), columns=["product_family"]), right=avg_df, how="left", left_on="product_family", right_on="product_family").fillna(avg_df.order_amount.mean().__floordiv__(1))
+        o.set_index(keys="product_family", inplace=True)
+        # avg_df.drop(["date", "amount"], inplace = True, axis = 1)
+        # AVERAGE ORDER SIZE
+
+        # SETUP TIMES
+        st = pd.merge(left=prod_path.station, right=self.setup, how="left", left_on="station", right_on="stations_list").iloc[:, [0, 2]].copy()
+        st[st.columns[1]] = st[st.columns[1]].fillna(0)
+        st.set_index(keys="station", inplace=True)
+        st = st.transpose()
+        # SETUP TIMES
+
+        # OUTSOURCE AVAILABILITY
+        outsource_perm = pd.merge(left=prod_path.station, right=self.machine_info, how="left", left_on = "station", right_on="machine").loc[:, ["station", "outsource_availability"]].copy()
+        outsource_perm[outsource_perm.columns[1]] = outsource_perm[outsource_perm.columns[1]].fillna(0)
+        outsource_perm.set_index(keys="station", inplace=True)
+        outsource_perm = outsource_perm.transpose()
+        # OUTSOURCE AVAILABILITY
+
+
         d = self.forecast.copy()
         h = bom_data.pivot("product_family", "station", "cycle_times").fillna(0)
         h = h[machine_info_df[machine_info_df.columns[0]]].copy()
@@ -459,18 +502,19 @@ class TacticalMMInput:
         # Costs will be implemented
         c = DataFrame([20, 23, 151], index = [1, 2, 3]).transpose()
         # Machine costs will be implemented
-        cr = DataFrame(machine_info_df["procurement_cost"], index = list(range(1, f.shape[1] + 1))).transpose()
+        cr = merge(left=prod_path, right=machine_info_df, how="left", left_on = "station", right_on = "station").fillna(0)["procurement_cost"].to_frame().transpose()
 
-        for curr_df in [product_family_legend, machine_legend, d, h, k, f]:
+        for curr_df in [product_family_legend, machine_legend, d, h, k, f, o, st, cr, outsource_perm]:
             curr_df.index = list(range(1, curr_df.shape[0] + 1))
             curr_df.columns = list(range(1, curr_df.shape[1] + 1))
 
         d = self.create_scenarios(d)
+        d = d.astype(int)
 
-        return product_family_legend, machine_legend, d, h, k, f, w, c, cr
+        return product_family_legend, machine_legend, d, h, k, f, w, c, cr, o, st, outsource_perm
 
     def create_file(self, file_dir):
-        self.product_family_legend, self.machine_legend, self.forecast, self.times, self.route_prob, self.machine_cnt, self.workdays, self.cost, self.machine_price = self.create_tables()
+        self.product_family_legend, self.machine_legend, self.forecast, self.times, self.route_prob, self.machine_cnt, self.workdays, self.cost, self.machine_price, self.average_order, self.setup_times, self.outsource_availability = self.create_tables()
         create_xl_file(self, file_dir, "tactical_math_model")
 
 

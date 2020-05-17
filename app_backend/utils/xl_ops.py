@@ -95,7 +95,7 @@ def load_plan(file_dir):
 
 def add_plan(base_plan, file_dir):
     new_plan = load_plan(file_dir)
-    if base_plan.equals(load_plan):
+    if base_plan.iloc[:, :-1].equals(new_plan.iloc[:, :-1]):
         return pd.concat([base_plan, new_plan], ignore_index = True, copy = True), True
     else:
         return pd.concat([base_plan, new_plan], ignore_index = True, copy = True), False
@@ -170,6 +170,11 @@ def create_xl_file(input_obj, output_dir, file_type):
                 # input_obj.budget.to_excel(writer, sheet_name = "b", index = False)
                 input_obj.cost.to_excel(writer, sheet_name = "c", index = False)
                 input_obj.machine_price.to_excel(writer, sheet_name = "cr", index = False)
+                input_obj.average_order.to_excel(writer, sheet_name = "o", header=False)
+                input_obj.setup_times.to_excel(writer, sheet_name = "st", index = False)
+                input_obj.outsource_availability.to_excel(writer, sheet_name = "osp", index = False)
+                input_obj.order_time_parameters.to_excel(writer, sheet_name = "el", index = False)
+                input_obj.probabilities.to_excel(writer, sheet_name = "pr", index = False)
             except ValueError as e:
                 print("One of the tables type is not dataframe within the create_excel_file function.")
                 print(e)
@@ -222,7 +227,7 @@ def namerange_xl_files(input_obj, output_dir, file_type):
         schedule_idx = 0
         schedule_rows = input_obj.schedules[list(input_obj.schedules.keys())[0]].shape[0]
         for schedule_machine in input_obj.schedules.keys():
-            xl.ActiveWorkbook.Names.Add(Name = ("schedule_" + schedule_machine).lower(), RefersTo = schedule_namerange.format(
+            xl.ActiveWorkbook.Names.Add(Name = "schedule_" + schedule_machine, RefersTo = schedule_namerange.format(
                 "schedules",                                        # name of the named range
                 auc[2*schedule_idx],                                # the letter that is going to be used for the start
                 auc[2*schedule_idx + 1],                            # letter of end

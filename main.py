@@ -21,9 +21,9 @@ def load_archive():
 
 def create_operational_simulation(model):
     op_input_file = OperationalSMInput(model)
-    op_input_file.load_plan(constants.plans["aralik"])
-    op_input_file.load_plan(constants.plans["aralik"])
-    op_input_file.load_days(constants.days["aralik"])
+    op_input_file.load_plan(constants.plans["eylul"])
+    op_input_file.load_plan(constants.plans["eylul"])
+    op_input_file.load_days(constants.days["eylul"])
     op_input_file.load_math_model_output(constants.results["OperationalMMInput"])
     op_input_file.create_tables()
     op_input_file.create_file(constants.outputs["OperationalSMInput"])
@@ -45,6 +45,8 @@ def create_tactical_simulation(model):
 
 def create_tactical_math_model(model):
     tacmm = TacticalMMInput(model, "forecast")
+    tacmm.set_order_times([0.4, 0.2])
+    tacmm.set_probabilities([0.1, 0.2, 0.4, 0.2, 0.1])
     tacmm.create_file(constants.outputs["TacticalMMInput"])
     return tacmm
 
@@ -52,7 +54,7 @@ def create_tactical_math_model(model):
 if __name__ == "__main__":
     # archive = create_archive()
     archive = load_archive()
-    op_sm = create_operational_simulation(archive)
+    # op_sm = create_operational_simulation(archive)
     # create_tactical_simulation(archive)
     # op_mm = create_operational_math_model(archive)
-    # tmm = create_tactical_math_model(archive)
+    tmm = create_tactical_math_model(archive)

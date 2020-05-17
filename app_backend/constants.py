@@ -5,16 +5,16 @@ Systems Design Project Constants & File Paths
 
 archive_file_path = "C://sl_data//Input//Archive.mng"
 
-bom_path = "C://sl_data//input//bom.csv"
-times_path = "C://sl_data//input//times.csv"
-tbd_path = "C://sl_data//input//tbd.csv"
-machine_info_path = "C://sl_data//input//machine_info.xlsx"
-order_history_path = "C://sl_data//input//order_history.csv"
+bom_path = "C://sl_data//input//archive_data//bom.csv"
+times_path = "C://sl_data//input//archive_data//times.csv"
+tbd_path = "C://sl_data//input//archive_data//tbd.csv"
+machine_info_path = "C://sl_data//input//archive_data//machine_info.xlsx"
+order_history_path = "C://sl_data//input//archive_data//order_history.csv"
 
 outputs = {
             "TacticalMMInput": "C://sl_data//output//TKPM_Parameters.xlsx",
-            "OperationalMMInput": "C://sl_data//output//OKPM_Parameters.xlsx",
-            "OperationalSMInput": "C://sl_data//output//OKPB_Input_File.xlsx"
+            "OperationalMMInput": "C:\\sl_data\\output\\OKPM_Parameters.xlsx",
+            "OperationalSMInput": "C:\\sl_data\\output\\OKPB_Input_File.xlsx"
 }
 
 days = {
