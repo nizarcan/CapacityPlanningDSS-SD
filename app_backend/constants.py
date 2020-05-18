@@ -36,7 +36,13 @@ plans = {
 }
 
 results = {
-    "TacticalMMInput": "C://sl_data//input//results//TKPM_Results.txt",
+    "TacticalMMInput": "C://sl_data//input//results//TKPM_Results.xlsx",
     "OperationalMMInput": "C://sl_data//input//results//OKPM_Results.xlsx",
-    "OperationalSMInput": "C://sl_data//input//results//result.txt",
+    "OperationalSMInput": "C://sl_data//input//results//OKPB_Results.txt",
+}
+
+analysis = {
+    "TKPM": "C://sl_data//analysis//TKPM_Analysis.xlsx",
+    "OKPM": "C://sl_data//analysis//OKPM_Analysis.xlsx",
+    "OKPB": "C://sl_data//analysis//OKPB_Analysis.xlsx",
 }
