@@ -3,9 +3,6 @@ import pandas as pd
 import numpy as np
 
 
-# TODO: Analyze OKPM Results - Will ask Tugce about how
-
-
 def analyze_tkpm_results(file_dir, output_dir):
     machine_legend = pd.read_excel(file_dir, sheet_name="machine_legend", index_col=0)
     total_overtime_results = pd.read_excel(file_dir, sheet_name="A")

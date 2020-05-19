@@ -101,9 +101,9 @@ def add_plan(base_plan, file_dir):
         return pd.concat([base_plan, new_plan], ignore_index = True, copy = True), False
 
 
-def create_xl_file(input_obj, output_dir, file_type):
+def create_xl_file(input_obj, output_path, file_type):
     if file_type == "operational_simulation_model":
-        with pd.ExcelWriter(output_dir) as writer:
+        with pd.ExcelWriter(output_path + "OKPB_Input_File.xlsx") as writer:
             try:
                 input_obj.legend_table.to_excel(writer, sheet_name = "LEGEND")
                 input_obj.input_table.to_excel(writer, sheet_name = "input_table")
@@ -118,9 +118,9 @@ def create_xl_file(input_obj, output_dir, file_type):
             except ValueError as e:
                 print("One of the tables type is not dataframe within the create_excel_file function.")
                 print(e)
-        namerange_xl_files(input_obj, output_dir, file_type)
+        namerange_xl_files(input_obj, output_path + "OKPB_Input_File.xlsx", file_type)
     elif file_type == "operational_math_model":
-        with pd.ExcelWriter(output_dir) as writer:
+        with pd.ExcelWriter(output_path + "OKPM_Parameters.xlsx") as writer:
             try:
                 input_obj.product_no_legend.to_excel(writer, sheet_name = "product_no_legend")
                 input_obj.machine_legend.to_excel(writer, sheet_name = "machine_legend")
@@ -136,8 +136,10 @@ def create_xl_file(input_obj, output_dir, file_type):
             except ValueError as e:
                 print("One of the tables type is not dataframe within the create_excel_file function.")
                 print(e)
+        input_obj.machine_legend.to_excel(output_path + "OKPM_Results.xlsx", sheet_name="machine_legend")
+    # Discontinued
     elif file_type == "tactical_simulation_model":
-        with pd.ExcelWriter(output_dir) as writer:
+        with pd.ExcelWriter(output_path) as writer:
             try:
                 input_obj.prod_family_legend_table.to_excel(writer, sheet_name = "PROD_FAMILY_LEGEND")
                 input_obj.machine_legend_table.to_excel(writer, sheet_name = "MACHINE_LEGEND")
@@ -151,9 +153,9 @@ def create_xl_file(input_obj, output_dir, file_type):
             except ValueError as e:
                 print("One of the tables type is not dataframe within the create_excel_file function.")
                 print(e)
-        namerange_xl_files(input_obj, output_dir, file_type)
+        namerange_xl_files(input_obj, output_path+"OKPM_Results.xlsx", file_type)
     elif file_type == "tactical_math_model":
-        with pd.ExcelWriter(output_dir) as writer:
+        with pd.ExcelWriter(output_path+"TKPM_Parameters.xlsx") as writer:
             try:
                 input_obj.product_family_legend.to_excel(writer, sheet_name = "product_no_legend", header = False)
                 input_obj.machine_legend.to_excel(writer, sheet_name = "machine_legend", header = False)
@@ -178,6 +180,7 @@ def create_xl_file(input_obj, output_dir, file_type):
             except ValueError as e:
                 print("One of the tables type is not dataframe within the create_excel_file function.")
                 print(e)
+        input_obj.machine_legend.to_excel(output_path+"TKPM_Results.xlsx", sheet_name="machine_legend")
     else:
         raise WrongKeywordError(file_type)
 

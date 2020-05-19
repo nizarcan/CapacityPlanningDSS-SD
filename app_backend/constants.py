@@ -11,6 +11,8 @@ tbd_path = "C://sl_data//input//archive_data//tbd.csv"
 machine_info_path = "C://sl_data//input//archive_data//machine_info.xlsx"
 order_history_path = "C://sl_data//input//archive_data//order_history.csv"
 
+output_path = "C:\\sl_data\\output\\"
+
 outputs = {
             "TacticalMMInput": "C://sl_data//output//TKPM_Parameters.xlsx",
             "OperationalMMInput": "C:\\sl_data\\output\\OKPM_Parameters.xlsx",

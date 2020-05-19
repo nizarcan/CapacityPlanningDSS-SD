@@ -20,12 +20,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="18a06a02-a94f-41d1-ae3c-cd33898e8efd" name="Default Changelist" comment="added analysis tools for tkpm, okpm and okpb">
-      <change afterPath="$PROJECT_DIR$/app_backend/analyzer.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/one-time_scripts/results.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/one-time_scripts/tacticalmmoutput_analyze.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/sonuc.xlsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app_backend/analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_backend/analyzer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app_backend/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_backend/constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app_backend/utils/xl_ops.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_backend/utils/xl_ops.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +80,7 @@
       <recent name="D:\Python\SD_Python" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.analyzer">
+  <component name="RunManager" selected="Python.main">
     <configuration name="analyzer" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="sd_python" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -189,9 +190,6 @@
       <module name="sd_python" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -334,9 +332,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.analyzer" />
         <item itemvalue="Python.tacticalmmoutput_analyze" />
-        <item itemvalue="Python.main" />
         <item itemvalue="Python.xl_ops" />
         <item itemvalue="Python.math_model_sch" />
       </list>
@@ -409,7 +407,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589756677983</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="added analysis tools for tkpm, okpm and okpb">
+      <created>1589845064677</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1589845064677</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -507,10 +512,10 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="707" y="380" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1050@0.0.1920.1050" timestamp="1588691904619" />
-    <state x="793" y="108" key="CommitChangelistDialog2" timestamp="1589845040175">
+    <state x="793" y="108" key="CommitChangelistDialog2" timestamp="1589845062871">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="793" y="108" key="CommitChangelistDialog2/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589845040175" />
+    <state x="793" y="108" key="CommitChangelistDialog2/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589845062871" />
     <state x="587" y="93" key="CommitChangelistDialog2/1920.185.1440.870/0.0.1920.1050@0.0.1920.1050" timestamp="1587221307342" />
     <state width="1553" height="466" key="DebuggerActiveHint" timestamp="1589725525989">
       <screen x="0" y="0" width="1920" height="1050" />
@@ -563,10 +568,10 @@
     <state x="461" y="167" key="SettingsEditor/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1586850770945" />
     <state x="461" y="167" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1588692198646" />
     <state x="461" y="167" key="SettingsEditor/1920.185.1440.870/0.0.1920.1050@0.0.1920.1050" timestamp="1587221183963" />
-    <state x="552" y="258" key="Vcs.Push.Dialog.v2" timestamp="1589756703637">
+    <state x="552" y="258" key="Vcs.Push.Dialog.v2" timestamp="1589845073080">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="552" y="258" key="Vcs.Push.Dialog.v2/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589756703637" />
+    <state x="552" y="258" key="Vcs.Push.Dialog.v2/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589845073080" />
     <state x="552" y="258" key="Vcs.Push.Dialog.v2/1920.185.1440.870/0.0.1920.1050@0.0.1920.1050" timestamp="1587221256475" />
     <state width="936" height="546" key="XDebugger.FullValuePopup" timestamp="1589833824674">
       <screen x="0" y="0" width="1920" height="1050" />
@@ -594,7 +599,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app_backend/utils/xl_ops.py</url>
-          <line>153</line>
+          <line>155</line>
           <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
