@@ -20,13 +20,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="18a06a02-a94f-41d1-ae3c-cd33898e8efd" name="Default Changelist" comment="added analysis tools for tkpm, okpm and okpb">
-      <change afterPath="$PROJECT_DIR$/one-time_scripts/results.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sonuc.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app_frontend/images/mango.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app_frontend/images/metu_logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app_frontend/images/tc_mango_logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app_frontend/sheet_select.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app_frontend/welcome_wizard.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app_backend/analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_backend/analyzer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app_backend/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_backend/constants.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app_backend/utils/xl_ops.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_backend/utils/xl_ops.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app_backend/utils/df_ops.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_backend/utils/df_ops.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app_frontend/file_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_frontend/file_dialogs.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +63,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="run.code.analysis.last.selected.profile" value="aDefault" />
-    <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -80,28 +81,7 @@
       <recent name="D:\Python\SD_Python" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main">
-    <configuration name="analyzer" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="sd_python" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app_backend" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app_backend/analyzer.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python.sheet_select">
     <configuration name="average_order_size" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="sd_python" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -165,6 +145,69 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="df_ops" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="sd_python" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app_backend/utils" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app_backend/utils/df_ops.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="file_dialogs (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="sd_python" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app_frontend" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app_frontend/file_dialogs.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="file_dialogs" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="sd_python" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app_frontend" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="D:\Python\SD_Python\app_frontend\file_dialogs.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="forecast_scenario" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="sd_python" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -190,33 +233,15 @@
       <module name="sd_python" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="math_model_sch" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="sd_python" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/one-time_scripts" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/one-time_scripts/math_model_sch.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -267,7 +292,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="tacticalmmoutput_analyze" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="sheet_select" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="sd_python" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -275,11 +300,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/one-time_scripts" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app_frontend" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/one-time_scripts/tacticalmmoutput_analyze.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app_frontend/sheet_select.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -309,34 +334,13 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="xl_ops" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="sd_python" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app_backend/utils" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app_backend/utils/xl_ops.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.sheet_select" />
         <item itemvalue="Python.main" />
-        <item itemvalue="Python.analyzer" />
-        <item itemvalue="Python.tacticalmmoutput_analyze" />
-        <item itemvalue="Python.xl_ops" />
-        <item itemvalue="Python.math_model_sch" />
+        <item itemvalue="Python.df_ops" />
+        <item itemvalue="Python.file_dialogs (1)" />
+        <item itemvalue="Python.file_dialogs" />
       </list>
     </recent_temporary>
   </component>
@@ -414,7 +418,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589845064677</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="tweaking excel output method to create two files(+result files beforehand) as default">
+      <created>1589846428279</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1589846428279</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -440,7 +451,8 @@
     <MESSAGE value="local filesystem rearrangements within program" />
     <MESSAGE value="tactical mathematical model update, added features for mathematical models, also some minor reformats" />
     <MESSAGE value="added analysis tools for tkpm, okpm and okpb" />
-    <option name="LAST_COMMIT_MESSAGE" value="added analysis tools for tkpm, okpm and okpb" />
+    <MESSAGE value="tweaking excel output method to create two files(+result files beforehand) as default" />
+    <option name="LAST_COMMIT_MESSAGE" value="tweaking excel output method to create two files(+result files beforehand) as default" />
   </component>
   <component name="WindowStateProjectService">
     <state x="669" y="120" key="#average_order_size" timestamp="1588710784437">
@@ -456,6 +468,10 @@
     </state>
     <state x="647" y="327" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1587360180669" />
     <state x="647" y="327" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1588691860303" />
+    <state x="480" y="180" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1590002720434">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="480" y="180" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1050/1920.185.1440.870@1920.185.1440.870" timestamp="1590002720434" />
     <state x="669" y="120" key="#demand_scenarios" timestamp="1588692310691">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
@@ -512,10 +528,10 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="707" y="380" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1050@0.0.1920.1050" timestamp="1588691904619" />
-    <state x="793" y="108" key="CommitChangelistDialog2" timestamp="1589845062871">
+    <state x="793" y="108" key="CommitChangelistDialog2" timestamp="1589846426721">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="793" y="108" key="CommitChangelistDialog2/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589845062871" />
+    <state x="793" y="108" key="CommitChangelistDialog2/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589846426721" />
     <state x="587" y="93" key="CommitChangelistDialog2/1920.185.1440.870/0.0.1920.1050@0.0.1920.1050" timestamp="1587221307342" />
     <state width="1553" height="466" key="DebuggerActiveHint" timestamp="1589725525989">
       <screen x="0" y="0" width="1920" height="1050" />
@@ -525,53 +541,57 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="739" y="267" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1589015443151" />
-    <state width="1899" height="285" key="GridCell.Tab.0.bottom" timestamp="1589845040205">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1419" height="225" key="GridCell.Tab.0.bottom" timestamp="1590003629948">
+      <screen x="1920" y="185" width="1440" height="870" />
     </state>
     <state width="1899" height="352" key="GridCell.Tab.0.bottom/0.0.1920.1050/1920.0.1440.870@0.0.1920.1050" timestamp="1589500690570" />
     <state width="1899" height="352" key="GridCell.Tab.0.bottom/0.0.1920.1050/1920.173.1440.870@0.0.1920.1050" timestamp="1585944319341" />
     <state width="1899" height="352" key="GridCell.Tab.0.bottom/0.0.1920.1050/1920.174.1440.870@0.0.1920.1050" timestamp="1585997080753" />
-    <state width="1899" height="285" key="GridCell.Tab.0.bottom/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589845040205" />
-    <state width="1899" height="352" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1589489488116" />
+    <state width="1899" height="285" key="GridCell.Tab.0.bottom/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589968166804" />
+    <state width="1419" height="225" key="GridCell.Tab.0.bottom/0.0.1920.1050/1920.185.1440.870@1920.185.1440.870" timestamp="1590003629948" />
+    <state width="1899" height="285" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1589970730574" />
     <state width="1899" height="285" key="GridCell.Tab.0.bottom/1920.185.1440.870/0.0.1920.1050@0.0.1920.1050" timestamp="1587239363071" />
-    <state width="1899" height="285" key="GridCell.Tab.0.center" timestamp="1589845040205">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1419" height="225" key="GridCell.Tab.0.center" timestamp="1590003629948">
+      <screen x="1920" y="185" width="1440" height="870" />
     </state>
     <state width="1899" height="352" key="GridCell.Tab.0.center/0.0.1920.1050/1920.0.1440.870@0.0.1920.1050" timestamp="1589500690570" />
     <state width="1899" height="352" key="GridCell.Tab.0.center/0.0.1920.1050/1920.173.1440.870@0.0.1920.1050" timestamp="1585944319336" />
     <state width="1899" height="352" key="GridCell.Tab.0.center/0.0.1920.1050/1920.174.1440.870@0.0.1920.1050" timestamp="1585997080753" />
-    <state width="1899" height="285" key="GridCell.Tab.0.center/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589845040205" />
-    <state width="1899" height="352" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1589489488115" />
+    <state width="1899" height="285" key="GridCell.Tab.0.center/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589968166804" />
+    <state width="1419" height="225" key="GridCell.Tab.0.center/0.0.1920.1050/1920.185.1440.870@1920.185.1440.870" timestamp="1590003629948" />
+    <state width="1899" height="285" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1589970730574" />
     <state width="1899" height="285" key="GridCell.Tab.0.center/1920.185.1440.870/0.0.1920.1050@0.0.1920.1050" timestamp="1587239363070" />
-    <state width="1899" height="285" key="GridCell.Tab.0.left" timestamp="1589845040201">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1419" height="225" key="GridCell.Tab.0.left" timestamp="1590003629948">
+      <screen x="1920" y="185" width="1440" height="870" />
     </state>
     <state width="1899" height="352" key="GridCell.Tab.0.left/0.0.1920.1050/1920.0.1440.870@0.0.1920.1050" timestamp="1589500690570" />
     <state width="1899" height="352" key="GridCell.Tab.0.left/0.0.1920.1050/1920.173.1440.870@0.0.1920.1050" timestamp="1585944319336" />
     <state width="1899" height="352" key="GridCell.Tab.0.left/0.0.1920.1050/1920.174.1440.870@0.0.1920.1050" timestamp="1585997080743" />
-    <state width="1899" height="285" key="GridCell.Tab.0.left/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589845040201" />
-    <state width="1899" height="352" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1589489488115" />
+    <state width="1899" height="285" key="GridCell.Tab.0.left/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589968166804" />
+    <state width="1419" height="225" key="GridCell.Tab.0.left/0.0.1920.1050/1920.185.1440.870@1920.185.1440.870" timestamp="1590003629948" />
+    <state width="1899" height="285" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1589970730574" />
     <state width="1899" height="285" key="GridCell.Tab.0.left/1920.185.1440.870/0.0.1920.1050@0.0.1920.1050" timestamp="1587239363070" />
-    <state width="1899" height="285" key="GridCell.Tab.0.right" timestamp="1589845040205">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1419" height="225" key="GridCell.Tab.0.right" timestamp="1590003629948">
+      <screen x="1920" y="185" width="1440" height="870" />
     </state>
     <state width="1899" height="352" key="GridCell.Tab.0.right/0.0.1920.1050/1920.0.1440.870@0.0.1920.1050" timestamp="1589500690570" />
     <state width="1899" height="352" key="GridCell.Tab.0.right/0.0.1920.1050/1920.173.1440.870@0.0.1920.1050" timestamp="1585944319336" />
     <state width="1899" height="352" key="GridCell.Tab.0.right/0.0.1920.1050/1920.174.1440.870@0.0.1920.1050" timestamp="1585997080753" />
-    <state width="1899" height="285" key="GridCell.Tab.0.right/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589845040205" />
-    <state width="1899" height="352" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1589489488115" />
+    <state width="1899" height="285" key="GridCell.Tab.0.right/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589968166804" />
+    <state width="1419" height="225" key="GridCell.Tab.0.right/0.0.1920.1050/1920.185.1440.870@1920.185.1440.870" timestamp="1590003629948" />
+    <state width="1899" height="285" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1589970730574" />
     <state width="1899" height="285" key="GridCell.Tab.0.right/1920.185.1440.870/0.0.1920.1050@0.0.1920.1050" timestamp="1587239363070" />
-    <state x="461" y="167" key="SettingsEditor" timestamp="1588692198646">
+    <state x="461" y="167" key="SettingsEditor" timestamp="1589966966105">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="461" y="167" key="SettingsEditor/0.0.1920.1050/1920.174.1440.870@0.0.1920.1050" timestamp="1585855894213" />
-    <state x="461" y="167" key="SettingsEditor/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1586850770945" />
+    <state x="461" y="167" key="SettingsEditor/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589966966105" />
     <state x="461" y="167" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1588692198646" />
     <state x="461" y="167" key="SettingsEditor/1920.185.1440.870/0.0.1920.1050@0.0.1920.1050" timestamp="1587221183963" />
-    <state x="552" y="258" key="Vcs.Push.Dialog.v2" timestamp="1589845073080">
+    <state x="552" y="258" key="Vcs.Push.Dialog.v2" timestamp="1589846431368">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="552" y="258" key="Vcs.Push.Dialog.v2/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589845073080" />
+    <state x="552" y="258" key="Vcs.Push.Dialog.v2/0.0.1920.1050/1920.185.1440.870@0.0.1920.1050" timestamp="1589846431368" />
     <state x="552" y="258" key="Vcs.Push.Dialog.v2/1920.185.1440.870/0.0.1920.1050@0.0.1920.1050" timestamp="1587221256475" />
     <state width="936" height="546" key="XDebugger.FullValuePopup" timestamp="1589833824674">
       <screen x="0" y="0" width="1920" height="1050" />
@@ -606,11 +626,6 @@
           <url>file://$PROJECT_DIR$/app_backend/utils/xl_ops.py</url>
           <line>120</line>
           <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/app_backend/utils/df_ops.py</url>
-          <line>436</line>
-          <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app_backend/compiler.py</url>

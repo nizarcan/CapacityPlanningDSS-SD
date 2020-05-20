@@ -423,6 +423,7 @@ def create_operational_table(df, table_type, aux=None, *args):
             index = list(range(1, len(join_amount_count) + 1)))
         join_matrix.reset_index(drop = True, inplace = True)
         join_matrix.index = list(range(1, join_matrix.shape[0] + 1))
+        join_amount_df.amount[join_amount_df.amount < 1] = 1
 
         return join_matrix, join_amount_df
     elif table_type == "set_list":
