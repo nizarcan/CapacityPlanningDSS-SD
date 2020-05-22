@@ -69,14 +69,14 @@ def load_plan(file_dir):
     # whole_dataframe.drop(whole_dataframe[pd.to_numeric(whole_dataframe.amount, errors = 'coerce').isnull()].index, inplace = True)
     # whole_dataframe.drop(whole_dataframe[whole_dataframe.due_date.apply(lambda x: type(x)) == str].index, inplace = True)
     # whole_dataframe.reset_index(drop=True, inplace=True)
-    plan_df = pd.read_excel(file_dir)[["BANT NO", "ÜRÜNKODU", "Tarih", "PLAN ADET"]]  # , sheet_name="MartPlan"
-    plan_df.columns = ["assembly_unit", "product_no", "start_date", "amount"]
+    plan_df = pd.read_excel(file_dir)[["BANT NO", "ÜRÜNKODU", "Tarih", "PLAN ADET", "Termin Tarihi"]]  # , sheet_name="MartPlan"
+    plan_df.columns = ["assembly_unit", "product_no", "start_date", "amount", "due_date"]
     plan_df.drop(plan_df[
-                     plan_df.assembly_unit.isnull() | plan_df.product_no.isnull() | plan_df.start_date.isnull() | plan_df.amount.isnull()].index,
+                     plan_df.assembly_unit.isnull() | plan_df.product_no.isnull() | plan_df.start_date.isnull() | plan_df.amount.isnull() | plan_df.due_date.isnull()].index,
                  inplace = True)
     plan_df.sort_values(by = "start_date", inplace = True)
-    plan_df["due_date"] = plan_df.start_date + pd.to_timedelta([random.randint(4, 8) for _ in range(plan_df.shape[0])],
-                                                               unit = "d")
+    plan_df["due_date"] = plan_df.start_date + pd.to_timedelta([7 for _ in range(plan_df.shape[0])], unit = "d")
+
     plan_df.dropna(inplace = True)
     plan_df.drop(plan_df[pd.to_numeric(plan_df.amount, errors = 'coerce').isnull()].index, inplace = True)
     plan_df.drop(plan_df[plan_df.due_date.apply(lambda x: type(x)) == str].index, inplace = True)

@@ -651,3 +651,31 @@ def ctesi_creator(hour):
     else:
         out = pd.DataFrame(data = [[1, 24], [0, 0]])
     return out
+
+
+def weekday_creator(shift, overtime_per_day):
+    if shift == 1:
+        if overtime_per_day == 0:
+            return pd.DataFrame(data = [[1, 0, 0, 0, 0, 0], [7.5, 0.5]*3]).transpose()
+        elif overtime_per_day < 7.5:
+            return pd.DataFrame(data = [[1, 0, 1, 0, 0, 0], [7.5, 0.5, overtime_per_day, 0.5 + (7.5-overtime_per_day), 7.5, 0.5]]).transpose()
+        elif overtime_per_day < 15:
+            return pd.DataFrame(data = [[1, 0, 1, 0, 1, 0], [7.5, 0.5] + [(overtime_per_day/2), 0.5 + (7.5-(overtime_per_day/2))]*2]).transpose()
+        else:
+            return pd.DataFrame(data = [[1, 0, 1, 0, 1, 0], [7.5, 0.5]*3]).transpose()
+    if shift == 2:
+        if overtime_per_day == 0:
+            return pd.DataFrame(data = [[1, 0, 1, 0, 0, 0], [7.5, 0.5]*3]).transpose()
+        elif overtime_per_day < 7.5:
+            return pd.DataFrame(data = [[1, 0, 1, 0, 1, 0], [7.5, 0.5]*2 + [overtime_per_day, 0.5 + (7.5-overtime_per_day)]]).transpose()
+        else:
+            return pd.DataFrame(data = [[1, 0, 1, 0, 1, 0], [7.5, 0.5]*3]).transpose()
+    elif shift == 3:
+        return pd.DataFrame(data = [[1, 0, 1, 0, 1, 0], [7.5, 0.5]*3]).transpose()
+
+
+def outsource_creator(outsource_amount):
+    if outsource_amount < 24:
+        return pd.DataFrame(data = [[1, 0], [outsource_amount, 24-outsource_amount]]).transpose()
+    else:
+        return pd.DataFrame(data=[[1, 0], [24, 0]]).transpose()

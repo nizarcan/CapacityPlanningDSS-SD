@@ -31,8 +31,9 @@ def create_operational_simulation(model):
 
 
 def create_operational_math_model(model):
-    out_struct = OperationalMMInput(model, constants.plans["eylul"])
+    out_struct = OperationalMMInput(model, constants.plans["eylul"], 4)
     out_struct.load_days(constants.days["eylul"])
+    out_struct.load_math_model_output(constants.results["TacticalMMInput"])
     out_struct.create_file(constants.output_path)
     return out_struct
 
@@ -41,10 +42,11 @@ def create_tactical_simulation(model):
     tac_input_file = TacticalSMInput(model)
     tac_input_file.create_tables()
     tac_input_file.create_file(constants.output_path)
+    return tac_input_file
 
 
 def create_tactical_math_model(model):
-    tacmm = TacticalMMInput(model, "forecast")
+    tacmm = TacticalMMInput(model)
     tacmm.set_order_times([0.4, 0.2])
     tacmm.set_probabilities([0.1, 0.2, 0.4, 0.2, 0.1])
     tacmm.create_file(constants.output_path)
