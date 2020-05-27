@@ -1,6 +1,6 @@
-from app_backend.compiler import ArchiveDatabase, OperationalSMInput, OperationalMMInput, TacticalSMInput, TacticalMMInput, revert_checkpoint
+from backend.compiler import ArchiveDatabase, OperationalSMInput, OperationalMMInput, TacticalSMInput, TacticalMMInput, revert_checkpoint
 # from app_backend.utils.demand_util import OrderHistory
-import app_backend.constants as constants
+import backend.constants as constants
 
 
 def create_archive():
@@ -19,20 +19,20 @@ def load_archive():
     return revert_checkpoint(constants.archive_file_path)
 
 
-def create_operational_simulation(model):
+def create_operational_simulation(model, ay):
     op_input_file = OperationalSMInput(model)
-    op_input_file.load_plan(constants.plans["eylul"])
-    op_input_file.load_plan(constants.plans["eylul"])
-    op_input_file.load_days(constants.days["eylul"])
+    op_input_file.load_plan(constants.plans[ay])
+    op_input_file.load_plan(constants.plans[ay])
+    op_input_file.load_days(constants.days[ay])
     op_input_file.load_math_model_output(constants.results["OperationalMMInput"])
     op_input_file.create_tables()
     op_input_file.create_file(constants.output_path)
     return op_input_file
 
 
-def create_operational_math_model(model):
-    out_struct = OperationalMMInput(model, constants.plans["eylul"], 4)
-    out_struct.load_days(constants.days["eylul"])
+def create_operational_math_model(model, ay, senaryo):
+    out_struct = OperationalMMInput(model, constants.plans[ay], senaryo)
+    out_struct.load_days(constants.days[ay])
     out_struct.load_math_model_output(constants.results["TacticalMMInput"])
     out_struct.create_file(constants.output_path)
     return out_struct
@@ -54,9 +54,9 @@ def create_tactical_math_model(model):
 
 
 if __name__ == "__main__":
-    # archive = create_archive()
-    archive = load_archive()
-    op_sm = create_operational_simulation(archive)
+    archive = create_archive()
+    # archive = load_archive()
+    # op_sm = create_operational_simulation(archive, "aralik")
     # create_tactical_simulation(archive)
-    # op_mm = create_operational_math_model(archive)
+    # op_mm = create_operational_math_model(archive, "aralik", 4)
     # tmm = create_tactical_math_model(archive)

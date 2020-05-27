@@ -1,11 +1,12 @@
-from app_backend.utils.df_ops import arrange_df, merge_bom_and_times, trim_df, create_operational_table, \
-    create_tactical_table, trim_order, format_machine_names, schedule_changer_dict, ctesi_creator, weekday_creator, outsource_creator
-from app_backend.utils.xl_ops import load_file, load_plan, add_plan, create_xl_file
+from backend.utils.df_ops import arrange_df, merge_bom_and_times, trim_df, create_operational_table, \
+    create_tactical_table, trim_order, format_machine_names, schedule_changer_dict, ctesi_creator, weekday_creator, \
+    outsource_creator
+from backend.utils.xl_ops import load_file, load_plan, add_plan, create_xl_file
 import pandas as pd
 from pandas import DataFrame, concat, merge, to_timedelta, to_datetime, read_excel
-from app_backend.utils.demand_util import OrderHistory, extract_forecast
-from app_backend.utils.finder import joining_indices
-from app_backend.predictor import predict_next_12_months
+from backend.utils.demand_util import OrderHistory, extract_forecast
+from backend.utils.finder import joining_indices
+from backend.predictor import predict_next_12_months
 from datetime import datetime
 import pickle
 
@@ -52,7 +53,7 @@ class ArchiveDatabase:
     def load_times(self, file_dir):
         self.times_file = load_file(file_dir)
         self.times_file, self.assembly_df, self.cmy_df, self.temp = \
-            arrange_df(self.times_file, "times", relevant_col_idx = [3, 25, 29, 28])
+            arrange_df(self.times_file, "times", relevant_col_idx=[3, 25, 29, 28])
 
     def initialize_order_history(self):
         self.order_history.initialize()
@@ -62,7 +63,7 @@ class ArchiveDatabase:
 
     def merge_files(self):
         self.merged_file = merge_bom_and_times(self.bom_file, self.times_file)
-        self.merged_file = arrange_df(self.merged_file, "merged", assembly_df = self.assembly_df)
+        self.merged_file = arrange_df(self.merged_file, "merged", assembly_df=self.assembly_df)
 
 
 class OperationalSMInput:
@@ -93,28 +94,32 @@ class OperationalSMInput:
         self.is_duplicate = False
 
     def load_math_model_output(self, file_dir):
-        self.math_model_output["machine_legend"] = pd.read_excel(file_dir, sheet_name = "machine_legend", index_col = 0)
-        self.math_model_output["overtime"] = pd.read_excel(file_dir, sheet_name = "A")
+        self.math_model_output["machine_legend"] = pd.read_excel(file_dir, sheet_name="machine_legend", index_col=0)
+        self.math_model_output["overtime"] = pd.read_excel(file_dir, sheet_name="A")
         self.math_model_output["overtime"] = self.math_model_output["overtime"][self.math_model_output["overtime"][
                                                                                     self.math_model_output[
                                                                                         "overtime"].columns[
                                                                                         0]] == 2].iloc[:, 1:]
-        self.math_model_output["overtime"].set_index(keys = self.math_model_output["overtime"].columns[0],
-                                                     inplace = True)
-        self.math_model_output["overtime"] = pd.DataFrame(self.math_model_output["overtime"].sum(axis = 1), columns=["overtime"])
-        self.math_model_output["outsource"] = pd.read_excel(file_dir, sheet_name = "A")
+        self.math_model_output["overtime"].set_index(keys=self.math_model_output["overtime"].columns[0],
+                                                     inplace=True)
+        self.math_model_output["overtime"] = pd.DataFrame(self.math_model_output["overtime"].sum(axis=1),
+                                                          columns=["overtime"])
+        self.math_model_output["outsource"] = pd.read_excel(file_dir, sheet_name="A")
         self.math_model_output["outsource"] = self.math_model_output["outsource"][self.math_model_output["outsource"][
-                                                                                    self.math_model_output[
-                                                                                        "outsource"].columns[
-                                                                                        0]] == 3].iloc[:, 1:]
-        self.math_model_output["outsource"].set_index(keys = self.math_model_output["outsource"].columns[0],
-                                                     inplace = True)
-        self.math_model_output["outsource"] = pd.DataFrame(self.math_model_output["outsource"].sum(axis = 1), columns=["outsource"])
-        self.math_model_output["shift"] = pd.read_excel(file_dir, sheet_name = "s", header = 0).transpose()
+                                                                                      self.math_model_output[
+                                                                                          "outsource"].columns[
+                                                                                          0]] == 3].iloc[:, 1:]
+        self.math_model_output["outsource"].set_index(keys=self.math_model_output["outsource"].columns[0],
+                                                      inplace=True)
+        self.math_model_output["outsource"] = pd.DataFrame(self.math_model_output["outsource"].sum(axis=1),
+                                                           columns=["outsource"])
+        self.math_model_output["shift"] = pd.read_excel(file_dir, sheet_name="s", header=0).transpose()
         self.math_model_output["shift"].columns = ["shift"]
         self.math_model_output["shift"].index = self.math_model_output["shift"].index.astype(int)
         self.math_model_output["combo"] = pd.concat([self.math_model_output["machine_legend"],
-                                                     self.math_model_output["overtime"], self.math_model_output["shift"], self.math_model_output["outsource"]], axis = 1).fillna(0)
+                                                     self.math_model_output["overtime"],
+                                                     self.math_model_output["shift"],
+                                                     self.math_model_output["outsource"]], axis=1).fillna(0)
 
     def load_plan(self, file_dir):
         if not bool(self.plan_count):
@@ -124,12 +129,12 @@ class OperationalSMInput:
         self.plan_count += 1
 
     def load_days(self, file_dir):
-        days_df = read_excel(file_dir, header = 0, index_col = 0)
+        days_df = read_excel(file_dir, header=0, index_col=0)
         self.days[str(days_df.index.values[0])] = days_df
 
     def trim_bom(self):
         self.merged_file, missing_dict = trim_df(self.merged_file, self.plan)
-        self.plan.product_no.replace(missing_dict, inplace = True)
+        self.plan.product_no.replace(missing_dict, inplace=True)
 
     def create_tables(self):
         self.trim_bom()
@@ -140,7 +145,7 @@ class OperationalSMInput:
         self.sequence_matrix = create_operational_table(self.merged_file, "sequence")
         self.time_matrix = create_operational_table(self.merged_file, "time")
         self.join_matrix, self.join_amount_table = create_operational_table(self.merged_file, "joins")
-        self.set_list_table = create_operational_table(self.temp, "set_list", aux = self.machine_info)
+        self.set_list_table = create_operational_table(self.temp, "set_list", aux=self.machine_info)
         self.order_table = create_operational_table(self.plan, "order", self.merged_file, self.plan_count,
                                                     self.is_duplicate)
 
@@ -152,16 +157,17 @@ class OperationalSMInput:
             month_and_day = month.split(".")
             current_month = datetime(int(month_and_day[0]), int(month_and_day[1]), 1)
             end_day = [
-                (datetime(int(month_and_day[0]), int(month_and_day[1]) + 1, 1) - pd.to_timedelta(1, unit = "d")).day if int(
+                (datetime(int(month_and_day[0]), int(month_and_day[1]) + 1, 1) - pd.to_timedelta(1,
+                                                                                                 unit="d")).day if int(
                     month_and_day[1]) < 12 else 31 for _ in range(1)][0]
-            availability[month] = [1 if (((current_month + pd.to_timedelta(x, unit = "d")).weekday() < 5) and (
-                        self.days[month].values[0][x] == 1)) else 2 if (
-                        ((current_month + pd.to_timedelta(x, unit = "d")).weekday() == 5) and (
-                            self.days[month].values[0][x] == 1)) else 3 for x in range(end_day)]
+            availability[month] = [1 if (((current_month + pd.to_timedelta(x, unit="d")).weekday() < 5) and (
+                    self.days[month].values[0][x] == 1)) else 2 if (
+                    ((current_month + pd.to_timedelta(x, unit="d")).weekday() == 5) and (
+                    self.days[month].values[0][x] == 1)) else 3 for x in range(end_day)]
 
         if self.plan_count == 2:
             if self.is_duplicate:
-                total_availability = availability[list(availability.keys())[0]]*2
+                total_availability = availability[list(availability.keys())[0]] * 2
             else:
                 total_availability = availability[min(list(availability.keys()))] + availability[
                     max(list(availability.keys()))]
@@ -172,24 +178,28 @@ class OperationalSMInput:
                     2: ctesi_creator,
                     3: outsource_creator}
 
-        self.math_model_output["leftover_overtime"] = {x: self.math_model_output["combo"].loc[self.math_model_output["combo"]["station"] == x, "overtime"].values[0] - (24*total_availability.count(2)/self.plan_count)
-                                                       if self.math_model_output["combo"].loc[self.math_model_output["combo"]["station"] == x, "overtime"].values[0] > (24*total_availability.count(2)/self.plan_count)
-                                                       else 0 for x in self.math_model_output["combo"].station.values}
+        self.math_model_output["leftover_overtime"] = {
+            x: self.math_model_output["combo"].loc[self.math_model_output["combo"]["station"] == x, "overtime"].values[
+                   0] - (24 * total_availability.count(2) / self.plan_count)
+            if self.math_model_output["combo"].loc[self.math_model_output["combo"]["station"] == x, "overtime"].values[
+                   0] > (24 * total_availability.count(2) / self.plan_count)
+            else 0 for x in self.math_model_output["combo"].station.values}
 
         for machine in self.temp.stations_list.values:
             if machine in self.math_model_output["machine_legend"].values:
                 overtime = self.math_model_output["combo"].loc[
                                self.math_model_output["combo"]["station"] == machine, "overtime"].values[
-                               0]/(total_availability.count(2)/self.plan_count)
+                               0] / (total_availability.count(2) / self.plan_count)
                 shift = int(round(self.math_model_output["combo"].loc[
-                               self.math_model_output["combo"]["station"] == machine, "shift"].values[
-                               0]))
+                                      self.math_model_output["combo"]["station"] == machine, "shift"].values[
+                                      0]))
                 # THIS WILL BE REPLACED WITH COMBO DF
                 quantity = self.machine_info.loc[self.machine_info.machine == machine, "quantity"].values[0]
-                leftover_overtime = self.math_model_output["leftover_overtime"][machine]/(total_availability.count(1)/self.plan_count)
+                leftover_overtime = self.math_model_output["leftover_overtime"][machine] / (
+                        total_availability.count(1) / self.plan_count)
                 outsource = self.math_model_output["combo"].loc[
-                               self.math_model_output["combo"]["station"] == machine, "outsource"].values[
-                               0]/(total_availability.count(3)/self.plan_count)
+                                self.math_model_output["combo"]["station"] == machine, "outsource"].values[
+                                0] / (total_availability.count(3) / self.plan_count)
 
             elif machine in self.machine_info["machine"].values:
                 overtime = 0
@@ -210,9 +220,9 @@ class OperationalSMInput:
             schedule = pd.concat([
                 df_types[1](shift, leftover_overtime) if x == 1
                 else df_types[2](overtime) if x == 2
-                else df_types[3](outsource) for x in total_availability], ignore_index = True)
+                else df_types[3](outsource) for x in total_availability], ignore_index=True)
 
-            schedule[schedule.columns[0]] = schedule[schedule.columns[0]]*quantity
+            schedule[schedule.columns[0]] = schedule[schedule.columns[0]] * quantity
             schedules[machine] = schedule
 
         return schedules
@@ -240,7 +250,7 @@ class TacticalSMInput:
 
     def create_tables(self):
         self.prod_family_legend_table, self.machine_legend_table, self.sequence_list, self.min_matrix, self.mean_matrix, self.max_matrix, self.prob_matrix = create_tactical_table(
-            self.merged_file, table_type = "mult")
+            self.merged_file, table_type="mult")
         self.set_list_table = create_tactical_table(self.temp, "set_list")
         self.order_table = create_tactical_table(self.order_history, "order")
 
@@ -273,12 +283,12 @@ class OperationalMMInput:
     def cross_trim(self):
         self.plan = self.plan[self.plan.product_no.isin(self.merged_file.product_no)].copy()
         self.merged_file.drop(self.merged_file[~self.merged_file.product_no.isin(self.plan.product_no)].index,
-                              inplace = True)
-        self.merged_file.reset_index(inplace = True, drop = True)
-        self.plan.reset_index(inplace = True, drop = True)
+                              inplace=True)
+        self.merged_file.reset_index(inplace=True, drop=True)
+        self.plan.reset_index(inplace=True, drop=True)
 
     def load_days(self, file_dir):
-        self.days = read_excel(file_dir, header = 0, index_col = 0)
+        self.days = read_excel(file_dir, header=0, index_col=0)
 
     def load_math_model_output(self, file_dir):
         self.math_model_output = pd.read_excel(file_dir, sheet_name="machine_legend")
@@ -319,14 +329,14 @@ class OperationalMMInput:
         df = self.plan.copy()
         resch_dict = schedule_changer_dict(self.plan, self.days)
         df.start_date = df.start_date.dt.date
-        df.start_date.replace(resch_dict, inplace = True)
-        df = df.groupby(by = ["product_no", "start_date"], as_index = False).agg({"amount": "sum"})
+        df.start_date.replace(resch_dict, inplace=True)
+        df = df.groupby(by=["product_no", "start_date"], as_index=False).agg({"amount": "sum"})
         df["new_day"] = to_datetime(df.start_date).dt.day
-        df = df.groupby(by = ["product_no", "new_day"], as_index = False).agg({"amount": "sum"})
+        df = df.groupby(by=["product_no", "new_day"], as_index=False).agg({"amount": "sum"})
         df = df.pivot("product_no", "new_day", "amount").fillna(0)
         workdays = list(set(resch_dict.values()))
         workdays.sort()
-        out_df = DataFrame(index = df.index, columns = [to_datetime(x).day for x in workdays]).fillna(0)
+        out_df = DataFrame(index=df.index, columns=[to_datetime(x).day for x in workdays]).fillna(0)
         out_df[df.columns] = df
         out_df.columns = list(range(1, out_df.shape[1] + 1))
         # df["new_day"] = df["new_day"].apply(lambda x: x.days + 1)
@@ -336,7 +346,7 @@ class OperationalMMInput:
         df = load_file(file_dir)
         df[df.columns[0]] = format_machine_names(df, df.columns[0])
         df = concat([self.machine_info[~self.machine_info["machine"].isin(df[df.columns[0]].to_list())], df])
-        df.reset_index(inplace = True, drop = True)
+        df.reset_index(inplace=True, drop=True)
         self.machine_info = df.copy()
 
     def create_tables(self, pivot=True):
@@ -345,58 +355,58 @@ class OperationalMMInput:
         df = self.merged_file.copy()
         df.amount = df.amount.astype(int)
         df.cycle_times = df.cycle_times.astype(float)
-        df.cycle_times = df.amount*df.cycle_times.astype(float)
-        df.drop(joining_indices(df), inplace = True)
-        df.drop(df[df.product_no.eq(df.product_no.shift(1, fill_value = 0)) & df.level.eq(1)].index, inplace = True)
+        df.cycle_times = df.amount * df.cycle_times.astype(float)
+        df.drop(joining_indices(df), inplace=True)
+        df.drop(df[df.product_no.eq(df.product_no.shift(1, fill_value=0)) & df.level.eq(1)].index, inplace=True)
 
         # Legends for the machine route and the product number index
-        production_path = df.groupby("station", as_index = False).agg({"level": "mean"})
-        production_path.sort_values("level", ascending = False, inplace = True)
+        production_path = df.groupby("station", as_index=False).agg({"level": "mean"})
+        production_path.sort_values("level", ascending=False, inplace=True)
         machine_legend = production_path["station"].copy()
         machine_legend.index = list(range(1, machine_legend.shape[0] + 1))
         machine_legend = machine_legend.to_frame()
-        production_path.drop("level", axis = 1, inplace = True)
+        production_path.drop("level", axis=1, inplace=True)
         production_path.columns = [1]
         production_path = production_path.transpose()
         production_path.columns = list(range(1, production_path.shape[1] + 1))
         product_no_legend = DataFrame(df.product_no.unique().tolist(),
-                                      index = list(range(1, df.product_no.nunique() + 1)), columns = ["product_no"])
-        machine_info_df = merge(left = machine_legend, right = self.machine_info, how = "left", left_on = "station",
-                                right_on = "machine").fillna(1).iloc[:, [0, 2, 3]]
+                                      index=list(range(1, df.product_no.nunique() + 1)), columns=["product_no"])
+        machine_info_df = merge(left=machine_legend, right=self.machine_info, how="left", left_on="station",
+                                right_on="machine").fillna(1).iloc[:, [0, 2, 3]]
         machine_info_df.index = list(range(1, machine_info_df.shape[0] + 1))
 
         # AVERAGE ORDER SIZE
-        avg_df = self.order_history.orders.groupby("product_no", as_index = False).agg(
+        avg_df = self.order_history.orders.groupby("product_no", as_index=False).agg(
             {"date": "count", "amount": "sum"})
-        avg_df["order_amount"] = avg_df.amount/avg_df.date
+        avg_df["order_amount"] = avg_df.amount / avg_df.date
         avg_df.order_amount = avg_df.order_amount.floordiv(1) + 1
-        avg_df.drop(["date", "amount"], axis = 1, inplace = True)
-        o = pd.merge(left = pd.DataFrame(self.plan.product_no.unique(), columns = ["product_no"]), right = avg_df,
-                     how = "left", left_on = "product_no", right_on = "product_no").fillna(
+        avg_df.drop(["date", "amount"], axis=1, inplace=True)
+        o = pd.merge(left=pd.DataFrame(self.plan.product_no.unique(), columns=["product_no"]), right=avg_df,
+                     how="left", left_on="product_no", right_on="product_no").fillna(
             avg_df.order_amount.mean().__floordiv__(1))
-        o.set_index(keys = "product_no", inplace = True)
+        o.set_index(keys="product_no", inplace=True)
         # avg_df.drop(["date", "amount"], inplace = True, axis = 1)
         # AVERAGE ORDER SIZE
 
         # SETUP TIMES
-        st = pd.merge(left = production_path.transpose(), right = self.setup, how = "left", left_on = 1,
-                      right_on = "stations_list").iloc[:, [0, 2]].copy()
+        st = pd.merge(left=production_path.transpose(), right=self.setup, how="left", left_on=1,
+                      right_on="stations_list").iloc[:, [0, 2]].copy()
         st[st.columns[1]] = st[st.columns[1]].fillna(0)
-        st.set_index(keys = [1], inplace = True)
+        st.set_index(keys=[1], inplace=True)
         st = st.transpose()
         # SETUP TIMES
 
         # OUTSOURCE AVAILABILITY
-        outsource_perm = pd.merge(left = production_path.transpose(), right = self.machine_info, how = "left",
-                                  left_on = 1, right_on = "machine").loc[:,
+        outsource_perm = pd.merge(left=production_path.transpose(), right=self.machine_info, how="left",
+                                  left_on=1, right_on="machine").loc[:,
                          [production_path.transpose().columns[0], "outsource_availability"]].copy()
         outsource_perm[outsource_perm.columns[1]] = outsource_perm[outsource_perm.columns[1]].fillna(0)
-        outsource_perm.set_index(keys = [1], inplace = True)
+        outsource_perm.set_index(keys=[1], inplace=True)
         outsource_perm = outsource_perm.transpose()
         # OUTSOURCE AVAILABILITY
 
         # Creation of h(times), k(binary), d(order), f(amount), s(shift) and c(cost) tables
-        df = df.groupby(["product_no", "station"], as_index = False).agg({"cycle_times": sum})
+        df = df.groupby(["product_no", "station"], as_index=False).agg({"cycle_times": sum})
         h = df.pivot("product_no", "station", "cycle_times").fillna(0)
         k = df.copy()
         k.at[k.cycle_times > 0, "cycle_times"] = 1
@@ -406,9 +416,12 @@ class OperationalMMInput:
         # CHANGE THIS TO ANY OR IN .TO_LIST MEHOD
         f = []
         for machine in machine_info_df["station"]:
-            if bool(sum(self.math_model_output.station.str.contains(machine))) and bool(sum(machine_info_df.station.str.contains(machine))):
-                f.append(machine_info_df.loc[machine_info_df.station == machine, "quantity"].values[0] + self.math_model_output.loc[self.math_model_output.station == machine, "investments"].values[0])
-            elif bool(sum(self.math_model_output.station.str.contains(machine)) == 0) and bool(sum(machine_info_df.station.str.contains(machine))):
+            if bool(sum(self.math_model_output.station.str.contains(machine))) and bool(
+                    sum(machine_info_df.station.str.contains(machine))):
+                f.append(machine_info_df.loc[machine_info_df.station == machine, "quantity"].values[0] +
+                         self.math_model_output.loc[self.math_model_output.station == machine, "investments"].values[0])
+            elif bool(sum(self.math_model_output.station.str.contains(machine)) == 0) and bool(
+                    sum(machine_info_df.station.str.contains(machine))):
                 f.append(machine_info_df.loc[machine_info_df.station == machine, "quantity"].values[0])
             else:
                 f.append(1)
@@ -422,9 +435,9 @@ class OperationalMMInput:
                 s.append(machine_info_df.loc[machine_info_df.station == machine, "shift"].values[0])
             else:
                 s.append(1)
-        s = pd.DataFrame(data = s, columns = ["shift"]).transpose().copy()
+        s = pd.DataFrame(data=s, columns=["shift"]).transpose().copy()
         # s = machine_info_df["shift"].to_frame().transpose().copy()
-        c = DataFrame(index = [1, 2, 3], columns = [1], data = [0, 23, 151]).transpose()
+        c = DataFrame(index=[1, 2, 3], columns=[1], data=[0, 23, 151]).transpose()
         if pivot:
             d = self.pivot_days()
         else:
@@ -465,106 +478,79 @@ class TacticalMMInput:
         self.order_time_parameters = None
         self.probabilities = None
 
-    @staticmethod
-    def create_scenarios(forecast):
-        temp_forecast = forecast.copy()
-        temp_forecast.drop(temp_forecast[temp_forecast.sum(axis = 1) == 0].index, inplace = True)
-        forecast_index = temp_forecast.index
-        temp_forecast = temp_forecast.reindex(temp_forecast.index.repeat(5))
-        temp_forecast.reset_index(inplace = True)
-        temp_forecast.iloc[::5, -12:] = temp_forecast.iloc[::5, -12:].sub(temp_forecast.iloc[::5, -12:].std(axis = 1)*1,
-                                                                          axis = 0)
-        temp_forecast.iloc[1::5, -12:] = temp_forecast.iloc[1::5, -12:].sub(
-            temp_forecast.iloc[1::5, -12:].std(axis = 1)*0.5,
-            axis = 0)
-        temp_forecast.iloc[3::5, -12:] = temp_forecast.iloc[3::5, -12:].add(
-            temp_forecast.iloc[3::5, -12:].std(axis = 1)*0.5,
-            axis = 0)
-        temp_forecast.iloc[4::5, -12:] = temp_forecast.iloc[4::5, -12:].add(
-            temp_forecast.iloc[4::5, -12:].std(axis = 1)*1,
-            axis = 0)
-        num_forecast = temp_forecast._get_numeric_data()
-        num_forecast[num_forecast < 0] = 0
-        num_forecast.astype(int)
-        temp_forecast.iloc[:, -12:] = num_forecast
-        temp_forecast["new_index"] = [1, 2, 3, 4, 5]*forecast_index.nunique()
-        temp_forecast.set_index(keys = [temp_forecast.columns[0], "new_index"], inplace = True)
-        temp_forecast.index.names = ["", ""]
-        return temp_forecast
-
     def cross_trim(self):
         # Placeholder
         self.forecast = extract_forecast(self.forecast)
         forecast_idx = self.forecast.index.to_list()
         bom_idx = self.merged_file.product_no.str.split(".").apply(lambda x: x[0]).isin(forecast_idx)
-        self.merged_file.drop(self.merged_file[~bom_idx].index, inplace = True)
+        self.merged_file.drop(self.merged_file[~bom_idx].index, inplace=True)
         self.forecast.drop(self.forecast[~self.forecast.index.to_series().isin(
-            list(self.merged_file.product_no.str.split(".").apply(lambda x: x[0]).unique()))].index, inplace = True)
-        self.merged_file.reset_index(inplace = True, drop = True)
+            list(self.merged_file.product_no.str.split(".").apply(lambda x: x[0]).unique()))].index, inplace=True)
+        self.merged_file.reset_index(inplace=True, drop=True)
 
-    def set_order_times(self, l: list):
-        self.order_time_parameters = pd.DataFrame(data = l, index = [1, 2]).transpose()
+    def set_order_times(self, order_list: list):
+        self.order_time_parameters = pd.DataFrame(data=order_list, index=[1, 2]).transpose()
 
-    def set_probabilities(self, l: list):
-        self.probabilities = pd.DataFrame(data = l, index = [1, 2, 3, 4, 5]).transpose()
+    def set_probabilities(self, probability_list: list):
+        self.probabilities = pd.DataFrame(data=probability_list, index=[1, 2, 3, 4, 5]).transpose()
 
     def create_tables(self):
         self.cross_trim()
         product_family_legend = DataFrame(
             list(self.merged_file.product_no.str.split(".").apply(lambda x: x[0]).unique()),
-            columns = ["product_family"])
-        prod_path = self.merged_file.groupby(by = "station", as_index = False).agg({"level": "mean"})
-        prod_path.sort_values(by = "level", ascending = False, inplace = True)
-        machine_legend = DataFrame(prod_path.station.to_list(), columns = ["station"])
+            columns=["product_family"])
+        prod_path = self.merged_file.groupby(by="station", as_index=False).agg({"level": "mean"})
+        prod_path.sort_values(by="level", ascending=False, inplace=True)
+        machine_legend = DataFrame(prod_path.station.to_list(), columns=["station"])
 
         bom_data = self.merged_file.copy()
         bom_data.amount = bom_data.amount.astype(int)
         bom_data.cycle_times = bom_data.cycle_times.astype(float)
-        bom_data.cycle_times = bom_data.amount*bom_data.cycle_times.astype(float)
-        bom_data.drop(joining_indices(bom_data), inplace = True)
+        bom_data.cycle_times = bom_data.amount * bom_data.cycle_times.astype(float)
+        bom_data.drop(joining_indices(bom_data), inplace=True)
         bom_data.drop(
-            bom_data[bom_data.product_no.eq(bom_data.product_no.shift(1, fill_value = 0)) & bom_data.level.eq(1)].index,
-            inplace = True)
-        bom_data = bom_data.groupby(by = ["product_no", "station"], as_index = False).agg({"cycle_times": "sum"})
+            bom_data[bom_data.product_no.eq(bom_data.product_no.shift(1, fill_value=0)) & bom_data.level.eq(1)].index,
+            inplace=True)
+        bom_data = bom_data.groupby(by=["product_no", "station"], as_index=False).agg({"cycle_times": "sum"})
         bom_data["product_family"] = bom_data.product_no.str.split(".").apply(lambda x: x[0])
         prod_cnt = {x: bom_data[bom_data.product_family == x].product_no.nunique() for x in
                     list(bom_data.product_family.unique())}
-        bom_data = bom_data.groupby(by = ["product_family", "station"], as_index = False).agg(
+        bom_data = bom_data.groupby(by=["product_family", "station"], as_index=False).agg(
             {"cycle_times": "mean", "product_no": "count"})
         bom_data.columns = ["product_family", "station", "cycle_times", "product_count"]
-        bom_data["probability"] = bom_data.product_count/bom_data.product_family.replace(prod_cnt)
+        bom_data["probability"] = bom_data.product_count / bom_data.product_family.replace(prod_cnt)
 
-        machine_info_df = merge(left = machine_legend, right = self.machine_info, how = "left", left_on = "station",
-                                right_on = "machine").fillna(1).iloc[:, [0, 2, 3, 4, 5]]
+        machine_info_df = merge(left=machine_legend, right=self.machine_info, how="left", left_on="station",
+                                right_on="machine").fillna(1).iloc[:, [0, 2, 3, 4, 5]]
 
         # AVERAGE ORDER SIZE
         avg_df = self.order_history.orders.copy()
         avg_df["product_family"] = avg_df.product_no.str.split(".").apply(lambda x: x[0])
-        avg_df = avg_df.groupby("product_family", as_index = False).agg({"date": "count", "amount": "sum"})
-        avg_df["order_amount"] = avg_df.amount/avg_df.date
+        avg_df = avg_df.groupby("product_family", as_index=False).agg({"date": "count", "amount": "sum"})
+        avg_df["order_amount"] = avg_df.amount / avg_df.date
         avg_df.order_amount = avg_df.order_amount.floordiv(1) + 1
-        avg_df.drop(["date", "amount"], axis = 1, inplace = True)
-        o = pd.merge(left = pd.DataFrame(product_family_legend.product_family.unique(), columns = ["product_family"]),
-                     right = avg_df, how = "left", left_on = "product_family", right_on = "product_family").fillna(
+        avg_df.drop(["date", "amount"], axis=1, inplace=True)
+        o = pd.merge(left=pd.DataFrame(product_family_legend.product_family.unique(), columns=["product_family"]),
+                     right=avg_df, how="left", left_on="product_family", right_on="product_family").fillna(
             avg_df.order_amount.mean().__floordiv__(1))
-        o.set_index(keys = "product_family", inplace = True)
+        o.set_index(keys="product_family", inplace=True)
         # avg_df.drop(["date", "amount"], inplace = True, axis = 1)
         # AVERAGE ORDER SIZE
 
         # SETUP TIMES
-        st = pd.merge(left = prod_path.station, right = self.setup, how = "left", left_on = "station",
-                      right_on = "stations_list").iloc[:, [0, 2]].copy()
+        st = pd.merge(left=prod_path.station, right=self.setup, how="left", left_on="station",
+                      right_on="stations_list").iloc[:, [0, 2]].copy()
         st[st.columns[1]] = st[st.columns[1]].fillna(0)
-        st.set_index(keys = "station", inplace = True)
+        st.set_index(keys="station", inplace=True)
         st = st.transpose()
         # SETUP TIMES
 
         # OUTSOURCE AVAILABILITY
-        outsource_perm = pd.merge(left = prod_path.station, right = self.machine_info, how = "left",
-                                  left_on = "station", right_on = "machine").loc[:,
+        outsource_perm = pd.merge(left=prod_path.station, right=self.machine_info, how="left",
+                                  left_on="station", right_on="machine").loc[:,
                          ["station", "outsource_availability"]].copy()
         outsource_perm[outsource_perm.columns[1]] = outsource_perm[outsource_perm.columns[1]].fillna(0)
-        outsource_perm.set_index(keys = "station", inplace = True)
+        outsource_perm.set_index(keys="station", inplace=True)
         outsource_perm = outsource_perm.transpose()
         # OUTSOURCE AVAILABILITY
 
@@ -575,20 +561,20 @@ class TacticalMMInput:
         k = k[machine_info_df[machine_info_df.columns[0]]].copy()
         f = machine_info_df["quantity"].to_frame().transpose().copy()
         # Workdays will be implemented
-        w = DataFrame([25, 24, 25, 25, 25, 19, 26, 23, 25, 25, 26, 23], index = list(range(1, 13))).transpose()
+        w = DataFrame([25, 24, 25, 25, 25, 19, 26, 23, 25, 25, 26, 23], index=list(range(1, 13))).transpose()
         # Budget part will be implemented
         # b = DataFrame([100000]*12, index = list(range(1, 13))).transpose()
         # Costs will be implemented
-        c = DataFrame([20, 23, 151], index = [1, 2, 3]).transpose()
+        c = DataFrame([20, 23, 151], index=[1, 2, 3]).transpose()
         # Machine costs will be implemented
-        cr = merge(left = prod_path, right = machine_info_df, how = "left", left_on = "station",
-                   right_on = "station").fillna(0)["procurement_cost"].to_frame().transpose()
+        cr = merge(left=prod_path, right=machine_info_df, how="left", left_on="station",
+                   right_on="station").fillna(0)["procurement_cost"].to_frame().transpose()
 
         for curr_df in [product_family_legend, machine_legend, d, h, k, f, o, st, cr, outsource_perm]:
             curr_df.index = list(range(1, curr_df.shape[0] + 1))
             curr_df.columns = list(range(1, curr_df.shape[1] + 1))
 
-        d = self.create_scenarios(d)
+        d = create_scenarios(d)
         d = d.astype(int)
 
         return product_family_legend, machine_legend, d, h, k, f, w, c, cr, o, st, outsource_perm
@@ -596,6 +582,33 @@ class TacticalMMInput:
     def create_file(self, file_dir):
         self.product_family_legend, self.machine_legend, self.forecast, self.times, self.route_prob, self.machine_cnt, self.workdays, self.cost, self.machine_price, self.average_order, self.setup_times, self.outsource_availability = self.create_tables()
         create_xl_file(self, file_dir, "tactical_math_model")
+
+
+def create_scenarios(forecast):
+    temp_forecast = forecast.copy()
+    temp_forecast.drop(temp_forecast[temp_forecast.sum(axis=1) == 0].index, inplace=True)
+    forecast_index = temp_forecast.index
+    temp_forecast: pd.DataFrame = temp_forecast.reindex(temp_forecast.index.repeat(5))
+    temp_forecast.reset_index(inplace=True)
+    temp_forecast.iloc[::5, -12:] = temp_forecast.iloc[::5, -12:].sub(temp_forecast.iloc[::5, -12:].std(axis=1) * 1,
+                                                                      axis=0)
+    temp_forecast.iloc[1::5, -12:] = temp_forecast.iloc[1::5, -12:].sub(
+        temp_forecast.iloc[1::5, -12:].std(axis=1) * 0.5,
+        axis=0)
+    temp_forecast.iloc[3::5, -12:] = temp_forecast.iloc[3::5, -12:].add(
+        temp_forecast.iloc[3::5, -12:].std(axis=1) * 0.5,
+        axis=0)
+    temp_forecast.iloc[4::5, -12:] = temp_forecast.iloc[4::5, -12:].add(
+        temp_forecast.iloc[4::5, -12:].std(axis=1) * 1,
+        axis=0)
+    num_forecast = temp_forecast._get_numeric_data()
+    num_forecast[num_forecast < 0] = 0
+    num_forecast.astype(int)
+    temp_forecast.iloc[:, -12:] = num_forecast
+    temp_forecast["new_index"] = [1, 2, 3, 4, 5] * forecast_index.nunique()
+    temp_forecast.set_index(keys=[temp_forecast.columns[0], "new_index"], inplace=True)
+    temp_forecast.index.names = ["", ""]
+    return temp_forecast
 
 
 if __name__ == "__main__":

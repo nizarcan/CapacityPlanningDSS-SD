@@ -1,5 +1,5 @@
-from app_backend.compiler import revert_checkpoint, TacticalMMInput
-import app_backend.constants as constants
+from backend.compiler import revert_checkpoint, TacticalMMInput
+import backend.constants as constants
 
 
 archive = revert_checkpoint(constants.archive_file_path)

@@ -1,4 +1,4 @@
-import app_backend.constants as constants
+import backend.constants as constants
 import pandas as pd
 import numpy as np
 

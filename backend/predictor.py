@@ -29,7 +29,7 @@ def predict_next_12_months(data):
 
 
 if __name__=="__main__":
-    from app_backend.compiler import revert_checkpoint
+    from backend.compiler import revert_checkpoint
 
     archive = revert_checkpoint("C://sl_data//input//Archive.mng")
     forecast = predict_next_12_months(archive.order_history.agg(pivot=True).iloc[:, :-12])

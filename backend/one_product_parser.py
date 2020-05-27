@@ -1,8 +1,8 @@
-from app_backend.utils.xl_ops import load_file, load_plan, add_plan, create_xl_file
-from app_backend.compiler import revert_checkpoint, ArchiveDatabase
-from app_backend.utils.finder import product_numerator, joining_indices
-from app_backend.utils.demand_util import extract_forecast
-import app_backend.constants as constants
+from backend.utils.xl_ops import load_file, load_plan, add_plan, create_xl_file
+from backend.compiler import revert_checkpoint, ArchiveDatabase
+from backend.utils.finder import product_numerator, joining_indices
+from backend.utils.demand_util import extract_forecast
+import backend.constants as constants
 import numpy as np
 import pandas as pd
 

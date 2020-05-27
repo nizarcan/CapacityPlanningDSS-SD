@@ -1,4 +1,4 @@
-import app_backend.constants as constants
+import backend.constants as constants
 from datetime import datetime
 import pandas as pd
 

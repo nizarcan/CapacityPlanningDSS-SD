@@ -4,7 +4,7 @@ import random
 from openpyxl import load_workbook
 from win32com.client import Dispatch
 from string import ascii_uppercase as auc
-from app_backend.utils.errors import WrongFileExtensionError, WrongKeywordError
+from backend.utils.errors import WrongFileExtensionError, WrongKeywordError
 
 auc = list(auc) + [x + y for x in auc for y in auc]
 

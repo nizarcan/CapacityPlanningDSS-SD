@@ -3,7 +3,7 @@ import pandas as pd
 from random import randint
 from statistics import mode
 from datetime import datetime
-import app_backend.utils.finder as finder
+import backend.utils.finder as finder
 from dateutil.relativedelta import relativedelta
 
 
@@ -634,7 +634,7 @@ def create_input_branches(group):
 
 
 def create_sim_timestamps(group):
-    if group.value is 0:
+    if group.value == 0:
         return pd.DataFrame(columns = ["product_family", "amount", "start_date", "due_date"])
     else:
         length_multiplier = int(np.select(

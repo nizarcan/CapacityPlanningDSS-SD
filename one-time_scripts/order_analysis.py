@@ -1,6 +1,6 @@
-from app_backend.compiler import revert_checkpoint
+from backend.compiler import revert_checkpoint
 from matplotlib import pyplot as plt
-import app_backend.constants as constants
+import backend.constants as constants
 
 
 def load_archive():
