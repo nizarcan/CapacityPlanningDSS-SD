@@ -4,7 +4,7 @@
 used for the project's two-levelled capacity evaluation.<br /><br />The softwares used for mathematical 
 programming and simulation are:</p>
 <li>GAMS
-<li>Arean Simulation
+<li>Arena Simulation
 
 <h2>Classes</h2>
 <li>ArchivalDatabase: The class that are used to hold information and to be archived.
