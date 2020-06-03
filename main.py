@@ -1,62 +1,226 @@
-from backend.compiler import ArchiveDatabase, OperationalSMInput, OperationalMMInput, TacticalSMInput, TacticalMMInput, revert_checkpoint
-# from app_backend.utils.demand_util import OrderHistory
-import backend.constants as constants
+from backend.utils.file_dialog import *
+from backend.compiler import *
+from backend.analyzer import *
+import eel
+
+eel.init('frontend')
+# Archive initialization
+archive = None
+archive_path = None
+# Paths
+result_path = None
+analysis_dir = None
+plan_path = None
+second_plan_path = None
+workdays_path = None
+second_workdays_path = None
+upper_model_output_path = None
+
+output_dir = None
+
+print('YnUgZMO8bnlhZGEgaXlpbGVyLCBrw7Z0w7xsZXIsIGludGlrYW0gc2F2YcWfxLEsIGJleWF6IG5pbmph')
+print('is github working?')
+
+@eel.expose
+def open_url(file_name, size=(1200, 600)):
+    eel.start(file_name, size=size, port=0)
 
 
-def create_archive():
-    model = ArchiveDatabase()
-    model.load_files_to_be_deleted(constants.tbd_path)
-    model.load_machine_info(constants.machine_info_path)
-    model.load_bom(constants.bom_path)
-    model.load_times(constants.times_path)
-    model.initialize_order_history()
-    model.merge_files()
-    model.save_checkpoint(constants.archive_file_path)
-    return model
+########################################################################################################################
+########################################################################################################################
+#                                               TOOLS FOR ARCHIVAL                                                     #
+########################################################################################################################
+########################################################################################################################
+@eel.expose
+def get_archive_path():
+    global archive_path
+    archive_path = ask_file((("Archive Files", "*.mng"),))
+    if archive_path is not None:
+        archive_path = archive_path.name
+        return "../" + "/".join(archive_path.split("/")[-2:])
+    else:
+        archive_path = None
+        return 0
 
 
+@eel.expose
 def load_archive():
-    return revert_checkpoint(constants.archive_file_path)
+    global archive_path, archive
+    if archive_path is not None:
+        archive = revert_checkpoint(archive_path)
+        print(archive)
+        # open_url("index.html", size=(1200, 600))
+    else:
+        return 0
 
 
-def create_operational_simulation(model, ay):
-    op_input_file = OperationalSMInput(model)
-    op_input_file.load_plan(constants.plans[ay])
-    op_input_file.load_plan(constants.plans[ay])
-    op_input_file.load_days(constants.days[ay])
-    op_input_file.load_math_model_output(constants.results["OperationalMMInput"])
-    op_input_file.create_tables()
-    op_input_file.create_file(constants.output_path)
-    return op_input_file
+@eel.expose
+def proceed_to_index():
+    if archive is not None:
+        return 1
+    else:
+        return 0
 
 
-def create_operational_math_model(model, ay, senaryo):
-    out_struct = OperationalMMInput(model, constants.plans[ay], senaryo)
-    out_struct.load_days(constants.days[ay])
-    out_struct.load_math_model_output(constants.results["TacticalMMInput"])
-    out_struct.create_file(constants.output_path)
-    return out_struct
+########################################################################################################################
+########################################################################################################################
+#                                               TOOLS FOR ANALYSIS                                                     #
+########################################################################################################################
+########################################################################################################################
+@eel.expose
+def get_result_path(filetype):
+    global result_path
+    if filetype == "xl":
+        result_path = ask_file((("Excel Files", ("*.xlsx", "*.xls", "*.csv")),))
+    elif filetype == "txt":
+        result_path = ask_file((("Text Files", "*.txt"),))
+    if result_path is not None:
+        result_path = result_path.name
+        return "../" + "/".join(result_path.split("/")[-2:])
+    else:
+        result_path = None
+        return 0
 
 
-def create_tactical_simulation(model):
-    tac_input_file = TacticalSMInput(model)
-    tac_input_file.create_tables()
-    tac_input_file.create_file(constants.output_path)
-    return tac_input_file
+@eel.expose
+def get_result_analysis_dir():
+    global analysis_dir
+    analysis_dir = ask_directory()
+    if analysis_dir != "":
+        return "../" + analysis_dir.split("/")[-1] + "/"
+    else:
+        analysis_dir = None
+        return 0
 
 
-def create_tactical_math_model(model):
-    tacmm = TacticalMMInput(model)
-    tacmm.set_order_times([0.4, 0.2])
-    tacmm.set_probabilities([0.1, 0.2, 0.4, 0.2, 0.1])
-    tacmm.create_file(constants.output_path)
-    return tacmm
+@eel.expose
+def analyze_result(result_type):
+    global result_path, analysis_dir
+    try:
+        if result_type == "tkpm":
+            analyze_tkpm_results(result_path, analysis_dir)
+        elif result_type == "okpm":
+            analyze_okpm_results(result_path, analysis_dir)
+        elif result_type == "okpb":
+            analyze_okpb_results(result_path, analysis_dir)
+        return 1
+    except:
+        return 0
+
+
+########################################################################################################################
+########################################################################################################################
+#                                       TOOLS FOR INPUT FILE CREATION                                                  #
+########################################################################################################################
+########################################################################################################################
+
+@eel.expose
+def get_input_file_output_dir():
+    global output_dir
+    output_dir = ask_directory()
+    if output_dir != "":
+        output_dir += "/"
+        return "../" + output_dir.split("/")[-2] + "/"
+    else:
+        output_dir = None
+        return 0
+
+
+@eel.expose
+def get_plan():
+    global plan_path
+    plan_path = ask_file((("Excel Files", ("*.xlsx", "*.xls", "*.csv")),))
+    if plan_path is not None:
+        plan_path = plan_path.name
+        return "../" + "/".join(plan_path.split("/")[-2:])
+    else:
+        plan_path = None
+        return 0
+
+
+@eel.expose
+def get_second_plan():
+    global second_plan_path
+    second_plan_path = ask_file((("Excel Files", ("*.xlsx", "*.xls", "*.csv")),))
+    if second_plan_path is not None:
+        second_plan_path = second_plan_path.name
+        return "../" + "/".join(second_plan_path.split("/")[-2:])
+    else:
+        second_plan_path = None
+        return 0
+
+
+@eel.expose
+def get_workdays():
+    global workdays_path
+    workdays_path = ask_file((("Excel Files", ("*.xlsx", "*.xls", "*.csv")),))
+    if workdays_path is not None:
+        workdays_path = workdays_path.name
+        return "../" + "/".join(workdays_path.split("/")[-2:])
+    else:
+        workdays_path = None
+        return 0
+
+
+@eel.expose
+def get_second_workdays():
+    global second_workdays_path
+    second_workdays_path = ask_file((("Excel Files", ("*.xlsx", "*.xls", "*.csv")),))
+    if second_workdays_path is not None:
+        second_workdays_path = second_workdays_path.name
+        return "../" + "/".join(second_workdays_path.split("/")[-2:])
+    else:
+        second_workdays_path = None
+        return 0
+
+
+@eel.expose
+def get_upper_model_output():
+    global upper_model_output_path
+    upper_model_output_path = ask_file((("Excel Files", ("*.xlsx", "*.xls", "*.csv")),))
+    if upper_model_output_path is not None:
+        upper_model_output_path = upper_model_output_path.name
+        return "../" + "/".join(upper_model_output_path.split("/")[-2:])
+    else:
+        upper_model_output_path = None
+        return 0
+
+
+@eel.expose
+def create_input_file(input_type, *args):
+    global plan_path, second_plan_path, workdays_path, second_workdays_path, output_dir, archive
+    try:
+        if input_type == "tkpm":
+            input_file = TacticalMMInput(archive)
+            input_file.set_order_times(args[0])
+            input_file.set_probabilities(args[1])
+            input_file.create_file(output_dir)
+        elif input_type == "okpm":
+            input_file = OperationalMMInput(archive, plan_path, args[0])
+            input_file.load_days(workdays_path)
+            input_file.load_math_model_output(upper_model_output_path)
+            input_file.create_file(output_dir)
+        if input_type == "okpb":
+            input_file = OperationalSMInput(archive)
+            input_file.load_plan(plan_path)
+            input_file.load_days(workdays_path)
+            if args[0]:
+                input_file.load_plan(plan_path)
+            else:
+                input_file.load_plan(second_plan_path)
+                input_file.load_days(second_workdays_path)
+            input_file.load_math_model_output(upper_model_output_path)
+            input_file.create_tables()
+            input_file.create_file(output_dir)
+    except:
+        eel.raiseCreationErrorJs()()
+
+
+@eel.expose
+def get_from_js(data):
+    global archive
+    archive = data
 
 
 if __name__ == "__main__":
-    archive = create_archive()
-    # archive = load_archive()
-    # op_sm = create_operational_simulation(archive, "aralik")
-    # create_tactical_simulation(archive)
-    # op_mm = create_operational_math_model(archive, "aralik", 4)
-    # tmm = create_tactical_math_model(archive)
+    open_url("login.html", size=(1200, 600))

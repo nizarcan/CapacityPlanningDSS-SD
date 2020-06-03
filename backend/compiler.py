@@ -65,6 +65,52 @@ class ArchiveDatabase:
         self.merged_file = merge_bom_and_times(self.bom_file, self.times_file)
         self.merged_file = arrange_df(self.merged_file, "merged", assembly_df=self.assembly_df)
 
+    def update_bom(self, file_dir):
+        new_bom = load_file(file_dir)
+        new_bom = arrange_df(new_bom, "bom", [0, 3, 2, 5, 4], self.files_to_be_deleted)
+        existing_bom_products = self.bom_file.product_no.unique().tolist()
+        new_bom_products = new_bom.product_no.unique().tolist()
+        self.bom_file.drop(self.bom_file[self.bom_file.product_no.isin([x for x in existing_bom_products if x in new_bom_products])].index, inplace=True)
+        self.bom_file = pd.concat([self.bom_file, new_bom], ignore_index=True)
+
+    def update_times(self, file_dir):
+        new_times = load_file(file_dir)
+        new_times, new_assembly, new_cmy, new_temp = arrange_df(new_times, "times", relevant_col_idx=[3, 25, 29, 28])
+        existing_times_products = self.times_file.part_no.unique().tolist()
+        new_times_products = new_times.part_no.unique().tolist()
+        self.times_file.drop(self.times_file[self.times_file.part_no.isin([x for x in existing_times_products if x in new_times_products])].index, inplace=True)
+        self.times_file = pd.concat([self.times_file, new_times], ignore_index=True)
+
+        existing_assembly_products = self.assembly_df.part_no.unique().tolist()
+        new_assembly_products = new_assembly.part_no.unique().tolist()
+        self.assembly_df.drop(self.assembly_df[self.assembly_df.part_no.isin([x for x in existing_assembly_products if x in new_assembly_products])].index, inplace=True)
+        self.assembly_df = pd.concat([self.assembly_df, new_assembly], ignore_index=True)
+
+        existing_cmy_products = self.cmy_df.part_no.unique().tolist()
+        new_cmy_products = new_cmy.part_no.unique().tolist()
+        self.cmy_df.drop(self.cmy_df[self.cmy_df.part_no.isin([x for x in existing_cmy_products if x in new_cmy_products])].index, inplace=True)
+        self.cmy_df = pd.concat([self.cmy_df, new_cmy], ignore_index=True)
+
+        existing_temp_stations = self.temp.stations_list.unique().tolist()
+        new_temp_stations = new_temp.stations_list.unique().tolist()
+        self.temp.drop(self.temp[self.temp.stations_list.isin([x for x in existing_temp_stations if x in new_temp_stations])].index, inplace=True)
+        self.temp = pd.concat([self.temp, new_temp], ignore_index=True)
+        self.temp.sort_values(by="stations_list", ascending=True, inplace=True)
+
+    def update_tbd(self, file_dir):
+        self.files_to_be_deleted = load_file(file_dir)
+
+    def update_machine_info(self, file_dir):
+        new_machine_df = load_file(file_dir)
+        existing_machines = self.machine_info.machine.unique().tolist()
+        new_machines = new_machine_df.machine.unique().tolist()
+        self.machine_info.drop(self.machine_info[self.machine_info.machine.isin([x for x in existing_machines if x in new_machines])].index, inplace=True)
+        self.machine_info = pd.concat([self.machine_info, new_machine_df], ignore_index=True)
+        self.machine_info.sort_values(by="machine", ascending=True, inplace=True)
+
+    def update_orders(self, file_dir):
+        self.order_history.add_orders(file_dir)
+
 
 class OperationalSMInput:
     def __init__(self, parent_obj):
