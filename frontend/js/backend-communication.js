@@ -322,9 +322,24 @@ function updateArchive(){
             selectedFileTypes.push(fileTypeIds[i])
         }
     }
+    eel.update_archive(selectedFileTypes)
+}
 
-    for (i=0; i<selectedFileTypes.length; i++) {
+function getNewFilePath(fileType){
+    currentFileType = fileType
+    eel.update_new_file_path(fileType)(updateNewFilePath)
+}
 
+function updateNewFilePath(path){
+    if (path != 0){
+        console.log(path)
+        document.getElementById(currentFileType + "Path").textContent = path
+    }
+    else {
+        var alertBox = document.getElementById("noFileSelectedAlert")
+        alertBox.style.display = "block"
+        var archivePathLabel = document.getElementById("archivePathLabel")
+        archivePathLabel.textContent = "Dosya Seçilmedi..."
     }
 }
 

@@ -15,11 +15,13 @@ second_plan_path = None
 workdays_path = None
 second_workdays_path = None
 upper_model_output_path = None
+# ---
+new_file_paths = {x: None for x in ["bom", "times", "order", "machineInfo", "tbd"]}
 
 output_dir = None
 
 print('YnUgZMO8bnlhZGEgaXlpbGVyLCBrw7Z0w7xsZXIsIGludGlrYW0gc2F2YcWfxLEsIGJleWF6IG5pbmph')
-print('is github working?')
+
 
 @eel.expose
 def open_url(file_name, size=(1200, 600)):
@@ -59,6 +61,41 @@ def proceed_to_index():
     if archive is not None:
         return 1
     else:
+        return 0
+
+
+########################################################################################################################
+########################################################################################################################
+#                                           TOOLS FOR ARCHIVE UPDATE                                                   #
+########################################################################################################################
+########################################################################################################################
+# noinspection PyUnresolvedReferences
+@eel.expose
+def update_archive(selected_file_types):
+    global archive
+    if "tbd" in selected_file_types:
+        archive.update_tdb(new_file_paths["tbd"])
+    elif "machineInfo" in selected_file_types:
+        archive.update_tdb(new_file_paths["machineInfo"])
+    elif "bom" in selected_file_types:
+        archive.update_tdb(new_file_paths["bom"])
+    elif "times" in selected_file_types:
+        archive.update_tdb(new_file_paths["times"])
+    elif "order" in selected_file_types:
+        archive.update_tdb(new_file_paths["order"])
+    if ("bom" in selected_file_types) | ("times" in selected_file_types):
+        archive.merge_files()
+
+
+@eel.expose
+def update_new_file_path(file_type):
+    global new_file_paths
+    new_file_paths[file_type] = ask_file((("Excel Files", ("*.xlsx", "*.xls", "*.csv")),))
+    if new_file_paths[file_type] is not None:
+        new_file_paths[file_type] = new_file_paths[file_type].name
+        return "../" + "/".join(new_file_paths[file_type].split("/")[-2:])
+    else:
+        new_file_paths[file_type] = None
         return 0
 
 
