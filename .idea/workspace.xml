@@ -19,14 +19,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ce5f1578-97a9-4ac7-beac-7168ab342862" name="Default Changelist" comment="cleaned repo">
+    <list default="true" id="ce5f1578-97a9-4ac7-beac-7168ab342862" name="Default Changelist" comment="archive update added">
       <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/archive-updater.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/archive-updater.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/js/backend-communication.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/backend-communication.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/media/9606031aabebde32fa96edeff071a132.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/okpb-analyzer.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/okpb-analyzer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +87,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591174416028</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="archive update added">
+      <created>1591177954448</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1591177954448</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -108,7 +110,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="cleaned repo" />
-    <option name="LAST_COMMIT_MESSAGE" value="cleaned repo" />
+    <MESSAGE value="archive update added" />
+    <option name="LAST_COMMIT_MESSAGE" value="archive update added" />
   </component>
   <component name="WindowStateProjectService">
     <state x="669" y="115" key="#main" timestamp="1590337261422">
@@ -151,10 +154,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="461" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1591173085928" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1591174460487">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1591177955710">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1591174460487" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1591177955710" />
     <state width="487" height="523" key="XDebugger.FullValuePopup" timestamp="1591176811192">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

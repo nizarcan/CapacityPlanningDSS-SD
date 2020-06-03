@@ -2,6 +2,8 @@
 * text=auto
 *.python linguist-detectable=true
 *.js linguist-detectable=true
+moment.js linguist-detectable=false
+main.js linguist-detectable=false
 *.html linguist-detectable=false
 *.css linguist-detectable=false
 *.xml linguist-detectable=false
