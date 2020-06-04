@@ -171,87 +171,11 @@
                 <div class="container-fluid">
                     <div class="header-wrap">
                         <form class="form-header" action="" method="POST">
-                            <!--                                <input class="au-input au-input&#45;&#45;xl" type="text" name="search" placeholder="Özellik arayın..." />-->
-                            <!--                                <button class="au-btn&#45;&#45;submit" type="submit">-->
-                            <!--                                    <i class="zmdi zmdi-search"></i>-->
-                            <!--                                </button>-->
                         </form>
                         <div class="header-button" align="right">
                             <div class="noti-wrap">
-                                <!--                                    <div class="noti__item js-item-menu">-->
-                                <!--                                        <i class="zmdi zmdi-comment-more"></i>-->
-                                <!--                                        <span class="quantity">1</span>-->
-                                <!--                                        <div class="mess-dropdown js-dropdown">-->
-                                <!--                                            <div class="mess__title">-->
-                                <!--                                                <p>You have 2 news message</p>-->
-                                <!--                                            </div>-->
-                                <!--                                            <div class="mess__item">-->
-                                <!--                                                <div class="image img-cir img-40">-->
-                                <!--                                                    <img src="images/icon/avatar-06.jpg" alt="Michelle Moreno" />-->
-                                <!--                                                </div>-->
-                                <!--                                                <div class="content">-->
-                                <!--                                                    <h6>Michelle Moreno</h6>-->
-                                <!--                                                    <p>Have sent a photo</p>-->
-                                <!--                                                    <span class="time">3 min ago</span>-->
-                                <!--                                                </div>-->
-                                <!--                                            </div>-->
-                                <!--                                            <div class="mess__item">-->
-                                <!--                                                <div class="image img-cir img-40">-->
-                                <!--                                                    <img src="images/icon/avatar-04.jpg" alt="Diane Myers" />-->
-                                <!--                                                </div>-->
-                                <!--                                                <div class="content">-->
-                                <!--                                                    <h6>Diane Myers</h6>-->
-                                <!--                                                    <p>You are now connected on message</p>-->
-                                <!--                                                    <span class="time">Yesterday</span>-->
-                                <!--                                                </div>-->
-                                <!--                                            </div>-->
-                                <!--                                            <div class="mess__footer">-->
-                                <!--                                                <a href="#">View all messages</a>-->
-                                <!--                                            </div>-->
-                                <!--                                        </div>-->
-                                <!--                                    </div>-->
-                                <!--                                    <div class="noti__item js-item-menu">-->
-                                <!--                                        <i class="zmdi zmdi-email"></i>-->
-                                <!--                                        <span class="quantity">1</span>-->
-                                <!--                                        <div class="email-dropdown js-dropdown">-->
-                                <!--                                            <div class="email__title">-->
-                                <!--                                                <p>You have 3 New Emails</p>-->
-                                <!--                                            </div>-->
-                                <!--                                            <div class="email__item">-->
-                                <!--                                                <div class="image img-cir img-40">-->
-                                <!--                                                    <img src="images/icon/avatar-06.jpg" alt="Cynthia Harvey" />-->
-                                <!--                                                </div>-->
-                                <!--                                                <div class="content">-->
-                                <!--                                                    <p>Meeting about new dashboard...</p>-->
-                                <!--                                                    <span>Cynthia Harvey, 3 min ago</span>-->
-                                <!--                                                </div>-->
-                                <!--                                            </div>-->
-                                <!--                                            <div class="email__item">-->
-                                <!--                                                <div class="image img-cir img-40">-->
-                                <!--                                                    <img src="images/icon/avatar-05.jpg" alt="Cynthia Harvey" />-->
-                                <!--                                                </div>-->
-                                <!--                                                <div class="content">-->
-                                <!--                                                    <p>Meeting about new dashboard...</p>-->
-                                <!--                                                    <span>Cynthia Harvey, Yesterday</span>-->
-                                <!--                                                </div>-->
-                                <!--                                            </div>-->
-                                <!--                                            <div class="email__item">-->
-                                <!--                                                <div class="image img-cir img-40">-->
-                                <!--                                                    <img src="images/icon/avatar-04.jpg" alt="Cynthia Harvey" />-->
-                                <!--                                                </div>-->
-                                <!--                                                <div class="content">-->
-                                <!--                                                    <p>Meeting about new dashboard...</p>-->
-                                <!--                                                    <span>Cynthia Harvey, April 12,,2018</span>-->
-                                <!--                                                </div>-->
-                                <!--                                            </div>-->
-                                <!--                                            <div class="email__footer">-->
-                                <!--                                                <a href="#">See all emails</a>-->
-                                <!--                                            </div>-->
-                                <!--                                        </div>-->
-                                <!--                                    </div>-->
                                 <div class="noti__item js-item-menu">
                                     <i class="zmdi zmdi-notifications"></i>
-                                    <!--                                        <span class="quantity" id="notificationQuantity">1</span>-->
                                     <div class="notifi-dropdown js-dropdown">
                                         <div class="notifi__title">
                                             <p>1 bildiriminiz var</p>
@@ -265,9 +189,6 @@
                                                 <span class="date">April 12, 2018 06:50</span>
                                             </div>
                                         </div>
-                                        <!--                                            <div class="notifi__footer">-->
-                                        <!--                                                <a href="#">All notifications</a>-->
-                                        <!--                                            </div>-->
                                     </div>
                                 </div>
                             </div>
@@ -293,7 +214,7 @@
                                             </div>
                                         </div>
                                         <div class="account-dropdown__footer">
-                                            <a href="#">
+                                            <a onclick="logOutApp()">
                                                 <i class="zmdi zmdi-power"></i>Çıkış Yap</a>
                                         </div>
                                     </div>
@@ -309,151 +230,238 @@
         <!-- MAIN CONTENT-->
         <div class="main-content">
             <div class="section__content section__content--p30">
+                <!-- DOSYA SEÇİLMEDİ ALERT BOX -->
+                <div class="sufee-alert alert with-close alert-danger alert-dismissible fade show"
+                     id="noFileSelectedAlert">
+                    <span class="badge badge-pill badge-danger">Hata</span>
+                    Klasör seçmediniz.
+                    <button type="button" class="close" aria-label="Close">
+                        <span aria-hidden="true" onclick="hideNoFileSelectedAlert()">×</span>
+                    </button>
+                </div>
+                <!-- END OF DOSYA SEÇİLMEDİ ALERT BOX -->
+                <script>
+            function hideNoFileSelectedAlert() {
+                var box = document.getElementById("noFileSelectedAlert")
+                box.style.display = "none"
+            }
+            hideNoFileSelectedAlert()
+
+                </script>
+
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-xl-12">
-                            <!-- RECENT REPORT 2-->
-                            <div class="recent-report3 m-b-40">
-                                <div class="title-wrap">
-                                    <h3 class="title-3">Geçmiş Talep</h3>
-                                    <div class="chart-info-wrap">
-                                        <div class="chart-note">
-                                            <span class="dot dot--blue"></span>
-                                            <span>Davlumbaz</span>
+                        <div class="col-lg-12" id="checkBoxContainer">
+                            <div class="card" id="updateHeaderCard">
+                                <div class="card-header">Özetini çıkarmak istediğiniz dosya tipini seçiniz:
+                                </div>
+                            </div>
+                            <div class="row" id="checkBoxCards">
+                                <div class="col-md-4">
+                                    <div class="card" id="bomCard">
+                                        <div class="card-header">
+                                            <center><strong class="card-title mb-3">BOM</strong></center>
                                         </div>
-                                        <div class="chart-note mr-0">
-                                            <span class="dot dot--green"></span>
-                                            <span>Aspiratör</span>
+                                        <div class="card-body">
+                                            <div class="card-body text-secondary">
+                                                <div class="location text-sm-center">Üretim tarifi içeren BOM verisini
+                                                    içeren dosya.
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="card-text text-sm-center">
+                                                <label class="switch switch-default switch-pill switch-primary mr-2">
+                                                    <input type="checkbox" class="switch-input" checked="true"
+                                                           id="bomCheckBox">
+                                                    <span class="switch-label"></span>
+                                                    <span class="switch-handle"></span>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="chart-wrap">
-                                    <div class="chartjs-size-monitor"
-                                         style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
-                                        <div class="chartjs-size-monitor-expand"
-                                             style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                                            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                                <div class="col-md-4">
+                                    <div class="card" id="timesCard">
+                                        <div class="card-header">
+                                            <center><strong class="card-title mb-3">Süreler</strong></center>
                                         </div>
-                                        <div class="chartjs-size-monitor-shrink"
-                                             style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                                            <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                                        <div class="card-body">
+                                            <div class="card-body text-secondary">
+                                                <div class="location text-sm-center">Üretim süresince işlenen parçaların
+                                                    işlem süresilerinin verilerini içeren dosya.
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="card-text text-sm-center">
+                                                <label class="switch switch-default switch-pill switch-primary mr-2">
+                                                    <input type="checkbox" class="switch-input" checked="true"
+                                                           id="timesCheckBox">
+                                                    <span class="switch-label"></span>
+                                                    <span class="switch-handle"></span>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
-                                    <canvas id="recent-rep3-chart" height="230" width="538"
-                                            class="chartjs-render-monitor"
-                                            style="display: block; width: 538px; height: 230px;"></canvas>
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="card" id="orderCard">
+                                        <div class="card-header">
+                                            <center><strong class="card-title mb-3">Geçmiş Talep</strong></center>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="card-body text-secondary">
+
+
+                                                <div class="location text-sm-center">Geçmiş talep verilerini içeren
+                                                    dosya.
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="card-text text-sm-center">
+                                                <label class="switch switch-default switch-pill switch-primary mr-2">
+                                                    <input type="checkbox" class="switch-input" checked="true"
+                                                           id="orderCheckBox">
+                                                    <span class="switch-label"></span>
+                                                    <span class="switch-handle"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card" id="machineInfoCard">
+                                        <div class="card-header">
+                                            <center><strong class="card-title mb-3">Makina Verileri</strong></center>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="card-body text-secondary">
+
+
+                                                <div class="location text-sm-center">Fiyatı, miktarı, vardıyası değişen
+                                                    ve
+                                                    satın alınan makinaların verilerini içeren dosya.
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="card-text text-sm-center">
+                                                <label class="switch switch-default switch-pill switch-primary mr-2">
+                                                    <input type="checkbox" class="switch-input" checked="true"
+                                                           id="machineInfoCheckBox">
+                                                    <span class="switch-label"></span>
+                                                    <span class="switch-handle"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card" id="tbdCard">
+                                        <div class="card-header">
+                                            <center><strong class="card-title mb-3">İşlem Yapılmayan Ürün
+                                                Kodları</strong>
+                                            </center>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="card-body text-secondary">
+
+
+                                                <div class="location text-sm-center">Üretim süresince üretim
+                                                    tesislerinde
+                                                    işlem görmeyen ürün bileşen kodları.
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="card-text text-sm-center">
+                                                <label class="switch switch-default switch-pill switch-primary mr-2">
+                                                    <input type="checkbox" class="switch-input" checked="true"
+                                                           id="tbdCheckBox">
+                                                    <span class="switch-label"></span>
+                                                    <span class="switch-handle"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
-                            <!-- END RECENT REPORT 2             -->
-                        </div>
-                        <div class="col-xl-12">
-                            <!-- TASK PROGRESS-->
-                            <div class="chart-percent-3 m-b-40">
-                                <h3 class="title-3 m-b-25">Son Arşiv Güncellemeleri</h3>
-                                <table class="table table-borderless table-data3">
-                                    <thead>
-                                    <tr>
-                                        <th>Tarih</th>
-                                        <th>Güncellenen Element</th>
-
-
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>2020-02-29 05:57</td>
-                                        <td>Makina Bilgisi</td>
-
-
-                                    </tr>
-                                    <tr>
-                                        <td>2020-02-28 01:22</td>
-                                        <td>Sipariş<strong>/</strong>İşlenmeyen Ürün Kodları</td>
-
-
-                                    </tr>
-                                    <tr>
-                                        <td>2020-02-27 02:12</td>
-                                        <td>BOM</td>
-
-
-                                    </tr>
-                                    <tr>
-                                        <td>2020-02-26 23:06</td>
-                                        <td>İşlem Süreleri</td>
-
-
-                                    </tr>
-                                    <tr>
-                                        <td>2020-02-25 19:03</td>
-                                        <td>Makina Bilgisi<strong>/</strong>Sipariş</td>
-
-
-                                    </tr>
-                                    <tr>
-                                        <td>2020-02-29 05:57</td>
-                                        <td>BOM</td>
-
-
-                                    </tr>
-
-
-                                    </tbody>
-                                </table>
-
-
-                            </div>
-                            <!-- END TASK PROGRESS-->
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="copyright">
-                                <p>2019-2020 TC Mango. Bu proje MIT lisansı altındadır. <a
-                                        href="https://ie.metu.edu.tr/" target="_blank">ODTÜ Endüstri Mühendisliği</a>
-                                    Sistem Tasarım Projesi.</p>
-                                <center><p style="color: #CECFCE">Template by Colorlib</p></center>
+                            <div class="card">
+                                <div class="card-body card-block" style="padding-bottom: 0px;">
+                                    <div class="form-group">
+                                        <label class=" form-control-label">Özetin kaydedileceği klasör</label>
+                                        <div class="input-group">
+                                            <div class="input-group-btn">
+                                                <button class="btn-sm btn-success" onclick="getSummaryDir()"
+                                                        style="margin-top: 6px">
+                                                    <i class="fa fa-search"></i> Klasör Seç
+                                                </button>
+                                            </div>
+                                            <label id="summaryDir" class=" form-control-label" style="
+                                                    margin-top: 8px;
+                                                    margin-left: 20px;">Klasör Seçilmedi...</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-primary btn-sm" onclick="createSummary()">
+                                        Özet çıkar
+                                    </button>
+
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="copyright">
+                                        <p>2019-2020 TC Mango. Bu proje MIT lisansı altındadır. <a
+                                                href="https://ie.metu.edu.tr/" target="_blank">ODTÜ Endüstri
+                                            Mühendisliği</a>
+                                            Sistem Tasarım Projesi.</p>
+                                        <center><p style="color: #CECFCE">Template by Colorlib</p></center>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- END MAIN CONTENT-->
+                <!-- END PAGE CONTAINER-->
             </div>
+
         </div>
-        <!-- END MAIN CONTENT-->
-        <!-- END PAGE CONTAINER-->
+
+        <!-- Jquery JS-->
+        <script src="vendor/jquery-3.2.1.min.js"></script>
+        <!-- Bootstrap JS-->
+        <script src="vendor/bootstrap-4.1/popper.min.js"></script>
+        <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
+        <!-- Vendor JS       -->
+        <script src="vendor/slick/slick.min.js">
+        </script>
+        <script src="vendor/wow/wow.min.js"></script>
+        <script src="vendor/animsition/animsition.min.js"></script>
+        <script src="vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
+        </script>
+        <script src="vendor/counter-up/jquery.waypoints.min.js"></script>
+        <script src="vendor/counter-up/jquery.counterup.min.js">
+        </script>
+        <script src="vendor/circle-progress/circle-progress.min.js"></script>
+        <script src="vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
+        <script src="vendor/chartjs/Chart.bundle.min.js"></script>
+        <script src="vendor/select2/select2.min.js">
+        </script>
+
+        <!-- Main JS-->
+        <script src="js/main.js"></script>
+
+        <!-- Python Communication Scripts -->
+        <script type="text/javascript" src="/eel.js"></script>
+        <script type="text/javascript" src="js/backend-communication.js"></script>
     </div>
-
 </div>
-
-<!-- Jquery JS-->
-<script src="vendor/jquery-3.2.1.min.js"></script>
-<!-- Bootstrap JS-->
-<script src="vendor/bootstrap-4.1/popper.min.js"></script>
-<script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
-<!-- Vendor JS       -->
-<script src="vendor/slick/slick.min.js">
-</script>
-<script src="vendor/wow/wow.min.js"></script>
-<script src="vendor/animsition/animsition.min.js"></script>
-<script src="vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
-</script>
-<script src="vendor/counter-up/jquery.waypoints.min.js"></script>
-<script src="vendor/counter-up/jquery.counterup.min.js">
-</script>
-<script src="vendor/circle-progress/circle-progress.min.js"></script>
-<script src="vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
-<script src="vendor/chartjs/Chart.bundle.min.js"></script>
-<script src="vendor/select2/select2.min.js">
-</script>
-
-<!-- Main JS-->
-<script src="js/main.js"></script>
-
-<!-- Python Communication Scripts -->
-<script type="text/javascript" src="/eel.js"></script>
-<script type="text/javascript" src="js/backend-communication.js"></script>
-
-
 </body>
 
 </html>

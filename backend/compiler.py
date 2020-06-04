@@ -65,16 +65,17 @@ class ArchiveDatabase:
         self.merged_file = merge_bom_and_times(self.bom_file, self.times_file)
         self.merged_file = arrange_df(self.merged_file, "merged", assembly_df=self.assembly_df)
 
-    def update_bom(self, file_dir):
-        new_bom = load_file(file_dir)
+    def update_bom(self, file_path):
+        new_bom = load_file(file_path)
         new_bom = arrange_df(new_bom, "bom", [0, 3, 2, 5, 4], self.files_to_be_deleted)
         existing_bom_products = self.bom_file.product_no.unique().tolist()
         new_bom_products = new_bom.product_no.unique().tolist()
         self.bom_file.drop(self.bom_file[self.bom_file.product_no.isin([x for x in existing_bom_products if x in new_bom_products])].index, inplace=True)
         self.bom_file = pd.concat([self.bom_file, new_bom], ignore_index=True)
+        self.reassign_time()
 
-    def update_times(self, file_dir):
-        new_times = load_file(file_dir)
+    def update_times(self, file_path):
+        new_times = load_file(file_path)
         new_times, new_assembly, new_cmy, new_temp = arrange_df(new_times, "times", relevant_col_idx=[3, 25, 29, 28])
         existing_times_products = self.times_file.part_no.unique().tolist()
         new_times_products = new_times.part_no.unique().tolist()
@@ -96,20 +97,42 @@ class ArchiveDatabase:
         self.temp.drop(self.temp[self.temp.stations_list.isin([x for x in existing_temp_stations if x in new_temp_stations])].index, inplace=True)
         self.temp = pd.concat([self.temp, new_temp], ignore_index=True)
         self.temp.sort_values(by="stations_list", ascending=True, inplace=True)
+        self.reassign_time()
 
-    def update_tbd(self, file_dir):
-        self.files_to_be_deleted = load_file(file_dir)
+    def update_tbd(self, file_path):
+        self.files_to_be_deleted = load_file(file_path)
+        self.reassign_time()
 
-    def update_machine_info(self, file_dir):
-        new_machine_df = load_file(file_dir)
+    def update_machine_info(self, file_path):
+        new_machine_df = load_file(file_path)
         existing_machines = self.machine_info.machine.unique().tolist()
         new_machines = new_machine_df.machine.unique().tolist()
         self.machine_info.drop(self.machine_info[self.machine_info.machine.isin([x for x in existing_machines if x in new_machines])].index, inplace=True)
         self.machine_info = pd.concat([self.machine_info, new_machine_df], ignore_index=True)
         self.machine_info.sort_values(by="machine", ascending=True, inplace=True)
+        self.reassign_time()
 
-    def update_orders(self, file_dir):
-        self.order_history.add_orders(file_dir)
+    def update_orders(self, file_path):
+        self.order_history.add_orders(file_path)
+        self.reassign_time()
+
+    def create_summary(self, filetypes_in_summary, file_dir):
+        bom_sum = pd.DataFrame(self.bom_file.sort_values(by="product_no", ascending=True).product_no.unique())
+        times_sum = pd.DataFrame(self.times_file.sort_values(by="part_no", ascending=True).part_no.unique())
+        order_sum = self.order_history.orders.groupby(by="date").agg({"amount": "sum"})
+        machine_info_sum = pd.DataFrame(self.machine_info.machine.unique())
+        tbd_sum = pd.DataFrame(self.files_to_be_deleted.sort_values(by="Silinecekler", ascending=True).Silinecekler.unique())
+        with pd.ExcelWriter(file_dir + "/Archive_Summary.xlsx") as writer:
+            if "bom" in filetypes_in_summary:
+                bom_sum.to_excel(writer, sheet_name="BOM", header=False, index=False)
+            if "times" in filetypes_in_summary:
+                times_sum.to_excel(writer, sheet_name="Times", header=False, index=False)
+            if "order" in filetypes_in_summary:
+                order_sum.to_excel(writer, sheet_name="Order", header=False)
+            if "machineInfo" in filetypes_in_summary:
+                machine_info_sum.to_excel(writer, sheet_name="Machine Info", header=False, index=False)
+            if "tbd" in filetypes_in_summary:
+                tbd_sum.to_excel(writer, sheet_name="Silinecekler", header=False, index=False)
 
 
 class OperationalSMInput:

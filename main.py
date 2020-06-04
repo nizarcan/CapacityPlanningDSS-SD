@@ -17,6 +17,7 @@ second_workdays_path = None
 upper_model_output_path = None
 # ---
 new_file_paths = {x: None for x in ["bom", "times", "order", "machineInfo", "tbd"]}
+summary_dir = None
 
 output_dir = None
 
@@ -74,15 +75,15 @@ def proceed_to_index():
 def update_archive(selected_file_types):
     global archive
     if "tbd" in selected_file_types:
-        archive.update_tdb(new_file_paths["tbd"])
+        archive.update_tbd(new_file_paths["tbd"])
     elif "machineInfo" in selected_file_types:
-        archive.update_tdb(new_file_paths["machineInfo"])
+        archive.update_machine_info(new_file_paths["machineInfo"])
     elif "bom" in selected_file_types:
-        archive.update_tdb(new_file_paths["bom"])
+        archive.update_bom(new_file_paths["bom"])
     elif "times" in selected_file_types:
-        archive.update_tdb(new_file_paths["times"])
+        archive.update_times(new_file_paths["times"])
     elif "order" in selected_file_types:
-        archive.update_tdb(new_file_paths["order"])
+        archive.update_orders(new_file_paths["order"])
     if ("bom" in selected_file_types) | ("times" in selected_file_types):
         archive.merge_files()
 
@@ -228,7 +229,9 @@ def create_input_file(input_type, *args):
     global plan_path, second_plan_path, workdays_path, second_workdays_path, output_dir, archive
     try:
         if input_type == "tkpm":
+            eel.raiseForecastStartedAlert()
             input_file = TacticalMMInput(archive)
+            eel.raiseForecastEndedAlert()
             input_file.set_order_times(args[0])
             input_file.set_probabilities(args[1])
             input_file.create_file(output_dir)
@@ -249,8 +252,76 @@ def create_input_file(input_type, *args):
             input_file.load_math_model_output(upper_model_output_path)
             input_file.create_tables()
             input_file.create_file(output_dir)
+        eel.raiseInputCreationSuccessAlert()()
     except:
         eel.raiseCreationErrorJs()()
+
+
+########################################################################################################################
+########################################################################################################################
+#                                          TOOLS FOR ARCHIVE CREATION                                                  #
+########################################################################################################################
+########################################################################################################################
+@eel.expose
+def create_archive():
+    try:
+        global archive, new_file_paths
+        archive = ArchiveDatabase()
+        archive.load_files_to_be_deleted(new_file_paths["tbd"])
+        archive.load_machine_info(new_file_paths["machineInfo"])
+        archive.load_bom(new_file_paths["bom"])
+        archive.load_times(new_file_paths["times"])
+        archive.order_history.add_orders(new_file_paths["order"])
+        archive.merge_files()
+        return 1
+    except:
+        return 0
+
+
+@eel.expose
+def logout_app():
+    try:
+        archive_dir = ask_directory()
+        if archive_dir != "":
+            archive.save_checkpoint(archive_dir + "/Archive.mng")
+        return 1
+    except:
+        return 0
+
+
+########################################################################################################################
+########################################################################################################################
+#                                          TOOLS FOR ARCHIVE CREATION                                                  #
+########################################################################################################################
+########################################################################################################################
+
+
+@eel.expose
+def get_summary_dir():
+    global summary_dir
+    summary_dir = ask_directory()
+    if summary_dir != "":
+        return "../" + summary_dir.split("/")[-1] + "/"
+    else:
+        summary_dir = None
+        return 0
+
+
+# noinspection PyUnresolvedReferences
+@eel.expose
+def create_summary(selected_file_types):
+    global archive, summary_dir
+    try:
+        archive.create_summary(selected_file_types, summary_dir)
+        return 1
+    except:
+        return 0
+
+
+
+@eel.expose
+def kill_app():
+    exit(0)
 
 
 @eel.expose

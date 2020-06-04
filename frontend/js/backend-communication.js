@@ -182,7 +182,22 @@ function updateUpperModelOutput(path){
 
 eel.expose(raiseCreationErrorJs);
 function raiseCreationErrorJs(){
-    alert("1")
+    alert("Girdi dosyası oluşturulması sırasında beklenmedik bir problem oluştu. Dosyalarınızın doğruluğunu kontrol ediniz.")
+}
+
+eel.expose(raiseForecastStartedAlert);
+function raiseForecastStartedAlert(){
+    alert("Talep tahminlemesi başladı.")
+}
+
+eel.expose(raiseForecastEndedAlert);
+function raiseForecastEndedAlert(){
+    alert("Talep tahminlemesi işlemi sona erdi. Girdi dosyası oluşturuluyor.")
+}
+
+eel.expose(raiseInputCreationSuccessAlert);
+function raiseForecastEndedAlert(){
+    alert("Dosya oluşturulması başarıyla tamamlandı.")
 }
 
 function createInputFile(inputType){
@@ -313,7 +328,6 @@ function showCheckBoxContainer(){
 }
 
 function updateArchive(){
-
     var fileTypeIds = ["bom", "times", "order", "machineInfo", "tbd"]
     var selectedFileTypes = []
 
@@ -343,6 +357,80 @@ function updateNewFilePath(path){
     }
 }
 
+////////////////////////////////
+// SUMMARY CREATING FUNCTIONS //
+////////////////////////////////
+function getSummaryDir(){
+    eel.get_summary_dir()(updateSummaryDir)
+}
+
+function updateSummaryDir(path){
+    if (path != 0){
+        console.log(path)
+        document.getElementById("summaryDir").textContent = path
+    }
+    else {
+        var alertBox = document.getElementById("noFileSelectedAlert")
+        alertBox.style.display = "block"
+        var archivePathLabel = document.getElementById("summaryDir")
+        archivePathLabel.textContent = "Klasör Seçilmedi..."
+    }
+}
+
+async function createSummary() {
+    var fileTypeIds = ["bom", "times", "order", "machineInfo", "tbd"]
+    var selectedFileTypes = []
+
+    for (i=0; i<5; i++) {
+        if (document.getElementById(fileTypeIds[i]+"CheckBox").checked == true){
+            selectedFileTypes.push(fileTypeIds[i])
+        }
+    }
+    let completionStatus = await eel.create_summary(selectedFileTypes)()
+    if (Boolean(completionStatus)) {
+        alert("İşlem başarıyla sonuçlandı.")
+    }
+    else {
+        alert("İşlem sırasında bir hata oluştu")
+    }
+
+}
+
+////////////////////////////////
+// ARCHIVE CREATING FUNCTIONS //
+////////////////////////////////
+function createArchive(){
+    var fileTypeIds = ["bom", "times", "order", "machineInfo", "tbd"]
+    var isAllSelected=true
+    for (i=0; i<5; i++) {
+        isAllSelected = isAllSelected && (document.getElementById(fileTypeIds[i] + "Path") != "Dosya Seçilmedi...")
+    }
+    if (isAllSelected) {
+        var creationStatus = eel.create_archive()()
+        if (Boolean(creationStatus)) {
+            document.location.href = "index.html"
+        }
+        else {
+            alert("Bir hata oluştu, lütfen dosyaların doğruluğundan emin olup tekrar deneyiniz.")
+        }
+    }
+    else {
+        alert("Eklenmemiş dosya(lar) bulunmaktadır. Lütfen tüm dosyaları seçin.")
+    }
+}
+
+////////////////////////////////
+//      LOGOUT FUNCTIONS      //
+////////////////////////////////
+async function logOutApp(){
+    let logoutStatus = await eel.logout_app()()
+    if (logoutStatus) {
+        alert("İşlem tamamlandı, programı kapatabilirsiniz.")
+    }
+    else {
+        alert("Bir hata oluştu, lütfen tekrar deneyiniz.")
+    }
+}
 
 
 function launchFullScreen(element) {
