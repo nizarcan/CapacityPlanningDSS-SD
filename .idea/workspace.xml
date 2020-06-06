@@ -19,17 +19,21 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ce5f1578-97a9-4ac7-beac-7168ab342862" name="Default Changelist" comment="gitignore update">
-      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
+    <list default="true" id="ce5f1578-97a9-4ac7-beac-7168ab342862" name="Default Changelist" comment="removed noti-wrap">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/analyzer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/compiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/compiler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/utils/demand_util.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/utils/demand_util.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/utils/xl_ops.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/utils/xl_ops.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/about.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/about.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/archive-updater.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/archive-updater.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/js/backend-communication.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/backend-communication.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/okpb-analyzer.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/okpb-analyzer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/okpb-creator.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/okpb-creator.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/okpm-analyzer.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/okpm-analyzer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/okpm-creator.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/okpm-creator.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tkpm-analyzer.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tkpm-analyzer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tkpm-creator.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tkpm-creator.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -51,7 +55,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
   </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -110,7 +114,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591178334838</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="added archive summary, file creation prompts and program exit">
+      <created>1591278722440</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1591278722440</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -129,7 +140,9 @@
     <MESSAGE value="cleaned repo" />
     <MESSAGE value="archive update added" />
     <MESSAGE value="gitignore update" />
-    <option name="LAST_COMMIT_MESSAGE" value="gitignore update" />
+    <MESSAGE value="added archive summary, file creation prompts and program exit" />
+    <MESSAGE value="removed noti-wrap" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed noti-wrap" />
   </component>
   <component name="WindowStateProjectService">
     <state x="669" y="115" key="#main" timestamp="1590337261422">
@@ -168,14 +181,14 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1590337258306" />
-    <state x="461" y="165" key="SettingsEditor" timestamp="1591173085928">
+    <state x="461" y="165" key="SettingsEditor" timestamp="1591483002276">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="461" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1591173085928" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1591178719310">
+    <state x="461" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1591483002276" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1591482686788">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1591178719310" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1591482686788" />
     <state width="487" height="523" key="XDebugger.FullValuePopup" timestamp="1591176811192">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

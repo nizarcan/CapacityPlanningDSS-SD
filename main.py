@@ -240,7 +240,7 @@ def create_input_file(input_type, *args):
             input_file.load_days(workdays_path)
             input_file.load_math_model_output(upper_model_output_path)
             input_file.create_file(output_dir)
-        if input_type == "okpb":
+        elif input_type == "okpb":
             input_file = OperationalSMInput(archive)
             input_file.load_plan(plan_path)
             input_file.load_days(workdays_path)

@@ -89,7 +89,12 @@ async function makeAnalysis(modelType){
             let operationStatus = await eel.analyze_result('okpb')()
         }
     }
-    // There will be some function to raise indicating that the operation did not end correctly.
+    if (operationStatus) {
+        alert("Analiz başarıyla sonuçlandı.")
+    }
+    else {
+        alert("Analiz sırasında bir problem oluştu. Lütfen girdiğiniz verinin doğruluğunu kontrol ediniz.")
+    }
 }
 
 ////////////////////////////////
@@ -196,7 +201,7 @@ function raiseForecastEndedAlert(){
 }
 
 eel.expose(raiseInputCreationSuccessAlert);
-function raiseForecastEndedAlert(){
+function raiseInputCreationSuccessAlert(){
     alert("Dosya oluşturulması başarıyla tamamlandı.")
 }
 
@@ -215,7 +220,7 @@ function createInputFile(inputType){
             deviationProbabilitySum = deviationProbabilitySum +  Number(document.getElementById(deviationProbabilityIds[i]).value)
         }
         if ((earlinessTardinessPass != true) || (deviationProbabilitySum != 1) || (!idOutputDirSelected)) {
-            alert("SOMETHING is not right")
+            alert("Lütfen girdilerin doğruluğunu kontrol edin.")
         }
         else {
             var earlinessTardiness = []
@@ -241,7 +246,7 @@ function createInputFile(inputType){
         }
         passStatus = passStatus && document.getElementById("inputFileOutputDir").textContent != "Klasör Seçilmedi..."
         if (!passStatus) {
-            alert("SOMETHING is not right")
+            alert("Lütfen girdilerin doğruluğunu kontrol edin.")
         }
         else {
             eel.create_input_file(inputType, Number(document.getElementById("scenarioComboBox").value))
@@ -257,7 +262,7 @@ function createInputFile(inputType){
             }
             passStatus = passStatus && document.getElementById("inputFileOutputDir").textContent != "Klasör Seçilmedi..."
             if (!passStatus) {
-                alert("SOMETHING is not right")
+                alert("Lütfen girdilerin doğruluğunu kontrol edin.")
             }
             else {
                 eel.create_input_file(inputType, document.getElementById("isDuplicateCheckBox").checked)
@@ -271,7 +276,7 @@ function createInputFile(inputType){
             }
             passStatus = passStatus && document.getElementById("inputFileOutputDir").textContent != "Klasör Seçilmedi..."
             if (!passStatus) {
-                alert("SOMETHING is not right")
+                alert("Lütfen girdilerin doğruluğunu kontrol edin.")
             }
             else {
                 eel.create_input_file(inputType, Number(document.getElementById("isDuplicateCheckBox").checked))

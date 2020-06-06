@@ -44,7 +44,7 @@ def analyze_tkpm_results(file_dir, output_dir):
         shift_results[i].columns = [""] + list(shift_results[i].columns[1:])
         shift_results[i].set_index(shift_results[i].columns[0], inplace = True)
 
-    with pd.ExcelWriter(output_dir) as writer:
+    with pd.ExcelWriter(output_dir + "/TKPM_Analysis.xlsx") as writer:
         overtime_results.to_excel(writer, sheet_name="overtime")
         investment_results.to_excel(writer, sheet_name="investment")
         for i in range(1, 6):
@@ -63,7 +63,7 @@ def analyze_okpm_results(file_dir, output_dir):
     results.columns = [""]+list(results.columns[1:])
     results.set_index(results.columns[0], inplace=True)
 
-    with pd.ExcelWriter(output_dir) as writer:
+    with pd.ExcelWriter(output_dir + "/OKPM_Analysis.xlsx") as writer:
         results.to_excel(writer, sheet_name="overtime")
 
 
@@ -109,7 +109,7 @@ def analyze_okpb_results(file_dir, output_dir):
         for df in [nq, nr]:
             df["Average"] = df["Average"].apply(lambda x: float(x))
             df.sort_values(by = "Average", ascending = False, inplace = True)
-        with pd.ExcelWriter(output_dir) as writer:
+        with pd.ExcelWriter(output_dir + "/OKPB_Analysis.xlsx") as writer:
             tallies.to_excel(writer, sheet_name = "tallies", index = False)
             nq.to_excel(writer, sheet_name = "nq", index = False)
             nr.to_excel(writer, sheet_name = "nr", index = False)

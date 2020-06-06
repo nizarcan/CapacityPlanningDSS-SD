@@ -29,6 +29,8 @@ class ArchiveDatabase:
         self.temp = None
         self.machine_info = None
         self.last_adition_date = datetime.now().date()
+        self.cols = {"bom": ["Ana Malzeme", "Bileşen Malzeme", "Seviye_Yeni", "Miktar", "Açıklama"],
+                     "times": ["Malzeme", "HAT/MAKİNA", "CYCLETIME", "SETUP"]}
 
     def __repr__(self):
         if self.last_adition_date is None:
@@ -48,12 +50,14 @@ class ArchiveDatabase:
 
     def load_bom(self, file_dir):
         self.bom_file = load_file(file_dir)
-        self.bom_file = arrange_df(self.bom_file, "bom", [0, 3, 2, 5, 4], self.files_to_be_deleted)
+        col_idx = [list(self.bom_file.columns).index(x) for x in self.cols["bom"]]
+        self.bom_file = arrange_df(self.bom_file, "bom", col_idx, self.files_to_be_deleted)
 
     def load_times(self, file_dir):
         self.times_file = load_file(file_dir)
+        col_idx = [list(self.times_file.columns).index(x) for x in self.cols["times"]]
         self.times_file, self.assembly_df, self.cmy_df, self.temp = \
-            arrange_df(self.times_file, "times", relevant_col_idx=[3, 25, 29, 28])
+            arrange_df(self.times_file, "times", relevant_col_idx=col_idx)
 
     def initialize_order_history(self):
         self.order_history.initialize()
@@ -67,7 +71,8 @@ class ArchiveDatabase:
 
     def update_bom(self, file_path):
         new_bom = load_file(file_path)
-        new_bom = arrange_df(new_bom, "bom", [0, 3, 2, 5, 4], self.files_to_be_deleted)
+        col_idx = [list(new_bom.columns).index(x) for x in self.cols["bom"]]
+        new_bom = arrange_df(new_bom, "bom", col_idx, self.files_to_be_deleted)
         existing_bom_products = self.bom_file.product_no.unique().tolist()
         new_bom_products = new_bom.product_no.unique().tolist()
         self.bom_file.drop(self.bom_file[self.bom_file.product_no.isin([x for x in existing_bom_products if x in new_bom_products])].index, inplace=True)
@@ -76,7 +81,8 @@ class ArchiveDatabase:
 
     def update_times(self, file_path):
         new_times = load_file(file_path)
-        new_times, new_assembly, new_cmy, new_temp = arrange_df(new_times, "times", relevant_col_idx=[3, 25, 29, 28])
+        col_idx = [list(new_times.columns).index(x) for x in self.cols["times"]]
+        new_times, new_assembly, new_cmy, new_temp = arrange_df(new_times, "times", relevant_col_idx=col_idx)
         existing_times_products = self.times_file.part_no.unique().tolist()
         new_times_products = new_times.part_no.unique().tolist()
         self.times_file.drop(self.times_file[self.times_file.part_no.isin([x for x in existing_times_products if x in new_times_products])].index, inplace=True)
