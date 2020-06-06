@@ -21,19 +21,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ce5f1578-97a9-4ac7-beac-7168ab342862" name="Default Changelist" comment="removed noti-wrap">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/analyzer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/compiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/compiler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/about.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/about.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/archive-updater.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/archive-updater.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/js/backend-communication.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/backend-communication.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/okpb-analyzer.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/okpb-analyzer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/okpb-creator.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/okpb-creator.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/okpm-analyzer.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/okpm-analyzer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/okpm-creator.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/okpm-creator.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tkpm-analyzer.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tkpm-analyzer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tkpm-creator.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tkpm-creator.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -121,7 +108,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591278722440</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="removed noti-wrap">
+      <created>1591483013575</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1591483013575</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -185,10 +179,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="461" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1591483002276" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1591482686788">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1591483018885">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1591482686788" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1591483018885" />
     <state width="487" height="523" key="XDebugger.FullValuePopup" timestamp="1591176811192">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

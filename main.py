@@ -332,3 +332,7 @@ def get_from_js(data):
 
 if __name__ == "__main__":
     open_url("login.html", size=(1200, 600))
+    # todo: 1 - create archive with little bom, normal  times, classic others
+    # todo: 2 - update archive with bigger bom, normal times, classic others
+    # todo: 3 - update archive with increased times
+    # todo: 4 - change logout for all pages
