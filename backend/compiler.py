@@ -47,6 +47,7 @@ class ArchiveDatabase:
 
     def load_files_to_be_deleted(self, file_dir):
         self.files_to_be_deleted = load_file(file_dir)
+        self.files_to_be_deleted.Silinecekler = self.files_to_be_deleted.Silinecekler.astype(str)
 
     def load_bom(self, file_dir):
         self.bom_file = load_file(file_dir)
@@ -75,7 +76,8 @@ class ArchiveDatabase:
         new_bom = arrange_df(new_bom, "bom", col_idx, self.files_to_be_deleted)
         existing_bom_products = self.bom_file.product_no.unique().tolist()
         new_bom_products = new_bom.product_no.unique().tolist()
-        self.bom_file.drop(self.bom_file[self.bom_file.product_no.isin([x for x in existing_bom_products if x in new_bom_products])].index, inplace=True)
+        self.bom_file.drop(self.bom_file[self.bom_file.product_no.isin(
+            [x for x in existing_bom_products if x in new_bom_products])].index, inplace=True)
         self.bom_file = pd.concat([self.bom_file, new_bom], ignore_index=True)
         self.reassign_time()
 
@@ -85,35 +87,42 @@ class ArchiveDatabase:
         new_times, new_assembly, new_cmy, new_temp = arrange_df(new_times, "times", relevant_col_idx=col_idx)
         existing_times_products = self.times_file.part_no.unique().tolist()
         new_times_products = new_times.part_no.unique().tolist()
-        self.times_file.drop(self.times_file[self.times_file.part_no.isin([x for x in existing_times_products if x in new_times_products])].index, inplace=True)
+        self.times_file.drop(self.times_file[self.times_file.part_no.isin(
+            [x for x in existing_times_products if x in new_times_products])].index, inplace=True)
         self.times_file = pd.concat([self.times_file, new_times], ignore_index=True)
 
         existing_assembly_products = self.assembly_df.part_no.unique().tolist()
         new_assembly_products = new_assembly.part_no.unique().tolist()
-        self.assembly_df.drop(self.assembly_df[self.assembly_df.part_no.isin([x for x in existing_assembly_products if x in new_assembly_products])].index, inplace=True)
+        self.assembly_df.drop(self.assembly_df[self.assembly_df.part_no.isin(
+            [x for x in existing_assembly_products if x in new_assembly_products])].index, inplace=True)
         self.assembly_df = pd.concat([self.assembly_df, new_assembly], ignore_index=True)
 
         existing_cmy_products = self.cmy_df.part_no.unique().tolist()
         new_cmy_products = new_cmy.part_no.unique().tolist()
-        self.cmy_df.drop(self.cmy_df[self.cmy_df.part_no.isin([x for x in existing_cmy_products if x in new_cmy_products])].index, inplace=True)
+        self.cmy_df.drop(
+            self.cmy_df[self.cmy_df.part_no.isin([x for x in existing_cmy_products if x in new_cmy_products])].index,
+            inplace=True)
         self.cmy_df = pd.concat([self.cmy_df, new_cmy], ignore_index=True)
 
         existing_temp_stations = self.temp.stations_list.unique().tolist()
         new_temp_stations = new_temp.stations_list.unique().tolist()
-        self.temp.drop(self.temp[self.temp.stations_list.isin([x for x in existing_temp_stations if x in new_temp_stations])].index, inplace=True)
+        self.temp.drop(self.temp[self.temp.stations_list.isin(
+            [x for x in existing_temp_stations if x in new_temp_stations])].index, inplace=True)
         self.temp = pd.concat([self.temp, new_temp], ignore_index=True)
         self.temp.sort_values(by="stations_list", ascending=True, inplace=True)
         self.reassign_time()
 
     def update_tbd(self, file_path):
         self.files_to_be_deleted = load_file(file_path)
+        self.files_to_be_deleted.Silinecekler = self.files_to_be_deleted.Silinecekler.astype(str)
         self.reassign_time()
 
     def update_machine_info(self, file_path):
         new_machine_df = load_file(file_path)
         existing_machines = self.machine_info.machine.unique().tolist()
         new_machines = new_machine_df.machine.unique().tolist()
-        self.machine_info.drop(self.machine_info[self.machine_info.machine.isin([x for x in existing_machines if x in new_machines])].index, inplace=True)
+        self.machine_info.drop(self.machine_info[self.machine_info.machine.isin(
+            [x for x in existing_machines if x in new_machines])].index, inplace=True)
         self.machine_info = pd.concat([self.machine_info, new_machine_df], ignore_index=True)
         self.machine_info.sort_values(by="machine", ascending=True, inplace=True)
         self.reassign_time()
@@ -127,7 +136,8 @@ class ArchiveDatabase:
         times_sum = pd.DataFrame(self.times_file.sort_values(by="part_no", ascending=True).part_no.unique())
         order_sum = self.order_history.orders.groupby(by="date").agg({"amount": "sum"})
         machine_info_sum = pd.DataFrame(self.machine_info.machine.unique())
-        tbd_sum = pd.DataFrame(self.files_to_be_deleted.sort_values(by="Silinecekler", ascending=True).Silinecekler.unique())
+        tbd_sum = pd.DataFrame(
+            self.files_to_be_deleted.sort_values(by="Silinecekler", ascending=True).Silinecekler.unique())
         with pd.ExcelWriter(file_dir + "/Archive_Summary.xlsx") as writer:
             if "bom" in filetypes_in_summary:
                 bom_sum.to_excel(writer, sheet_name="BOM", header=False, index=False)
@@ -552,6 +562,7 @@ class TacticalMMInput:
         self.outsource_availability = None
         self.order_time_parameters = None
         self.probabilities = None
+        self.forecast_output = None
 
     def cross_trim(self):
         # Placeholder
@@ -654,8 +665,15 @@ class TacticalMMInput:
 
         return product_family_legend, machine_legend, d, h, k, f, w, c, cr, o, st, outsource_perm
 
-    def create_file(self, file_dir):
+    def create_file(self, file_dir, want_forecast=True):
         self.product_family_legend, self.machine_legend, self.forecast, self.times, self.route_prob, self.machine_cnt, self.workdays, self.cost, self.machine_price, self.average_order, self.setup_times, self.outsource_availability = self.create_tables()
+        if want_forecast:
+            product_family_dict = self.product_family_legend.to_dict()[self.product_family_legend.columns[0]]
+            self.forecast_output = self.forecast.copy()
+            # self.forecast_output.index = [(product_family_dict[x], y) for (x, y) in self.forecast.index]
+            self.forecast_output["product_family"] = [product_family_dict[x] for (x, y) in self.forecast.index]
+            self.forecast_output["scenario"] = [1, 2, 3, 4, 5] * int(self.forecast_output.product_family.max())
+            self.forecast_output.set_index(keys=["product_family", "scenario"], inplace=True)
         create_xl_file(self, file_dir, "tactical_math_model")
 
 

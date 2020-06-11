@@ -195,7 +195,7 @@
                                             </div>
                                         </div>
                                         <div class="account-dropdown__footer">
-                                            <a href="#">
+                                            <a onclick="logOutApp()">
                                                 <i class="zmdi zmdi-power"></i>Çıkış Yap</a>
                                         </div>
                                     </div>
@@ -227,6 +227,7 @@
                             box.style.display = "none"
                         }
                         hideNoFileSelectedAlert()
+
 
 
                     </script>
@@ -488,6 +489,24 @@ margin-bottom: 8px;
                                                 margin-top: 8px;
                                                 margin-left: 20px;">Klasör Seçilmedi...</label>
                                     </div>
+                                </div>
+                                <hr>
+                                <div class="form-group" style="
+                                        margin-top: 30px;
+                                        margin-bottom: 0px;
+                                    ">
+                                    <label class=" form-control-label" style="
+                                            margin-top: 0px;
+                                        ">Ayrı Talep Tahmini Çıktısı<label
+                                            class="switch switch-default switch-pill switch-primary mr-2" style="
+    left: 20px;
+">
+                                        <input type="checkbox" class="switch-input" checked="true"
+                                               id="forecastCheckBox">
+                                        <span class="switch-label"></span>
+                                        <span class="switch-handle"></span>
+                                    </label>
+                                    </label>
                                 </div>
 
 

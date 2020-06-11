@@ -65,6 +65,7 @@ class OrderHistory:
         new_data = new_data[["Grş.trh.", "Malzeme", "Miktar"]].copy()
         new_data.columns = ["date", "product_no", "amount"]
         new_data.drop(new_data[pd.to_numeric(new_data.amount, errors="coerce").isna()].index, inplace=True)
+        new_data.product_no = new_data.product_no.astype(str)
         new_data.drop(new_data[new_data.product_no.map(len) != 13].index, inplace=True)
         new_data.date = pd.to_datetime(new_data.date, format="%d/%m/%Y")
         new_data.date = new_data["date"].dt.strftime("%Y-%m")

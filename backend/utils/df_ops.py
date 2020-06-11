@@ -24,6 +24,7 @@ def arrange_df(df, df_type, relevant_col_idx=None, items_to_delete=None, assembl
         # Reformatting the columns
         df = reformat_columns(df, relevant_col_idx, "bom")
 
+        df.part_no = df.part_no.astype(str)
         # If specified, bom will be trimmed
         if bom_trim:
             df = trim_bom(df)

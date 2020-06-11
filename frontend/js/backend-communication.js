@@ -234,7 +234,9 @@ function createInputFile(inputType){
                 deviationProbabilities.push(Number(document.getElementById(deviationProbabilityIds[i]).value))
             }
 
-            eel.create_input_file(inputType, earlinessTardiness, deviationProbabilities)
+            var forecastCheckboxChecked = document.getElementById("forecastCheckBox").checked
+
+            eel.create_input_file(inputType, earlinessTardiness, deviationProbabilities, forecastCheckboxChecked)
         }
 
     }
@@ -391,6 +393,7 @@ async function createSummary() {
             selectedFileTypes.push(fileTypeIds[i])
         }
     }
+    console.log(selectedFileTypes)
     let completionStatus = await eel.create_summary(selectedFileTypes)()
     if (Boolean(completionStatus)) {
         alert("İşlem başarıyla sonuçlandı.")
@@ -404,14 +407,14 @@ async function createSummary() {
 ////////////////////////////////
 // ARCHIVE CREATING FUNCTIONS //
 ////////////////////////////////
-function createArchive(){
+async function createArchive(){
     var fileTypeIds = ["bom", "times", "order", "machineInfo", "tbd"]
     var isAllSelected=true
     for (i=0; i<5; i++) {
         isAllSelected = isAllSelected && (document.getElementById(fileTypeIds[i] + "Path") != "Dosya Seçilmedi...")
     }
     if (isAllSelected) {
-        var creationStatus = eel.create_archive()()
+        let creationStatus = await eel.create_archive()()
         if (Boolean(creationStatus)) {
             document.location.href = "index.html"
         }
@@ -446,4 +449,9 @@ function launchFullScreen(element) {
   } else if(element.webkitRequestFullScreen) {
     element.webkitRequestFullScreen();
   }
+}
+
+eel.expose(createAlert);
+function createAlert(alertMessage){
+    alert(alertMessage)
 }

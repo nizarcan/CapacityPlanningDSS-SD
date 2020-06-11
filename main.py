@@ -74,18 +74,24 @@ def proceed_to_index():
 @eel.expose
 def update_archive(selected_file_types):
     global archive
-    if "tbd" in selected_file_types:
-        archive.update_tbd(new_file_paths["tbd"])
-    elif "machineInfo" in selected_file_types:
-        archive.update_machine_info(new_file_paths["machineInfo"])
-    elif "bom" in selected_file_types:
-        archive.update_bom(new_file_paths["bom"])
-    elif "times" in selected_file_types:
-        archive.update_times(new_file_paths["times"])
-    elif "order" in selected_file_types:
-        archive.update_orders(new_file_paths["order"])
-    if ("bom" in selected_file_types) | ("times" in selected_file_types):
-        archive.merge_files()
+    try:
+        eel.createAlert("Güncelleme işlemi başladı.")
+        if "tbd" in selected_file_types:
+            archive.update_tbd(new_file_paths["tbd"])
+        elif "machineInfo" in selected_file_types:
+            archive.update_machine_info(new_file_paths["machineInfo"])
+        elif "bom" in selected_file_types:
+            archive.update_bom(new_file_paths["bom"])
+        elif "times" in selected_file_types:
+            archive.update_times(new_file_paths["times"])
+        elif "order" in selected_file_types:
+            archive.update_orders(new_file_paths["order"])
+        if ("bom" in selected_file_types) | ("times" in selected_file_types):
+            archive.merge_files()
+            archive.merged_file.setup_times.fillna(0)
+        eel.createAlert("Güncelleme işlemi başarı ile sonuçlandı.")
+    except:
+        eel.createAlert("Güncelleme işlemi gerçekleştirilirken bir sorun oluştu. Veri doğruluğunuzdan emin olun.")
 
 
 @eel.expose
@@ -234,7 +240,7 @@ def create_input_file(input_type, *args):
             eel.raiseForecastEndedAlert()
             input_file.set_order_times(args[0])
             input_file.set_probabilities(args[1])
-            input_file.create_file(output_dir)
+            input_file.create_file(output_dir, args[2])
         elif input_type == "okpm":
             input_file = OperationalMMInput(archive, plan_path, args[0])
             input_file.load_days(workdays_path)
@@ -268,11 +274,18 @@ def create_archive():
         global archive, new_file_paths
         archive = ArchiveDatabase()
         archive.load_files_to_be_deleted(new_file_paths["tbd"])
+        print("tbd tamam")
         archive.load_machine_info(new_file_paths["machineInfo"])
+        print("minfo tamam")
         archive.load_bom(new_file_paths["bom"])
+        print("bom tamam")
         archive.load_times(new_file_paths["times"])
+        print("zaman tamam")
         archive.order_history.add_orders(new_file_paths["order"])
+        print("siparis tamam")
         archive.merge_files()
+        archive.merged_file.setup_times.fillna(0, inplace=True)
+        print("merge tamam")
         return 1
     except:
         return 0
@@ -332,7 +345,6 @@ def get_from_js(data):
 
 if __name__ == "__main__":
     open_url("login.html", size=(1200, 600))
-    # todo: 1 - create archive with little bom, normal  times, classic others
-    # todo: 2 - update archive with bigger bom, normal times, classic others
-    # todo: 3 - update archive with increased times
-    # todo: 4 - change logout for all pages
+    # todo: fix error with forecast print
+    # todo: about
+
