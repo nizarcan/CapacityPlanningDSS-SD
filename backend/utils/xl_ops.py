@@ -161,7 +161,7 @@ def create_xl_file(input_obj, output_path, file_type):
         input_obj.machine_legend.to_excel(output_path + "TKPM_Results.xlsx", sheet_name="machine_legend")
         if input_obj.forecast_output is not None:
             input_obj.forecast_output.to_excel(output_path + "Talep Tahmini.xlsx", sheet_name="Talep Tahmini",
-                                               merge_cells=False)
+                                               merge_cells=False, index_label=["", ""])
     else:
         raise WrongKeywordError(file_type)
 

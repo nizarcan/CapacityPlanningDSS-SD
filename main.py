@@ -1,6 +1,8 @@
 from backend.utils.file_dialog import *
 from backend.compiler import *
 from backend.analyzer import *
+import pkg_resources.py2_warn
+import bottle_websocket
 import eel
 
 eel.init('frontend')
@@ -329,7 +331,6 @@ def create_summary(selected_file_types):
         return 1
     except:
         return 0
-
 
 
 @eel.expose

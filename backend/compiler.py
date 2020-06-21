@@ -672,7 +672,7 @@ class TacticalMMInput:
             self.forecast_output = self.forecast.copy()
             # self.forecast_output.index = [(product_family_dict[x], y) for (x, y) in self.forecast.index]
             self.forecast_output["product_family"] = [product_family_dict[x] for (x, y) in self.forecast.index]
-            self.forecast_output["scenario"] = [1, 2, 3, 4, 5] * int(self.forecast_output.product_family.max())
+            self.forecast_output["scenario"] = [1, 2, 3, 4, 5] * int(max(product_family_dict.keys()))
             self.forecast_output.set_index(keys=["product_family", "scenario"], inplace=True)
         create_xl_file(self, file_dir, "tactical_math_model")
 
