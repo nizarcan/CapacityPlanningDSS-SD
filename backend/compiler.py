@@ -142,13 +142,13 @@ class ArchiveDatabase:
             if "bom" in filetypes_in_summary:
                 bom_sum.to_excel(writer, sheet_name="BOM", header=False, index=False)
             if "times" in filetypes_in_summary:
-                times_sum.to_excel(writer, sheet_name="Times", header=False, index=False)
+                times_sum.to_excel(writer, sheet_name="Süreler", header=False, index=False)
             if "order" in filetypes_in_summary:
-                order_sum.to_excel(writer, sheet_name="Order", header=False)
+                order_sum.to_excel(writer, sheet_name="Sipariş", header=False)
             if "machineInfo" in filetypes_in_summary:
-                machine_info_sum.to_excel(writer, sheet_name="Machine Info", header=False, index=False)
+                machine_info_sum.to_excel(writer, sheet_name="Makina Verisi", header=False, index=False)
             if "tbd" in filetypes_in_summary:
-                tbd_sum.to_excel(writer, sheet_name="Silinecekler", header=False, index=False)
+                tbd_sum.to_excel(writer, sheet_name="İşlenmeyen Parçalar", header=False, index=False)
 
 
 class OperationalSMInput:

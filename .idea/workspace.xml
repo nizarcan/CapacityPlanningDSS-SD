@@ -19,10 +19,24 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ce5f1578-97a9-4ac7-beac-7168ab342862" name="Default Changelist" comment="added forecast and linked logout function">
+    <list default="true" id="ce5f1578-97a9-4ac7-beac-7168ab342862" name="Default Changelist" comment="chromium binary and archive name will be added">
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/analyzer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/compiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/compiler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/utils/xl_ops.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/utils/xl_ops.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/predictor.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/predictor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/about.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/about.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/archive-updater.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/archive-updater.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/js/backend-communication.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pythonjs/backend-communication.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/okpb-analyzer.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/okpb-analyzer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/okpb-creator.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/okpb-creator.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/okpm-analyzer.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/okpm-analyzer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/okpm-creator.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/okpm-creator.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tkpm-analyzer.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tkpm-analyzer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tkpm-creator.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tkpm-creator.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -46,6 +60,11 @@
     <property name="TERMINAL_CUSTOM_COMMANDS_GOT_IT" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Projects\CapacityPlanningDSS-SD\frontend\pythonjs" />
+    </key>
   </component>
   <component name="RunManager" selected="Python.main">
     <configuration name="analyzer" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -73,9 +92,6 @@
       <module name="CapacityPlanningDSS-SD" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -157,7 +173,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591918908796</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="chromium binary and archive name will be added">
+      <created>1592720278338</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1592720278338</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -180,57 +203,58 @@
     <MESSAGE value="removed noti-wrap" />
     <MESSAGE value="added todos" />
     <MESSAGE value="added forecast and linked logout function" />
-    <option name="LAST_COMMIT_MESSAGE" value="added forecast and linked logout function" />
+    <MESSAGE value="chromium binary and archive name will be added" />
+    <option name="LAST_COMMIT_MESSAGE" value="chromium binary and archive name will be added" />
   </component>
   <component name="WindowStateProjectService">
     <state x="669" y="115" key="#main" timestamp="1590337261422">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="669" y="115" key="#main/0.0.1920.1040@0.0.1920.1040" timestamp="1590337261422" />
-    <state x="595" y="317" width="789" height="642" key="#xdebugger.evaluate" timestamp="1591953592012">
+    <state x="680" y="313" width="789" height="642" key="#xdebugger.evaluate" timestamp="1592842203907">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="595" y="317" width="789" height="642" key="#xdebugger.evaluate/0.0.1920.1040@0.0.1920.1040" timestamp="1591953592012" />
-    <state width="1899" height="348" key="GridCell.Tab.0.bottom" timestamp="1591997922315">
+    <state x="680" y="313" width="789" height="642" key="#xdebugger.evaluate/0.0.1920.1040@0.0.1920.1040" timestamp="1592842203907" />
+    <state width="1899" height="347" key="GridCell.Tab.0.bottom" timestamp="1592859304883">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1591997922315" />
-    <state width="1899" height="348" key="GridCell.Tab.0.center" timestamp="1591997922315">
+    <state width="1899" height="347" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1592859304883" />
+    <state width="1899" height="347" key="GridCell.Tab.0.center" timestamp="1592859304883">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1591997922315" />
-    <state width="1899" height="348" key="GridCell.Tab.0.left" timestamp="1591997922315">
+    <state width="1899" height="347" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1592859304883" />
+    <state width="1899" height="347" key="GridCell.Tab.0.left" timestamp="1592859304883">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1591997922315" />
-    <state width="1899" height="348" key="GridCell.Tab.0.right" timestamp="1591997922315">
+    <state width="1899" height="347" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1592859304883" />
+    <state width="1899" height="347" key="GridCell.Tab.0.right" timestamp="1592859304883">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1591997922315" />
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1591997922315">
+    <state width="1899" height="347" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1592859304883" />
+    <state width="1899" height="347" key="GridCell.Tab.1.bottom" timestamp="1592859304883">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1591997922315" />
-    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1591997922315">
+    <state width="1899" height="347" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1592859304883" />
+    <state width="1899" height="347" key="GridCell.Tab.1.center" timestamp="1592859304883">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1591997922315" />
-    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1591997922315">
+    <state width="1899" height="347" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1592859304883" />
+    <state width="1899" height="347" key="GridCell.Tab.1.left" timestamp="1592859304883">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1591997922315" />
-    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1591997922315">
+    <state width="1899" height="347" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1592859304883" />
+    <state width="1899" height="347" key="GridCell.Tab.1.right" timestamp="1592859304883">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1591997922315" />
+    <state width="1899" height="347" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1592859304883" />
     <state x="461" y="165" key="SettingsEditor" timestamp="1591483002276">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="461" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1591483002276" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1591918911894">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1592720283541">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1591918911894" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1592720283541" />
     <state width="487" height="523" key="XDebugger.FullValuePopup" timestamp="1591905621589">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -239,10 +263,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="769" y="434" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1591174436735" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1591176029959">
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1592842830078">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1591176029959" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1592842830078" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -251,6 +275,16 @@
           <url>file://$PROJECT_DIR$/backend/compiler.py</url>
           <line>673</line>
           <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/backend/utils/xl_ops.py</url>
+          <line>53</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/backend/compiler.py</url>
+          <line>591</line>
+          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

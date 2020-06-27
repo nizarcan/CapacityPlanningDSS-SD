@@ -152,7 +152,7 @@ function updateWorkdays(path){
 }
 
 function getSecondWorkdays() {
-    eel.get_second_plan()(updateSecondWorkdays)
+    eel.get_second_workdays()(updateSecondWorkdays)
 }
 
 function updateSecondWorkdays(path){
@@ -185,6 +185,11 @@ function updateUpperModelOutput(path){
     }
 }
 
+eel.expose(alertFromPython);
+function alertFromPython(s){
+    alert(s)
+}
+
 eel.expose(raiseCreationErrorJs);
 function raiseCreationErrorJs(){
     alert("Girdi dosyası oluşturulması sırasında beklenmedik bir problem oluştu. Dosyalarınızın doğruluğunu kontrol ediniz.")
@@ -211,7 +216,7 @@ function createInputFile(inputType){
         deviationProbabilityIds = ["birSigmaAltComboBox", "yarimSigmaAltComboBox", "sifirSigmaComboBox", "yarimSigmaUstComboBox", "birSigmaUstComboBox"]
         var earlinessTardinessPass = false
         var deviationProbabilitySum = 0
-        var idOutputDirSelected = document.getElementById("inputFileOutputDir").value != "Klasör Seçilmedi..."
+        var idOutputDirSelected = document.getElementById("inputFileOutputDir").textContent != "Klasör Seçilmedi..."
         for (let i=0; i<2; i++){
             earlinessTardinessPass = earlinessTardinessPass || Number(document.getElementById(earlinessTardinessIds[i]).value) != 0
         }
@@ -219,7 +224,7 @@ function createInputFile(inputType){
         for (let i=0; i<5; i++){
             deviationProbabilitySum = deviationProbabilitySum +  Number(document.getElementById(deviationProbabilityIds[i]).value)
         }
-        if ((earlinessTardinessPass != true) || (deviationProbabilitySum != 1) || (!idOutputDirSelected)) {
+        if ((earlinessTardinessPass != true) || (Math.round(deviationProbabilitySum) != 1) || (!idOutputDirSelected)) {
             alert("Lütfen girdilerin doğruluğunu kontrol edin.")
         }
         else {
@@ -419,7 +424,7 @@ async function createArchive(){
             document.location.href = "index.html"
         }
         else {
-            alert("Bir hata oluştu, lütfen dosyaların doğruluğundan emin olup tekrar deneyiniz.")
+            alert("Bir hata oluştu, lütfen dosyaların doğruluğundan ya da açık dosya olmadığından emin olup tekrar deneyiniz.")
         }
     }
     else {

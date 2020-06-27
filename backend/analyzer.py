@@ -15,7 +15,7 @@ def analyze_tkpm_results(file_dir, output_dir):
     total_overtime_results = total_overtime_results[
                                  total_overtime_results[total_overtime_results.columns[0]] == 2].iloc[:, 1:]
     for i in range(1, 6):
-        temp_schedule = total_overtime_results[total_overtime_results[total_overtime_results.columns[1]] == i]
+        temp_schedule = total_overtime_results[total_overtime_results[total_overtime_results.columns[1]] == i].copy()
         temp_schedule.set_index(temp_schedule.columns[0], inplace=True)
         temp_schedule.drop(temp_schedule.columns[0], axis=1, inplace=True)
         temp_schedule = temp_schedule.sum(axis=1)
@@ -26,7 +26,7 @@ def analyze_tkpm_results(file_dir, output_dir):
     overtime_results.set_index(overtime_results.columns[0], inplace=True)
 
     for i in range(1, 6):
-        temp_investment = total_investment_results[total_investment_results[total_investment_results.columns[1]] == i]
+        temp_investment = total_investment_results[total_investment_results[total_investment_results.columns[1]] == i].copy()
         temp_investment.set_index(temp_investment.columns[0], inplace=True)
         temp_investment.drop(temp_investment.columns[0], axis=1, inplace=True)
         temp_investment = temp_investment.sum(axis=1)
@@ -38,7 +38,7 @@ def analyze_tkpm_results(file_dir, output_dir):
     investment_results.set_index(investment_results.columns[0], inplace=True)
 
     for i in range(1, 6):
-        temp_shift = total_shift_results[total_shift_results[total_shift_results.columns[1]] == i]
+        temp_shift = total_shift_results[total_shift_results[total_shift_results.columns[1]] == i].copy()
         temp_shift.set_index(temp_shift.columns[0], inplace=True)
         temp_shift.drop(temp_shift.columns[0], axis=1, inplace=True)
         shift_results[i] = pd.concat([shift_results[i], temp_shift], axis=1).fillna(0)
@@ -47,10 +47,10 @@ def analyze_tkpm_results(file_dir, output_dir):
         shift_results[i].set_index(shift_results[i].columns[0], inplace=True)
 
     with pd.ExcelWriter(output_dir + "/TKPM_Analysis.xlsx") as writer:
-        overtime_results.to_excel(writer, sheet_name="overtime")
-        investment_results.to_excel(writer, sheet_name="investment")
+        overtime_results.to_excel(writer, sheet_name="Fazla Mesai")
+        investment_results.to_excel(writer, sheet_name="Yatırım")
         for i in range(1, 6):
-            shift_results[i].to_excel(writer, sheet_name="s" + str(i))
+            shift_results[i].to_excel(writer, sheet_name="Vardiya_Senaryo_" + str(i))
 
 
 def analyze_okpm_results(file_dir, output_dir):
@@ -67,7 +67,7 @@ def analyze_okpm_results(file_dir, output_dir):
     results.set_index(results.columns[0], inplace=True)
 
     with pd.ExcelWriter(output_dir + "/OKPM_Analysis.xlsx") as writer:
-        results.to_excel(writer, sheet_name="overtime")
+        results.to_excel(writer, sheet_name="Fazla Mesai")
 
 
 def analyze_okpb_results(file_dir, output_dir):
@@ -113,11 +113,11 @@ def analyze_okpb_results(file_dir, output_dir):
             df["Average"] = df["Average"].apply(lambda x: float(x))
             df.sort_values(by="Average", ascending=False, inplace=True)
         with pd.ExcelWriter(output_dir + "/OKPB_Analysis.xlsx") as writer:
-            tallies.to_excel(writer, sheet_name="tallies", index=False)
-            nq.to_excel(writer, sheet_name="nq", index=False)
-            nr.to_excel(writer, sheet_name="nr", index=False)
-            counters.to_excel(writer, sheet_name="counters", index=False)
-            outputs.to_excel(writer, sheet_name="outputs", index=False)
+            tallies.to_excel(writer, sheet_name="Tallies", index=False)
+            nq.to_excel(writer, sheet_name="NQ", index=False)
+            nr.to_excel(writer, sheet_name="NR", index=False)
+            counters.to_excel(writer, sheet_name="Counters", index=False)
+            outputs.to_excel(writer, sheet_name="Outputs", index=False)
 
 
 if __name__ == "__main__":

@@ -3,7 +3,9 @@ from backend.compiler import *
 from backend.analyzer import *
 import pkg_resources.py2_warn
 import bottle_websocket
+from datetime import datetime
 import eel
+
 
 eel.init('frontend')
 # Archive initialization
@@ -27,7 +29,7 @@ print('YnUgZMO8bnlhZGEgaXlpbGVyLCBrw7Z0w7xsZXIsIGludGlrYW0gc2F2YcWfxLEsIGJleWF6I
 
 
 @eel.expose
-def open_url(file_name, size=(1200, 600)):
+def open_url(file_name, size=(1400, 800)):
     eel.start(file_name, size=size, port=0)
 
 
@@ -142,6 +144,7 @@ def get_result_analysis_dir():
 @eel.expose
 def analyze_result(result_type):
     global result_path, analysis_dir
+    eel.alertFromPython("Analiz işlemi başladı.")
     try:
         if result_type == "tkpm":
             analyze_tkpm_results(result_path, analysis_dir)
@@ -149,8 +152,10 @@ def analyze_result(result_type):
             analyze_okpm_results(result_path, analysis_dir)
         elif result_type == "okpb":
             analyze_okpb_results(result_path, analysis_dir)
+        eel.alertFromPython("Analiz başarıyla sonuçlandı.")
         return 1
     except:
+        eel.alertFromPython("Analiz sırasında bir problem oluştu. Lütfen girdiğiniz verinin doğruluğunu kontrol ediniz.")
         return 0
 
 
@@ -235,6 +240,7 @@ def get_upper_model_output():
 @eel.expose
 def create_input_file(input_type, *args):
     global plan_path, second_plan_path, workdays_path, second_workdays_path, output_dir, archive
+    eel.alertFromPython('İşlem başladı.')
     try:
         if input_type == "tkpm":
             eel.raiseForecastStartedAlert()
@@ -244,10 +250,15 @@ def create_input_file(input_type, *args):
             input_file.set_probabilities(args[1])
             input_file.create_file(output_dir, args[2])
         elif input_type == "okpm":
-            input_file = OperationalMMInput(archive, plan_path, args[0])
+            print("first part")
+            input_file = OperationalMMInput(archive, plan_path, int(args[0]))
+            print("second part")
             input_file.load_days(workdays_path)
+            print("third part")
             input_file.load_math_model_output(upper_model_output_path)
+            print("fourth part")
             input_file.create_file(output_dir)
+            print("fifth part")
         elif input_type == "okpb":
             input_file = OperationalSMInput(archive)
             input_file.load_plan(plan_path)
@@ -298,8 +309,10 @@ def logout_app():
     try:
         archive_dir = ask_directory()
         if archive_dir != "":
-            archive.save_checkpoint(archive_dir + "/Archive.mng")
-        return 1
+            archive.save_checkpoint(archive_dir + "/Arşiv_" + "_".join([str(datetime.now().year), str(datetime.now().month), str(datetime.now().day), str(datetime.now().hour), str(datetime.now().minute)]) + ".mng")
+            return 1
+        else:
+            return 0
     except:
         return 0
 
@@ -345,7 +358,5 @@ def get_from_js(data):
 
 
 if __name__ == "__main__":
-    open_url("login.html", size=(1200, 600))
-    # todo: fix error with forecast print
-    # todo: about
+    open_url("login.html")
 

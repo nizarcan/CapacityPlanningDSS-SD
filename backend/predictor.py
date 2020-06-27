@@ -16,7 +16,7 @@ def predict_next_12_months(data):
         except ValueError:
             model = ExponentialSmoothing(ts, trend = 'add', seasonal = 'add', seasonal_periods = 12).fit(
                 use_basinhopping = True)
-        except Warning:
+        except:
             model = ExponentialSmoothing(ts, seasonal_periods = 12).fit()
 
         temp_pred = model.predict(start = start_and_finish[0], end = start_and_finish[1])

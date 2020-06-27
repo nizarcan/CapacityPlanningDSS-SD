@@ -107,11 +107,12 @@
 
     <!-- MENU SIDEBAR-->
     <aside class="menu-sidebar d-none d-lg-block">
-<div class="logo">
-                <a href="index.html">
-                    <img src="images/icon/logo.png" alt="Cool Admin" style="margin-left: 20px;">
-                </a>
-            </div>        <div class="menu-sidebar__content js-scrollbar1">
+        <div class="logo">
+            <a href="index.html">
+                <img src="images/icon/logo.png" alt="Cool Admin" style="margin-left: 20px;">
+            </a>
+        </div>
+        <div class="menu-sidebar__content js-scrollbar1">
             <nav class="navbar-sidebar">
                 <ul class="list-unstyled navbar__list">
                     <li>
@@ -172,14 +173,14 @@
                         <form class="form-header" action="" method="POST">
                         </form>
                         <div class="header-button" align="right">
-                                <div class="account-wrap">
-                                    <div class="account-item clearfix js-item-menu">
-                                        <div class="image">
-                                            <img src="images/icon/metu-logo.png" alt="TC MANGO">
-                                        </div>
-                                        <div class="content">
-                                            <a class="js-acc-btn" href="#">TC MANGO</a>
-                                        </div>
+                            <div class="account-wrap">
+                                <div class="account-item clearfix js-item-menu">
+                                    <div class="image">
+                                        <img src="images/icon/metu-logo.png" alt="TC MANGO">
+                                    </div>
+                                    <div class="content">
+                                        <a class="js-acc-btn" href="#">TC MANGO</a>
+                                    </div>
                                     <div class="account-dropdown js-dropdown">
                                         <div class="info clearfix">
 
@@ -195,11 +196,11 @@
                                         </div>
                                         <div class="account-dropdown__footer">
                                             <a onclick="logOutApp()">
-                                                <i class="zmdi zmdi-power"></i>Çıkış Yap</a>
+                                                <i class="zmdi zmdi-power"></i>Oturumu Sonlandır</a>
                                         </div>
                                     </div>
-                                    </div>
                                 </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -212,10 +213,11 @@
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
                     <!-- DOSYA SEÇİLMEDİ ALERT BOX -->
-                    <div class="sufee-alert alert with-close alert-danger alert-dismissible fade show" id="noFileSelectedAlert">
+                    <div class="sufee-alert alert with-close alert-danger alert-dismissible fade show"
+                         id="noFileSelectedAlert">
                         <span class="badge badge-pill badge-danger">Hata</span>
-                            Dosya seçmediniz.
-                            <button type="button" class="close" aria-label="Close">
+                        Dosya seçmediniz.
+                        <button type="button" class="close" aria-label="Close">
                             <span aria-hidden="true" onclick="hideNoFileSelectedAlert()">×</span>
                         </button>
                     </div>
@@ -225,6 +227,7 @@
                             box.style.display = "none"
                         }
                         hideNoFileSelectedAlert()
+
                     </script>
                     <!-- END OF DOSYA SEÇİLMEDİ ALERT BOX -->
                     <div class="col-lg-12">
@@ -237,51 +240,53 @@
                                 Çıktı Analizi
                             </div>
                             <div class="card-body card-block">
-<!--                                <form action="" method="post" class="form-horizontal">-->
-                                    <div class="form-group">
-                                        <label class=" form-control-label">TKPM Çıktı Dosyası</label>
-                                        <div class="input-group">
-                                            <div class="input-group-btn" style="
+                                <!--                                <form action="" method="post" class="form-horizontal">-->
+                                <div class="form-group">
+                                    <label class=" form-control-label">TKPM Çıktı Dosyası</label>
+                                    <div class="input-group">
+                                        <div class="input-group-btn" style="
                                                 margin-top: 6px;">
-                                                <button class="btn-sm btn-success" onclick="getResultPath('xl')">
-                                                    <i class="fa fa-search"></i> Dosya Seç
-                                                </button>
-                                            </div>
-                                            <label id="resultPath" class=" form-control-label"
-                                                style="margin-top: 8px;
+                                            <button class="btn-sm btn-success" onclick="getResultPath('xl')">
+                                                <i class="fa fa-search"></i> Dosya Seç
+                                            </button>
+                                        </div>
+                                        <label id="resultPath" class=" form-control-label"
+                                               style="margin-top: 8px;
                                                 margin-left: 20px;">Dosya Seçilmedi...
 
-                                            </label>
-                                        </div>
-
-
+                                        </label>
                                     </div>
 
-<!--                                </form>-->
-<!--                                <form action="" method="post" class="form-horizontal">-->
-                                    <div class="form-group">
-                                        <label class=" form-control-label">Analizin Kaydedileceği
-                                            Klasör</label>
-                                        <div class="input-group">
-                                            <div class="input-group-btn" style="
+
+                                </div>
+
+                                <!--                                </form>-->
+                                <!--                                <form action="" method="post" class="form-horizontal">-->
+                                <div class="form-group">
+                                    <label class=" form-control-label">Analizin Kaydedileceği
+                                        Klasör</label>
+                                    <div class="input-group">
+                                        <div class="input-group-btn" style="
                                                 margin-top: 6px;
                                             ">
-                                                <button class="btn-sm btn-success" onclick="getAnalysisDir()">
-                                                    <i class="fa fa-search"></i> Klasör Seç
-                                                </button>
-                                            </div>
-                                            <label id="analysisDir" class=" form-control-label" style="
+                                            <button class="btn-sm btn-success" onclick="getAnalysisDir()">
+                                                <i class="fa fa-search"></i> Klasör Seç
+                                            </button>
+                                        </div>
+                                        <label id="analysisDir" class=" form-control-label" style="
                                                 margin-top: 8px;
                                                 margin-left: 20px;">Klasör Seçilmedi...</label>
-                                        </div>
-
-
                                     </div>
 
-<!--                                </form>-->
+
+                                </div>
+
+                                <!--                                </form>-->
                             </div>
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-primary btn-sm" onclick="makeAnalysis('tkpm')">Analiz Et</button>
+                                <button type="submit" class="btn btn-primary btn-sm" onclick="makeAnalysis('tkpm')">
+                                    Analiz Et
+                                </button>
 
 
                             </div>
@@ -291,8 +296,9 @@
                         <div class="col-md-12">
                             <div class="copyright">
                                 <p>2019-2020 TC Mango. Bu proje MIT lisansı altındadır. <a
-                                        href="https://ie.metu.edu.tr/">ODTÜ Endüstri Mühendisliği</a> Sistem Tasarım
-                                    Projesi.</p>
+                                        href="https://ie.metu.edu.tr/" target="_blank">ODTÜ Endüstri
+                                    Mühendisliği</a>
+                                    Sistem Tasarım Projesi.</p>
                                 <center><p style="color: #CECFCE">Template by Colorlib</p></center>
                             </div>
                         </div>
@@ -332,7 +338,7 @@
 
 <!-- Python Communication Scripts -->
 <script type="text/javascript" src="/eel.js"></script>
-<script type="text/javascript" src="js/backend-communication.js"></script>
+<script type="text/javascript" src="pythonjs/backend-communication.js"></script>
 
 
 </body>
