@@ -19,25 +19,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ce5f1578-97a9-4ac7-beac-7168ab342862" name="Default Changelist" comment="chromium binary and archive name will be added">
-      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
+    <list default="true" id="ce5f1578-97a9-4ac7-beac-7168ab342862" name="Default Changelist" comment="vendored codes added to linguist">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/analyzer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/compiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/compiler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/predictor.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/predictor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/about.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/about.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/archive-updater.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/archive-updater.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/js/backend-communication.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pythonjs/backend-communication.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/okpb-analyzer.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/okpb-analyzer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/okpb-creator.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/okpb-creator.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/okpm-analyzer.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/okpm-analyzer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/okpm-creator.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/okpm-creator.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tkpm-analyzer.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tkpm-analyzer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tkpm-creator.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tkpm-creator.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,6 +75,9 @@
       <module name="CapacityPlanningDSS-SD" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -180,7 +166,14 @@
       <option name="project" value="LOCAL" />
       <updated>1592720278338</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="vendored codes added to linguist">
+      <created>1593251976161</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1593251976161</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -204,7 +197,8 @@
     <MESSAGE value="added todos" />
     <MESSAGE value="added forecast and linked logout function" />
     <MESSAGE value="chromium binary and archive name will be added" />
-    <option name="LAST_COMMIT_MESSAGE" value="chromium binary and archive name will be added" />
+    <MESSAGE value="vendored codes added to linguist" />
+    <option name="LAST_COMMIT_MESSAGE" value="vendored codes added to linguist" />
   </component>
   <component name="WindowStateProjectService">
     <state x="669" y="115" key="#main" timestamp="1590337261422">
@@ -251,10 +245,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="461" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1591483002276" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1592720283541">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1593251977905">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1592720283541" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1593251977905" />
     <state width="487" height="523" key="XDebugger.FullValuePopup" timestamp="1591905621589">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

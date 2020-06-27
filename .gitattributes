@@ -3,6 +3,7 @@
 *.python linguist-detectable=true
 *.js linguist-detectable=true
 frontend/js/* linguist-vendored
+frontend/vendor/* linguist-vendored
 *.html linguist-detectable=false
 *.css linguist-detectable=false
 *.xml linguist-detectable=false
