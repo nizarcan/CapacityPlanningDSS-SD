@@ -178,10 +178,11 @@ def trim_bom(df):
     df.reset_index(drop=True, inplace=True)
 
     # This part is a bit more tricky, this code takes the 90th percentile in the past orders and then takes them into
-    # consideration
+    # consideration, enable if proper use is needed. For a one time usage, just replace the FILE_PATH with pivoted total
+    # demand info as a csv file. Else, bind the variable to the frontend.
 
     # Order data processing and finding 90 Percentile
-    # order_data = pd.read_csv("D:/Python/ml/5_yil_uretim.csv")
+    # order_data = pd.read_csv(FILE_PATH)
     # order_data.drop(order_data.columns[1:4], axis = 1, inplace = True)
     # order_data["sum"] = order_data[order_data.columns[1:]].sum(axis = 1)
     # order_data.sort_values(by = "sum", inplace = True, ascending = False)
@@ -451,8 +452,6 @@ def create_operational_table(df, table_type, aux=None, *args):
         whole_dataframe = df.copy()
         whole_dataframe.product_no.replace(idx_dict, inplace=True)
         whole_dataframe["day_of_month"] = whole_dataframe.start_date.dt.day
-        # whole_dataframe["day_of_month"] = [int(x.days) for x in whole_dataframe["day_of_month"]]
-        # if sum(whole_dataframe.iloc[:int(whole_dataframe.shape[0]/2), :].reset_index(drop=True).start_date == whole_dataframe.iloc[int(whole_dataframe.shape[0]/2):, :].reset_index(drop=True).start_date)==int(whole_dataframe.shape[0]/2):
         if args[0] > 1:
             if args[1]:
                 whole_dataframe.drop(whole_dataframe[~whole_dataframe["start_date"].dt.month ==

@@ -377,9 +377,7 @@ class OperationalMMInput:
 
     def load_math_model_output(self, file_dir):
         self.math_model_output = pd.read_excel(file_dir, sheet_name="machine_legend")
-        # self.math_model_output = self.math_model_output[self.math_model_output[self.math_model_output.columns[1]] == self.selected_scenario].copy()
         self.math_model_output.set_index(self.math_model_output.columns[0], inplace=True)
-        # self.math_model_output.drop(self.math_model_output.columns[0], inplace=True, axis=1)
         self.math_model_output.columns = ["station"]
         shift = pd.read_excel(file_dir, sheet_name="L")
         shift = shift[shift[shift.columns[1]] == self.selected_scenario].copy()
@@ -397,20 +395,6 @@ class OperationalMMInput:
         self.math_model_output = pd.concat([self.math_model_output, shift, investments], axis=1).fillna(0)
 
     def pivot_days(self):
-        # df = self.plan.copy()
-        # resch_dict = schedule_changer_dict(self.plan, self.days)
-        # df.start_date = df.start_date.dt.date
-        # df.start_date.replace(resch_dict, inplace = True)
-        # df = df.groupby(by = ["product_no", "start_date"], as_index = False).agg({"amount": "sum"})
-        # df["new_day"] = to_datetime(df.start_date).dt.day
-        # # df["new_day"] = df["new_day"].apply(lambda x: x.days + 1)
-        # last_day = [datetime(to_datetime(df.start_date).dt.year.mode()[0], to_datetime(df.start_date).dt.month.mode()[0] + 1, 1) -
-        #             to_timedelta(1, unit = "d") if (to_datetime(df.start_date).dt.month.mode()[0] != 12)
-        #             else datetime(to_datetime(df.start_date).dt.year.mode()[0] + 1, 1, 1) - to_timedelta(1, unit = "d") for _ in range(1)][0]
-        # df = df.groupby(by=["product_no", "new_day"], as_index=False).agg({"amount": "sum"})
-        # df = df.pivot("product_no", "new_day", "amount").fillna(0)
-        # out_df = DataFrame(index = df.index, columns = list(range(1, last_day.day+1))).fillna(0)
-        # out_df[df.columns] = df
         df = self.plan.copy()
         resch_dict = schedule_changer_dict(self.plan, self.days)
         df.start_date = df.start_date.dt.date
@@ -424,7 +408,6 @@ class OperationalMMInput:
         out_df = DataFrame(index=df.index, columns=[to_datetime(x).day for x in workdays]).fillna(0)
         out_df[df.columns] = df
         out_df.columns = list(range(1, out_df.shape[1] + 1))
-        # df["new_day"] = df["new_day"].apply(lambda x: x.days + 1)
         return out_df
 
     def update_machine_info(self, file_dir):
@@ -470,7 +453,6 @@ class OperationalMMInput:
                      how="left", left_on="product_no", right_on="product_no").fillna(
             avg_df.order_amount.mean().__floordiv__(1))
         o.set_index(keys="product_no", inplace=True)
-        # avg_df.drop(["date", "amount"], inplace = True, axis = 1)
         # AVERAGE ORDER SIZE
 
         # SETUP TIMES
@@ -521,7 +503,6 @@ class OperationalMMInput:
             else:
                 s.append(1)
         s = pd.DataFrame(data=s, columns=["shift"]).transpose().copy()
-        # s = machine_info_df["shift"].to_frame().transpose().copy()
         c = DataFrame(index=[1, 2, 3], columns=[1], data=[0, 23, 151]).transpose()
         if pivot:
             d = self.pivot_days()
