@@ -13,11 +13,11 @@ programming and simulation are:</p>
 <img src="images/welcome-page.jpg" width=480 height=270>
 
 
-<p>Database update</p>
+<p>Updating data</p>
 <img src="images/archive-update.jpg" width=480 height=270>
 
 
-<p>Input file creation examples</p>
+<p>Creating mathematical model</p>
 <img src="images/tactical-mm-input.jpg" width=480 height=270>
 <p> </p>
 <img src="images/operational-mm-input.jpg" width=480 height=270>
